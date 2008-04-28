@@ -1,0 +1,169 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{FBD61F5D-2F55-4F51-AE65-850B1E3CF8B5}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Expemerent.UI</RootNamespace>
+    <AssemblyName Condition=" '$(Configuration)' == 'HtmDebug' or '$(Configuration)' == 'HtmRelease'">Expemerent.UI.Htmlayout</AssemblyName>
+    <AssemblyName Condition=" '$(Configuration)' == 'SciterDebug' or '$(Configuration)' == 'SciterRelease'">Expemerent.UI.Sciter</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'SciterDebug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\SciterDebug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'SciterRelease|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\SciterRelease\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'HtmDebug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\HtmDebug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'HtmRelease|AnyCPU' ">
+    <OutputPath>bin\HtmRelease\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AttachBehaviorEventArgs.cs" />
+    <Compile Include="Behaviors\BehaviorEventArgs.cs" />
+    <Compile Include="Behaviors\DataArrivedEventArgs.cs" />
+    <Compile Include="Behaviors\ElementEventArgs.cs" />
+    <Compile Include="Behaviors\DrawEventArgs.cs" />
+    <Compile Include="Behaviors\FocusEventArgs.cs" />
+    <Compile Include="Behaviors\InputEventArgs.cs" />
+    <Compile Include="Behaviors\ISciterBehavior.cs" />
+    <Compile Include="Behaviors\UserInputEventArgs.cs" />
+    <Compile Include="CallbackHostEventArgs.cs" />
+    <Compile Include="Controls\BindableControl.cs" />
+    <Compile Include="Controls\ButtonControl.cs">
+    </Compile>
+    <Compile Include="Controls\CheckBoxControl.cs">
+    </Compile>
+    <Compile Include="Controls\ControlsCollection.cs" />
+    <Compile Include="Controls\InputControl.cs">
+    </Compile>
+    <Compile Include="Controls\SliderControl.cs">
+    </Compile>
+    <Compile Include="Controls\TextBoxControl.cs">
+    </Compile>
+    <Compile Include="Dom\ElementLocation.cs" />
+    <Compile Include="Dom\ElementState.cs" />
+    <Compile Include="Dom\PopupPlacement.cs" />
+    <Compile Include="ISciterControl.cs" />
+    <Compile Include="LazyValue.cs" />
+    <Compile Include="Native\BehaviorData.cs" />
+    <Compile Include="Native\ElementAreas.cs" />
+    <Compile Include="Native\ElementState.cs" />
+    <Compile Include="Native\EventGroups.cs" />
+    <Compile Include="Dom\ElementScope.cs" />
+    <Compile Include="Native\InstanceProtector.cs" />
+    <Compile Include="Behaviors\KeyEventArgs.cs" />
+    <Compile Include="Behaviors\MethodCallEventArgs.cs" />
+    <Compile Include="Behaviors\MouseEventArgs.cs" />
+    <Compile Include="Behaviors\ScriptingMethodCall.cs" />
+    <Compile Include="DataLoadedEventArgs.cs" />
+    <Compile Include="DocumentCompleteEventArgs.cs" />
+    <Compile Include="Dom\AttributeCollection.cs" />
+    <Compile Include="Dom\Element.cs" />
+    <Compile Include="Dom\ElementRef.cs" />
+    <Compile Include="Dom\ElementsCollection.cs" />
+    <Compile Include="Dom\ElementUtility.cs" />
+    <Compile Include="Dom\Style.cs" />
+    <Compile Include="Behaviors\SciterBehavior.cs" />
+    <Compile Include="LoadDataEventArgs.cs" />
+    <Compile Include="Native\ISciterNotifications.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Native\JsonValue.cs" />
+    <Compile Include="Native\MarshalUtility.cs" />
+    <Compile Include="Native\PopupPlacement.cs" />
+    <Compile Include="Native\ResourceType.cs" />
+    <Compile Include="Native\ScDomResult.cs" />
+    <Compile Include="Native\Scripting.cs" />
+    <Compile Include="Native\SetElementHtml.cs" />
+    <Compile Include="Native\SharedDomApi.cs" />
+    <Compile Include="Native\SharedHostApi.cs" />
+    <Compile Include="Native\User32.cs" />
+    <Compile Include="Native\WindowHook.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Protocol\IProtocolHandler.cs" />
+    <Compile Include="Protocol\ResProtocol.cs" />
+    <Compile Include="ResourceType.cs" />
+    <Compile Include="SciterControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="SciterException.cs" />
+    <Compile Include="SciterFactory.cs" />
+    <Compile Include="SciterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SciterView.cs" />
+    <Compile Include="ScriptingClassAttribute.cs" />
+    <Compile Include="ScriptingMethodAttribute.cs" />
+    <Compile Include="ScriptingPropertyAttribute.cs" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Configuration)' == 'SciterDebug' or '$(Configuration)' == 'SciterRelease'">
+    <Compile Include="Native\SciterDomApi.cs" />
+    <Compile Include="Native\SciterHostApi.cs" />
+    <Content Include="$(SolutionDir)\3rdParty\Sciter\bin\sciter-x.dll">
+      <Link>sciter-x.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Configuration)' == 'HtmDebug' or '$(Configuration)' == 'HtmRelease'">
+    <Compile Include="Native\HtmlayoutDomApi.cs" />
+    <Compile Include="Native\HtmlayoutHostApi.cs" />
+    <Content Include="$(SolutionDir)\3rdParty\Htmlayout\bin\htmlayout.dll">
+      <Link>htmlayout.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
