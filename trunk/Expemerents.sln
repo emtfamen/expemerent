@@ -1,0 +1,75 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Expemerent.Basic", "Expemerent.Basic\Expemerent.Basic.csproj", "{3C49FDAD-73BB-41E1-B06C-1B0F1A9D551E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Expemerent.UI", "Expemerent.UI\Expemerent.UI.csproj", "{FBD61F5D-2F55-4F51-AE65-850B1E3CF8B5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3rdParty", "3rdParty", "{3414090E-E612-4D97-8D6B-B8C14837FBAF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sciter", "sciter", "{2288C479-C2B8-43F5-9DD1-BAE1CDB33865}"
+	ProjectSection(SolutionItems) = preProject
+		3rdParty\Sciter\api\json-aux.h = 3rdParty\Sciter\api\json-aux.h
+		3rdParty\Sciter\api\json-parse.h = 3rdParty\Sciter\api\json-parse.h
+		3rdParty\Sciter\api\json-slice.h = 3rdParty\Sciter\api\json-slice.h
+		3rdParty\Sciter\api\json-value.h = 3rdParty\Sciter\api\json-value.h
+		3rdParty\Sciter\api\sciter-x-aux.h = 3rdParty\Sciter\api\sciter-x-aux.h
+		3rdParty\Sciter\api\sciter-x-behavior.h = 3rdParty\Sciter\api\sciter-x-behavior.h
+		3rdParty\Sciter\api\sciter-x-dom.h = 3rdParty\Sciter\api\sciter-x-dom.h
+		3rdParty\Sciter\api\sciter-x-host-callback.h = 3rdParty\Sciter\api\sciter-x-host-callback.h
+		3rdParty\Sciter\api\sciter-x-module.cpp = 3rdParty\Sciter\api\sciter-x-module.cpp
+		3rdParty\Sciter\api\sciter-x-richtext.h = 3rdParty\Sciter\api\sciter-x-richtext.h
+		3rdParty\Sciter\api\sciter-x-script.h = 3rdParty\Sciter\api\sciter-x-script.h
+		3rdParty\Sciter\api\sciter-x-value.h = 3rdParty\Sciter\api\sciter-x-value.h
+		3rdParty\Sciter\api\sciter-x.h = 3rdParty\Sciter\api\sciter-x.h
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "htmlayout", "htmlayout", "{818C7856-4827-425C-9265-64FE8F2C9DF0}"
+	ProjectSection(SolutionItems) = preProject
+		3rdParty\Htmlayout\api\atlhtmlayout.h = 3rdParty\Htmlayout\api\atlhtmlayout.h
+		3rdParty\Htmlayout\api\atlhtmlayouthost.h = 3rdParty\Htmlayout\api\atlhtmlayouthost.h
+		3rdParty\Htmlayout\api\htmlayout.h = 3rdParty\Htmlayout\api\htmlayout.h
+		3rdParty\Htmlayout\api\htmlayout_aux.h = 3rdParty\Htmlayout\api\htmlayout_aux.h
+		3rdParty\Htmlayout\api\htmlayout_behavior.h = 3rdParty\Htmlayout\api\htmlayout_behavior.h
+		3rdParty\Htmlayout\api\htmlayout_behavior.hpp = 3rdParty\Htmlayout\api\htmlayout_behavior.hpp
+		3rdParty\Htmlayout\api\htmlayout_canvas.hpp = 3rdParty\Htmlayout\api\htmlayout_canvas.hpp
+		3rdParty\Htmlayout\api\htmlayout_controls.hpp = 3rdParty\Htmlayout\api\htmlayout_controls.hpp
+		3rdParty\Htmlayout\api\htmlayout_dialog.hpp = 3rdParty\Htmlayout\api\htmlayout_dialog.hpp
+		3rdParty\Htmlayout\api\htmlayout_dom.h = 3rdParty\Htmlayout\api\htmlayout_dom.h
+		3rdParty\Htmlayout\api\htmlayout_dom.hpp = 3rdParty\Htmlayout\api\htmlayout_dom.hpp
+		3rdParty\Htmlayout\api\htmlayout_graphin.h = 3rdParty\Htmlayout\api\htmlayout_graphin.h
+		3rdParty\Htmlayout\api\htmlayout_notifications.hpp = 3rdParty\Htmlayout\api\htmlayout_notifications.hpp
+		3rdParty\Htmlayout\api\htmlayout_queue.h = 3rdParty\Htmlayout\api\htmlayout_queue.h
+		3rdParty\Htmlayout\api\htmlayout_value.hpp = 3rdParty\Htmlayout\api\htmlayout_value.hpp
+		3rdParty\Htmlayout\api\htmlayout_x.h = 3rdParty\Htmlayout\api\htmlayout_x.h
+		3rdParty\Htmlayout\api\htmlite.h = 3rdParty\Htmlayout\api\htmlite.h
+		3rdParty\Htmlayout\api\htmprint.h = 3rdParty\Htmlayout\api\htmprint.h
+		3rdParty\Htmlayout\api\json-aux.h = 3rdParty\Htmlayout\api\json-aux.h
+		3rdParty\Htmlayout\api\json-parse.h = 3rdParty\Htmlayout\api\json-parse.h
+		3rdParty\Htmlayout\api\json-slice.h = 3rdParty\Htmlayout\api\json-slice.h
+		3rdParty\Htmlayout\api\json-value.h = 3rdParty\Htmlayout\api\json-value.h
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3C49FDAD-73BB-41E1-B06C-1B0F1A9D551E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C49FDAD-73BB-41E1-B06C-1B0F1A9D551E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C49FDAD-73BB-41E1-B06C-1B0F1A9D551E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C49FDAD-73BB-41E1-B06C-1B0F1A9D551E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBD61F5D-2F55-4F51-AE65-850B1E3CF8B5}.Debug|Any CPU.ActiveCfg = SciterDebug|Any CPU
+		{FBD61F5D-2F55-4F51-AE65-850B1E3CF8B5}.Debug|Any CPU.Build.0 = SciterDebug|Any CPU
+		{FBD61F5D-2F55-4F51-AE65-850B1E3CF8B5}.Release|Any CPU.ActiveCfg = SciterDebug|Any CPU
+		{FBD61F5D-2F55-4F51-AE65-850B1E3CF8B5}.Release|Any CPU.Build.0 = SciterDebug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2288C479-C2B8-43F5-9DD1-BAE1CDB33865} = {3414090E-E612-4D97-8D6B-B8C14837FBAF}
+		{818C7856-4827-425C-9265-64FE8F2C9DF0} = {3414090E-E612-4D97-8D6B-B8C14837FBAF}
+	EndGlobalSection
+EndGlobal
