@@ -319,7 +319,7 @@ namespace Expemerent.UI.Native
         /// You can install Window EventHandler only once - it will survive all document reloads.
         /// </summary>
         [DllImport("htmlayout.dll")]
-        private static extern ScDomResult HTMLayoutWindowAttachEventHandler(IntPtr IntPtrLayout, [MarshalAs(UnmanagedType.FunctionPtr)] ElementEventProc pep, IntPtr tag, EVENT_GROUPS subscription);
+        private static extern ScDomResult HTMLayoutWindowAttachEventHandler(IntPtr IntPtrLayout, /*[MarshalAs(UnmanagedType.FunctionPtr)] ElementEventProc*/ IntPtr pep, IntPtr tag, EVENT_GROUPS subscription);
 
         /// <summary>
         /// Attach/Detach ElementEventProc to the Sciter window. 
@@ -327,7 +327,7 @@ namespace Expemerent.UI.Native
         /// You can install Window EventHandler only once - it will survive all document reloads.
         /// </summary>
         [DllImport("htmlayout.dll")]
-        private static extern ScDomResult HTMLayoutWindowDetachEventHandler(IntPtr IntPtrLayout, [MarshalAs(UnmanagedType.FunctionPtr)] ElementEventProc pep, IntPtr tag);
+        private static extern ScDomResult HTMLayoutWindowDetachEventHandler(IntPtr IntPtrLayout, /*[MarshalAs(UnmanagedType.FunctionPtr)] ElementEventProc*/ IntPtr pep, IntPtr tag);
 
         /// <summary>
         /// SendEvent - sends sinking/bubbling event to the child/parent chain of element element.

@@ -102,6 +102,19 @@ namespace Expemerent.UI.Dom
         }
 
         /// <summary>
+        /// Gets internal HELEMENT handle
+        /// </summary>
+        internal IntPtr ElementHandle
+        {
+            [DebuggerStepThrough]
+            get 
+            {
+                Debug.Assert(_referenceType == ElementRefType.Normal);
+                return _element;
+            }
+        }
+
+        /// <summary>
         /// Get text of the element reference
         /// </summary>
         public ElementRefType ReferenceType

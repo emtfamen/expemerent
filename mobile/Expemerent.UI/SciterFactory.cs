@@ -128,9 +128,7 @@ namespace Expemerent.UI
 
             var factory =  default(CreateInstance<SciterBehavior>);
             if (_behaviors.TryGetValue(behavior, out factory))
-            {
                 return factory();
-            }
 
             return null;
         }

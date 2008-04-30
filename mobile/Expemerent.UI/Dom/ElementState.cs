@@ -10,6 +10,11 @@ namespace Expemerent.UI.Dom
     public enum ElementState
     {
         /// <summary>
+        /// Empty state
+        /// </summary>
+        None = 0,
+
+        /// <summary>
         /// selector :link, any element having href attribute
         ///</summary>
         Link = ELEMENT_STATE_BITS.STATE_LINK,

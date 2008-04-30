@@ -133,6 +133,7 @@
     <Compile Include="Native\HtmlayoutHostApi.cs" />
     <Compile Include="Native\MarshalUtility.cs" />
     <Compile Include="Native\SharedDomApi.cs" />
+    <Compile Include="Native\SharedHostApi.cs" />
     <Content Include="$(SolutionDir)\3rdParty\Htmlayout\bin\windows mobile 5.0 pocket pc sdk (armv4i)\htmlayout.dll">
       <Link>htmlayout.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

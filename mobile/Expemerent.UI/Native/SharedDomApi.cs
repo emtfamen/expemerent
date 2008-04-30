@@ -403,6 +403,26 @@ namespace Expemerent.UI.Native
         {
             CheckResult(HTMLayoutSetCapture(element.Handle));
         }
+
+        /// <summary>
+        /// Attach/Detach ElementEventProc to the Sciter window. 
+        /// All events will start first here (in SINKING phase) and if not consumed will end up here.
+        /// You can install Window EventHandler only once - it will survive all document reloads.
+        /// </summary>
+        public void WindowAttachEventHandler(IntPtr hWnd, ISciterBehavior bhv, EVENT_GROUPS evt)
+        {
+            CheckResult(HTMLayoutWindowAttachEventHandler(hWnd, SciterHostApi.ElementEventProcEntryPoint, InstanceProtector.Protect(bhv), evt));
+        }
+
+        /// <summary>
+        /// Attach/Detach ElementEventProc to the Sciter window. 
+        /// All events will start first here (in SINKING phase) and if not consumed will end up here.
+        /// You can install Window EventHandler only once - it will survive all document reloads.
+        /// </summary>
+        public void WindowDetachEventHandler(IntPtr hWnd, ISciterBehavior bhv)
+        {
+            CheckResult(HTMLayoutWindowDetachEventHandler(hWnd, SciterHostApi.ElementEventProcEntryPoint, InstanceProtector.Protect(bhv)));
+        }
         #endregion
 
         #region Private implementation

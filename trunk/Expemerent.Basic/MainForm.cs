@@ -12,6 +12,7 @@ namespace Expemerent.Basic
     {
         public MainForm()
         {
+            LoadResource<MainForm>("Html/Default.htm");
             InitializeComponent();
         }
 
@@ -19,8 +20,8 @@ namespace Expemerent.Basic
         {
             base.OnLoad(args);
 
-            View.CallbackHost += (s, e) => Trace.WriteLine(String.Format("First: {0}, Second: {1}", e.First, e.Second));
-            View.LoadResource(GetType(), "Html/scintilla.htm");
+            //View.CallbackHost += (s, e) => Trace.WriteLine(String.Format("First: {0}, Second: {1}", e.First, e.Second));
+            //View.LoadResource(GetType(), "Html/scintilla.htm");
 
             //var input = new TextBoxControl() { Selector = "#input_text" };
             //var label = new TextBoxControl() { Selector = "#static_text" };
