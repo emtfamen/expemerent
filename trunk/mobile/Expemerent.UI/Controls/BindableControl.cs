@@ -74,9 +74,10 @@ namespace Expemerent.UI.Controls
 
         #region Properties
         /// <summary>
-        /// Gets or sets a value indicating whether validation is performed
+        /// Gets or sets a value indicating whether the control causes validation to be performed on any controls that require validation when it receives focus.
         /// </summary>
         public bool CausesValidation { get; set; } 
+
         /// <summary>
         /// Attribues collection
         /// </summary>
@@ -134,6 +135,15 @@ namespace Expemerent.UI.Controls
 
                 _elementRef = value;                
             }
+        }
+
+        /// <summary>
+        /// Gets HELEMENT handle
+        /// </summary>
+        internal IntPtr ElementHandle 
+        { 
+            [DebuggerStepThrough]
+            get { return ElementRef != null ? ElementRef.ElementHandle : IntPtr.Zero; } 
         }
 
         /// <summary>
@@ -214,6 +224,14 @@ namespace Expemerent.UI.Controls
                     ProcessBindingContextChange();
                 }
             }
+        }
+
+        /// <summary>
+        /// Sets focus on this element
+        /// </summary>
+        public void SetFocus()
+        {
+            Element.SetState(ElementState.Focus, ElementState.None);
         }
         #endregion
 
@@ -473,13 +491,16 @@ namespace Expemerent.UI.Controls
         /// <summary>
         /// Performs control validation
         /// </summary>
-        protected virtual void PerformValidation(FocusEventArgs e)
+        /// <returns>true if validation succeeded</returns>
+        protected internal virtual bool PerformValidation()
         {
             var validateArgs = new CancelEventArgs();
             OnValidating(validateArgs);
 
-            if (!(e.Cancel = validateArgs.Cancel))
-                OnValidated(EventArgs.Empty);            
+            if (!validateArgs.Cancel)
+                OnValidated(EventArgs.Empty);
+
+            return !validateArgs.Cancel;
         }
         #endregion
 
@@ -528,23 +549,7 @@ namespace Expemerent.UI.Controls
 
             ProcessBindingContextChange();
             UpdateDomElement();
-        }
-
-        /// <summary>
-        /// Handles <see cref="SciterBehavior.Focus"/> event
-        /// </summary>
-        protected override void OnFocusEvent(FocusEventArgs e)
-        {
-            if (e.Phase == Phase.Sinking && e.IsLostFocus)
-            {
-                if (CausesValidation) 
-                    PerformValidation(e);
-
-                e.Handled = true;
-            }
-
-            base.OnFocusEvent(e);
-        }
+        }        
         #endregion
 
         #region Dispose implementation
@@ -585,7 +590,6 @@ namespace Expemerent.UI.Controls
         /// See <see cref="IComponent.Site"/>
         /// </summary>
         ISite IComponent.Site { get; set; }
-
-        #endregion
+        #endregion        
     }
 }

@@ -12,6 +12,13 @@ namespace Expemerent.UI
         /// <summary>
         /// Creates a new instance of the <see cref="AttachBehaviorEventArgs"/> class
         /// </summary>
+        public AttachBehaviorEventArgs()
+        {
+        }
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="AttachBehaviorEventArgs"/> class
+        /// </summary>
         /// <param name="notification"></param>
         internal AttachBehaviorEventArgs(Element element, String behaviorName)
         {
@@ -22,12 +29,12 @@ namespace Expemerent.UI
         /// <summary>
         /// Gets behavior name property
         /// </summary>
-        public string BehaviorName { get; private set; }
+        public string BehaviorName { get; protected internal set; }
 
         /// <summary>
         /// Gets target element 
         /// </summary>
-        public Element Element { get; private set; }
+        public Element Element { get; protected internal set; }
 
         /// <summary>
         /// Gets or sets behavior instance

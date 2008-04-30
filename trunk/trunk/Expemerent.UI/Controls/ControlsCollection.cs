@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using Expemerent.UI.Dom;
 
 namespace Expemerent.UI.Controls
 {
@@ -76,10 +77,31 @@ namespace Expemerent.UI.Controls
         /// </summary>
         internal void FreeElements()        
         {
-            foreach (var item in this.Items)
+            foreach (var item in Items)
                 item.SetParent(null);
 
             Clear();
+        }
+
+        /// <summary>
+        /// Updates SciterControls bindings
+        /// </summary>
+        internal void UpdateElements()
+        {
+            foreach (var item in this.Items)
+                item.UpdateDomElement();
+        }
+
+        /// <summary>
+        /// Finds a control associated with the specified Element
+        /// </summary>
+        internal BindableControl FindControl(Element element)
+        {
+            foreach (var item in Items)
+                if (item.ElementHandle == element.Handle)
+                    return item;
+
+            return null;
         }
     }
 }

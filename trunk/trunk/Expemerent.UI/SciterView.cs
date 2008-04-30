@@ -25,12 +25,12 @@ namespace Expemerent.UI
         /// <summary>
         /// Gets or sets value of the window handle
         /// </summary>
-        private IntPtr HandleInternal { get; set; }
+        internal IntPtr HandleInternal { get; set; }
 
         /// <summary>
         /// Gets value of the window handle
         /// </summary>
-        internal IntPtr Handle
+        protected IntPtr Handle
         {
             get
             {

@@ -184,9 +184,9 @@ namespace Expemerent.UI.Native
         /// </summary>
         public static void RegisterClass<TType>(SciterView view)
         {
-            Debug.Assert(view != null, "View cannot be null");
+            Debug.Assert(view != null && view.HandleInternal != IntPtr.Zero, "View cannot be null");
 
-            var hvm = SciterHostApi.SciterGetVM(view.Handle);
+            var hvm = SciterHostApi.SciterGetVM(view.HandleInternal);
             var scripting = GetScriptingClasses(view, hvm);
 
             var sciterClassDef = GetClassDef(typeof(TType));

@@ -264,14 +264,14 @@ namespace Expemerent.UI.Native
         /// All events will start first here (in SINKING phase) and if not consumed will end up here.
         /// You can install Window EventHandler only once - it will survive all document reloads.
         /// </summary>
-        private delegate ScDomResult SciterWindowAttachEventHandler(IntPtr hwnd, [MarshalAs(UnmanagedType.FunctionPtr)] ElementEventProc pep, IntPtr tag, EVENT_GROUPS subscription);
+        private delegate ScDomResult SciterWindowAttachEventHandler(IntPtr hwnd, /*[MarshalAs(UnmanagedType.FunctionPtr)] ElementEventProc*/ IntPtr pep, IntPtr tag, EVENT_GROUPS subscription);
 
         /// <summary>
         /// Attach/Detach ElementEventProc to the Sciter window. 
         /// All events will start first here (in SINKING phase) and if not consumed will end up here.
         /// You can install Window EventHandler only once - it will survive all document reloads.
         /// </summary>
-        private delegate ScDomResult SciterWindowDetachEventHandler(IntPtr hwnd, [MarshalAs(UnmanagedType.FunctionPtr)] ElementEventProc pep, IntPtr tag);
+        private delegate ScDomResult SciterWindowDetachEventHandler(IntPtr hwnd, /*[MarshalAs(UnmanagedType.FunctionPtr)] ElementEventProc*/ IntPtr pep, IntPtr tag);
 
         /// <summary>
         /// SendEvent - sends sinking/bubbling event to the child/parent chain of element element.
