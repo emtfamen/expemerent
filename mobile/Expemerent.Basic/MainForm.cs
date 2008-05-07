@@ -6,6 +6,7 @@ using Expemerent.UI.Controls;
 using System.Windows.Forms;
 using Expemerent.UI.Dom;
 using Expemerent.UI.Native;
+using System.ComponentModel;
 
 namespace Expemerent.Basic
 {
@@ -22,30 +23,68 @@ namespace Expemerent.Basic
 
             using (var scope = ElementScope.Create())
             {
-                var input = new TextBoxControl() { Selector = "#input_text" };
-                var label = new TextBoxControl() { Selector = "#static_text" };
-                var slider = new SliderControl() { Selector = "#slider" };
-                var slider_text = new TextBoxControl() { Selector = "#slider_text" };
-                var title = new TextBoxControl() { Selector = "#title" };
+                components = components ?? new Container();
+                var bindingSource = new System.Windows.Forms.BindingSource(components);
+                var bindingList = new BindingList<Contact>()  { 
+                new Contact() { FirstName = "f1", LastName = "s1" }, 
+                new Contact() { FirstName = "f2", LastName = "s2" },
+                new Contact() { FirstName = "f3", LastName = "s3" },
+                new Contact() { FirstName = "f4", LastName = "s4" } 
+            };
+                bindingList.AllowEdit = true;
+                bindingList.AllowRemove = true;
+                bindingList.AllowNew = true;
 
-                title.Mouse += (s, e) => { title.Text = String.Format("Мыша: {0}", e.MouseEvent); };
+                bindingSource.DataSource = bindingList;
 
-                slider_text.Text = "10";
-                label.IsEnabled = false;
+                var first = new TextBoxControl() { Selector = "#first_name" };
+                var second = new TextBoxControl() { Selector = "#last_name" };
+                var list = new ListBoxControl() { Selector = "#contacts", DisplayMember = "First" };
+                var addnew = new ButtonControl() { Selector = "#addnew" };
+                var delete = new ButtonControl() { Selector = "#delete" };
 
-                input.DataBindings.Add("Text", label, "Text");
-                slider.DataBindings.Add("Value", slider_text, "Text");
+                list.Format += (s, e) => { var contact = ((Contact)e.Value); e.Value = contact.FirstName + ", " + contact.LastName; };
+                addnew.Click += (s, e) => { bindingSource.Position = bindingSource.Add(new Contact()); };
+                delete.Click += (s, e) => { bindingSource.RemoveCurrent(); };
 
-                SciterControls.Add(title);
-                SciterControls.Add(slider);
-                SciterControls.Add(input);
-                SciterControls.Add(label);
-                SciterControls.Add(slider_text);
+
+                first.DataBindings.Add("Text", bindingSource, "FirstName");
+                second.DataBindings.Add("Text", bindingSource, "LastName");
+
+                list.DataSource = bindingSource;
+
+                SciterControls.Add(addnew);
+                SciterControls.Add(delete);
+                SciterControls.Add(first);
+                SciterControls.Add(second);
+                SciterControls.Add(list);
 
                 LoadResource<MainForm>("Html/Default.htm");
-
-                slider.Value = slider.Value + 7;
             }
         }
+
+        #region Support classes
+        /// <summary>
+        /// Contact information
+        /// </summary>
+        public class Contact
+        {
+            /// <summary>
+            /// Gets or sets First name
+            /// </summary>
+            public string FirstName { get; set; }
+
+            /// <summary>
+            /// Gets or sets Second name
+            /// </summary>
+            public string LastName { get; set; }
+
+            /// <summary>
+            /// Gets or sets contact address
+            /// </summary>
+            public string Address { get; set; }
+        }
+        #endregion
+
     }
 }

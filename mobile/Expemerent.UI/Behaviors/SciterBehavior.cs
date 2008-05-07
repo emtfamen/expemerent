@@ -29,7 +29,7 @@ namespace Expemerent.UI.Behaviors
         /// <summary>
         /// Gets a value indicating whether behavior have a subscribers
         /// </summary>
-        protected bool HaveSubscribers
+        protected bool HasEvents
         {
             [DebuggerStepThrough]
             get { return _events != null; }
@@ -323,7 +323,7 @@ namespace Expemerent.UI.Behaviors
 
         protected virtual void OnAttached(ElementEventArgs e)
         {
-            if (HaveSubscribers)
+            if (HasEvents)
             {
                 var handler = (EventHandler<ElementEventArgs>)Events[AttachedEvent];
                 if (handler != null)
@@ -333,7 +333,7 @@ namespace Expemerent.UI.Behaviors
 
         protected virtual void OnDetached(ElementEventArgs e)
         {
-            if (HaveSubscribers)
+            if (HasEvents)
             {
                 var handler = (EventHandler<ElementEventArgs>)Events[DetachedEvent];
                 if (handler != null)
@@ -343,7 +343,7 @@ namespace Expemerent.UI.Behaviors
 
         protected virtual void OnMouseEvent(MouseEventArgs e)
         {
-            if (HaveSubscribers)
+            if (HasEvents)
             {
                 var handler = (EventHandler<MouseEventArgs>)Events[MouseEvent];
                 if (handler != null)
@@ -353,7 +353,7 @@ namespace Expemerent.UI.Behaviors
 
         protected virtual void OnTimer(ElementEventArgs e)
         {
-            if (HaveSubscribers)
+            if (HasEvents)
             {
                 var handler = (EventHandler<ElementEventArgs>)Events[TimerEvent];
                 if (handler != null)
@@ -363,7 +363,7 @@ namespace Expemerent.UI.Behaviors
 
         protected virtual void OnDrawEvent(DrawEventArgs e)
         {
-            if (HaveSubscribers)
+            if (HasEvents)
             {
                 var handler = (EventHandler<DrawEventArgs>)Events[DrawEvent];
                 if (handler != null)
@@ -373,7 +373,7 @@ namespace Expemerent.UI.Behaviors
 
         protected virtual void OnFocusEvent(FocusEventArgs e)
         {
-            if (HaveSubscribers)
+            if (HasEvents)
             {
                 var handler = (EventHandler<FocusEventArgs>)Events[FocusEvent];
                 if (handler != null)
@@ -383,7 +383,7 @@ namespace Expemerent.UI.Behaviors
 
         protected virtual void OnKeyEvent(KeyEventArgs e)
         {
-            if (HaveSubscribers)
+            if (HasEvents)
             {
                 var handler = (EventHandler<KeyEventArgs>)Events[KeyEvent];
                 if (handler != null)
@@ -393,7 +393,7 @@ namespace Expemerent.UI.Behaviors
 
         protected virtual void OnScriptingMethodCall(ScriptingMethodCall e)
         {
-            if (HaveSubscribers)
+            if (HasEvents)
             {
                 var handler = (EventHandler<ScriptingMethodCall>)Events[ScriptingMethodCallEvent];
                 if (handler != null)
@@ -403,7 +403,7 @@ namespace Expemerent.UI.Behaviors
 
         protected virtual void OnBehaviorEvent(BehaviorEventArgs e)
         {
-            if (HaveSubscribers)
+            if (HasEvents)
             {
                 var handler = (EventHandler<BehaviorEventArgs>)Events[BehaviorEventEvent];
                 if (handler != null)
@@ -413,7 +413,7 @@ namespace Expemerent.UI.Behaviors
 
         protected virtual void OnMethodCall(MethodCallEventArgs e)
         {
-            if (HaveSubscribers)
+            if (HasEvents)
             {
                 var handler = (EventHandler<MethodCallEventArgs>)Events[MethodCallEvent];
                 if (handler != null)
@@ -423,7 +423,7 @@ namespace Expemerent.UI.Behaviors
 
         protected virtual void OnSize(ElementEventArgs e)
         {
-            if (HaveSubscribers)
+            if (HasEvents)
             {
                 var handler = (EventHandler<ElementEventArgs>)Events[SizeEvent];
                 if (handler != null)
@@ -433,7 +433,7 @@ namespace Expemerent.UI.Behaviors
 
         protected virtual void OnDataArrived(DataArrivedEventArgs e)
         {
-            if (HaveSubscribers)
+            if (HasEvents)
             {
                 var handler = (EventHandler<DataArrivedEventArgs>)Events[DataArrivedEvent];
                 if (handler != null)

@@ -551,6 +551,9 @@ namespace aux
 
     operator const wchar_t*() { return buffer.data(); }
     size_t length() const { return buffer.length(); }
+
+    pod::wchar_buffer& get_buffer() { return buffer; }
+
   };
 
   class w2utf 

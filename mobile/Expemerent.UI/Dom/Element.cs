@@ -10,23 +10,13 @@ namespace Expemerent.UI.Dom
     /// <summary>
     /// Represents a sciter HTML element 
     /// </summary>
-    public sealed class Element
+    public sealed class Element : IStyleAccessor, IAttributeAccessor
     {
         #region Internal data
         /// <summary>
         /// The element handle
         /// </summary>
         private IntPtr _handle;
-
-        /// <summary>
-        /// See <see cref="Attributes"/> property
-        /// </summary>
-        private AttributeCollection _attributes;
-
-        /// <summary>
-        /// See <see cref="Style"/> property
-        /// </summary>
-        private Style _style;
         
         /// <summary>
         /// Gets instance of sciter dom api
@@ -56,6 +46,14 @@ namespace Expemerent.UI.Dom
         #endregion
 
         #region Construction
+        /// <summary>
+        /// Creates a new handle without adding it to the tree
+        /// </summary>
+        public static ElementRef CreateElement(String tag, String text)
+        {
+            return SciterDomApi.CreateElement(tag, text);
+        }
+
         /// <summary>
         /// Creates a new instance of the <see cref="Element"/> class
         /// </summary>
@@ -125,18 +123,19 @@ namespace Expemerent.UI.Dom
         /// <summary>
         /// Gets attributes collection
         /// </summary>
-        public AttributeCollection Attributes
+        public IAttributeAccessor Attributes
         {
             [DebuggerStepThrough]
-            get { return _attributes = _attributes ?? new AttributeCollection(this); }
+            get { return this; }
         }
 
         /// <summary>
         /// Gets a style object
         /// </summary>
-        public Style Style
+        public IStyleAccessor Style
         {
-            get { return _style = _style ?? new Style(this); }
+            [DebuggerStepThrough]
+            get { return this; }
         }
         #endregion
 
@@ -259,8 +258,12 @@ namespace Expemerent.UI.Dom
         }
 
         /// <summary>
-        /// Attaches event handler to the element
+        /// Attaches event handler to the element. 
         /// </summary>
+        /// <remarks>
+        /// Element do not hold reference to the behavior instance. 
+        /// Is is responsibility of calling code to protect behavior from being garbage collected
+        /// </remarks>
         public void AttachBehavior(SciterBehavior behavior)
         {
             SciterDomApi.AttachEventHandler(this, behavior);
@@ -398,5 +401,93 @@ namespace Expemerent.UI.Dom
             Handle = IntPtr.Zero;
         } 
 	    #endregion    
+
+        #region Object equality
+        /// <summary>
+        /// Determines whether the specified <see cref="Element"/> is equal to the current <see cref="Element"/>
+        /// </summary>
+        public override bool Equals(object obj)
+        {
+            var element = obj as Element;
+            if (element != null)
+                return Handle == element.Handle;
+
+            return false;
+        }
+
+        /// <summary>
+        /// Evaluates object hash code
+        /// </summary>
+        public override int GetHashCode()
+        {
+            return Handle.GetHashCode();
+        } 
+        #endregion
+
+        #region IStyleAccessor Members
+        /// <summary>
+        /// Gets or sets style attribute
+        /// </summary>
+        string IStyleAccessor.this[string name]
+        {
+            [DebuggerStepThrough]
+            get { return SciterDomApi.GetStyleAttribute(this, name); }
+            [DebuggerStepThrough]
+            set { SciterDomApi.SetStyleAttribute(this, name, value); }
+        }
+
+        #endregion
+
+        #region IAttributeAccessor Members
+        /// <summary>
+        /// Gets or sets attribute value by name
+        /// </summary>
+        string IAttributeAccessor.this[string name]
+        {
+            get { return SciterDomApi.GetAttributeByName(this, name); }
+            set { SciterDomApi.SetAttributeByName(this, name, value); }
+        }
+
+        /// <summary>
+        /// Gets a number of element's attribues
+        /// </summary>
+        int IAttributeAccessor.Count
+        {
+            [DebuggerStepThrough]
+            get { return SciterDomApi.GetAttributeCount(this); }
+        }
+
+        /// <summary>
+        /// Clears attributes collection
+        /// </summary>
+        void IAttributeAccessor.Clear()
+        {
+            SciterDomApi.ClearAttributes(this);
+        }
+
+        #endregion
+
+        #region IEnumerable<KeyValuePair<string,string>> Members
+        /// <summary>
+        /// Gets attribues enumerator
+        /// </summary>
+        IEnumerator<KeyValuePair<string, string>> IEnumerable<KeyValuePair<string,string>>.GetEnumerator()
+        {
+            for (int i = 0; i < Attributes.Count; i++)
+                yield return SciterDomApi.GetAttribute(this, i);
+        }
+
+        #endregion
+
+        #region IEnumerable Members
+        /// <summary>
+        /// Gets attribues enumerator
+        /// </summary>
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return Attributes.GetEnumerator();
+        }
+
+        #endregion
     }
 }

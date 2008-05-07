@@ -39,7 +39,7 @@ namespace Expemerent.UI.Dom
         Visited = ELEMENT_STATE_BITS.STATE_VISITED,
         
         /// <summary>
-        /// selector :current, current item in collection, e.g. current <option> in <select>
+        /// selector :current, current item in collection, e.g. current &lt;option&gt; in &lt;select&gt;
         ///</summary>
         Current = ELEMENT_STATE_BITS.STATE_CURRENT,
         

@@ -73,7 +73,7 @@ namespace Expemerent.UI.Controls
         }
 
         /// <summary>
-        /// Frees element 
+        /// Empties collection by setting <see cref="BindableControl.Parent"/> to the <c>null</c> value 
         /// </summary>
         internal void FreeElements()        
         {
@@ -84,7 +84,7 @@ namespace Expemerent.UI.Controls
         }
 
         /// <summary>
-        /// Updates SciterControls bindings
+        /// Forces dom element update for contained controls
         /// </summary>
         internal void UpdateElements()
         {

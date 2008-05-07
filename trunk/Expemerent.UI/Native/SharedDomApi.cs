@@ -423,6 +423,17 @@ namespace Expemerent.UI.Native
         {
             CheckResult(HTMLayoutWindowDetachEventHandler(hWnd, SciterHostApi.ElementEventProcEntryPoint, InstanceProtector.Protect(bhv)));
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int GetElementIndex(Element element)
+        {
+            var index = default(int);
+            CheckResult(HTMLayoutGetElementIndex(element.Handle, out index));
+
+            return index;
+        }
         #endregion
 
         #region Private implementation

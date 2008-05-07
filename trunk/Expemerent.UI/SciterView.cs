@@ -250,14 +250,6 @@ namespace Expemerent.UI
         }
 
         /// <summary>
-        /// Creates a new handle without adding it to the tree
-        /// </summary>
-        public ElementRef CreateElement(String tag, String text)
-        {
-            return SciterDomApi.CreateElement(tag, text);
-        }
-
-        /// <summary>
         /// Registers scripting class 
         /// </summary>
         public void RegisterClass<TType>() where TType : new()

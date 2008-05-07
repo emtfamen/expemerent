@@ -13,6 +13,11 @@ namespace Expemerent.UI.Controls
     public class CheckBoxControl : InputControl
     {
         /// <summary>
+        /// 
+        /// </summary>
+        private readonly static object CheckedChangedEvent = new object();
+
+        /// <summary>
         /// Creates a new instance of the <see cref="InputControl"/> class
         /// </summary>
         public CheckBoxControl()
@@ -22,16 +27,23 @@ namespace Expemerent.UI.Controls
         /// <summary>
         /// Occurs when button was pressed
         /// </summary>
-        public event EventHandler CheckedChanged;
+        public event EventHandler CheckedChanged
+        {
+            add { Events.AddHandler(CheckedChangedEvent, value); }
+            remove { Events.RemoveHandler(CheckedChangedEvent, value); }
+        }
 
         /// <summary>
         /// Raises onclick event
         /// </summary>
         protected virtual void OnCheckedChanged(EventArgs e)
         {
-            var handler = CheckedChanged;
-            if (handler != null)
-                handler(this, e);
+            if (HasEvents)
+            {
+                var handler = (EventHandler)Events[CheckedChangedEvent];
+                if (handler != null)
+                    handler(this, e);
+            }
         }
 
         /// <summary>

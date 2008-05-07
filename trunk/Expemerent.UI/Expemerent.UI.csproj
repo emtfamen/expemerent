@@ -79,17 +79,23 @@
     </Compile>
     <Compile Include="Controls\CheckBoxControl.cs">
     </Compile>
+    <Compile Include="Controls\ContainerControl.cs" />
     <Compile Include="Controls\ControlsCollection.cs" />
+    <Compile Include="Controls\ConvertUtility.cs" />
     <Compile Include="Controls\InputControl.cs">
     </Compile>
+    <Compile Include="Controls\ISciterControl.cs" />
+    <Compile Include="Controls\ListBoxControl.cs" />
+    <Compile Include="Controls\ListControl.cs" />
     <Compile Include="Controls\SliderControl.cs">
     </Compile>
     <Compile Include="Controls\TextBoxControl.cs">
     </Compile>
     <Compile Include="Dom\ElementLocation.cs" />
     <Compile Include="Dom\ElementState.cs" />
+    <Compile Include="Dom\IAttributeAccessor.cs" />
+    <Compile Include="Dom\IStyleAccessor.cs" />
     <Compile Include="Dom\PopupPlacement.cs" />
-    <Compile Include="ISciterControl.cs" />
     <Compile Include="LazyValue.cs" />
     <Compile Include="Native\BehaviorData.cs" />
     <Compile Include="Native\ElementAreas.cs" />
@@ -103,12 +109,10 @@
     <Compile Include="Behaviors\ScriptingMethodCall.cs" />
     <Compile Include="DataLoadedEventArgs.cs" />
     <Compile Include="DocumentCompleteEventArgs.cs" />
-    <Compile Include="Dom\AttributeCollection.cs" />
     <Compile Include="Dom\Element.cs" />
     <Compile Include="Dom\ElementRef.cs" />
     <Compile Include="Dom\ElementsCollection.cs" />
     <Compile Include="Dom\ElementUtility.cs" />
-    <Compile Include="Dom\Style.cs" />
     <Compile Include="Behaviors\SciterBehavior.cs" />
     <Compile Include="LoadDataEventArgs.cs" />
     <Compile Include="Native\ISciterNotifications.cs">

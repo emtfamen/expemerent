@@ -8,12 +8,44 @@ using System.Collections.Generic;
 using System.Xml;
 
 namespace Expemerent.UI.Controls
-{
+{    
     /// <summary>
-    /// Base implementation of data binding support
+    /// Base implementation of control with databinding support
     /// </summary>
-    public class BindableControl : SciterBehavior, IBindableComponent, INotifyPropertyChanged, IDisposable
+    public class BindableControl : SciterBehavior, IBindableComponent, INotifyPropertyChanged, IAttributeAccessor, IStyleAccessor, IDisposable
     {
+        #region Event keys
+        /// <summary>
+        /// Event key for the <see cref="ParentChanged"/> event
+        /// </summary>
+        private readonly static object ParentChangedEvent = new object();
+
+        /// <summary>
+        /// Event key for the <see cref="PropertyChanged"/> event
+        /// </summary>
+        private readonly static object PropertyChangedEvent = new object();
+
+        /// <summary>
+        /// Event key for the <see cref="Validated"/> event
+        /// </summary>
+        private readonly static object ValidatedEvent = new object();
+
+        /// <summary>
+        /// Event key for the <see cref="Validating"/> event
+        /// </summary>
+        private readonly static object ValidatingEvent = new object();
+
+        /// <summary>
+        /// Event key for the <see cref="Validating"/> event
+        /// </summary>
+        private readonly static object BindingContextChangedEvent = new object();
+
+        /// <summary>
+        /// Event key for the <see cref="Disposing"/> event
+        /// </summary>
+        private readonly static object DisposedEvent = new object();
+        #endregion
+
         #region Class data
         /// <summary>
         /// See <see cref="BindingContext"/> property
@@ -53,12 +85,23 @@ namespace Expemerent.UI.Controls
         /// <summary>
         /// "Offline" collection of element attributes
         /// </summary>
-        private Dictionary<string, string> _attributes;
+        private Dictionary<string, string> _controlAttributes;
 
         /// <summary>
         /// "Offline" collection of element styles
         /// </summary>
-        private Dictionary<string, string> _styles;
+        private Dictionary<string, string> _controlStyle;
+
+        /// <summary>
+        /// Attribues collection
+        /// </summary>
+        private Dictionary<string, string> ControlAttributes { get { return _controlAttributes ?? (_controlAttributes = new Dictionary<string, string>()); } }
+
+        /// <summary>
+        /// Styles collection
+        /// </summary>
+        private Dictionary<string, string> ControlStyle { get { return _controlStyle ?? (_controlStyle = new Dictionary<string, string>()); } }
+
         #endregion
 
         #region Construction
@@ -74,19 +117,19 @@ namespace Expemerent.UI.Controls
 
         #region Properties
         /// <summary>
+        /// Gets accessor to the attributes collection
+        /// </summary>
+        public IAttributeAccessor Attributes { get { return this; } }
+
+        /// <summary>
+        /// Gets accessor to the styles collection
+        /// </summary>
+        public IStyleAccessor Style { get { return this; } }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the control causes validation to be performed on any controls that require validation when it receives focus.
         /// </summary>
         public bool CausesValidation { get; set; } 
-
-        /// <summary>
-        /// Attribues collection
-        /// </summary>
-        private Dictionary<string, string> Attributes { get { return _attributes ?? (_attributes = new Dictionary<string, string>()); } }
-
-        /// <summary>
-        /// Styles collection
-        /// </summary>
-        private Dictionary<string, string> Styles { get { return _styles ?? (_styles = new Dictionary<string, string>()); } }
 
         /// <summary>
         /// Gets or sets enabled state
@@ -222,6 +265,7 @@ namespace Expemerent.UI.Controls
                 {
                     _bindingContext = value;
                     ProcessBindingContextChange();
+                    OnBindingContextChanged(EventArgs.Empty);
                 }
             }
         }
@@ -239,36 +283,68 @@ namespace Expemerent.UI.Controls
         /// <summary>
         /// Occurs when a property value changes.
         /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged
+        {
+            add { Events.AddHandler(PropertyChangedEvent, value); }
+            remove { Events.RemoveHandler(PropertyChangedEvent, value); }
+        }
 
         /// <summary>
         /// Occurs when a control should be validated.
         /// </summary>
-        public event CancelEventHandler Validating;
+        public event CancelEventHandler Validating
+        {
+            add { Events.AddHandler(ValidatingEvent, value); }
+            remove { Events.RemoveHandler(ValidatingEvent, value); }
+        }
 
         /// <summary>
         /// Occurs when a control has been validated.
         /// </summary>
-        public event EventHandler Validated;
+        public event EventHandler Validated
+        {
+            add { Events.AddHandler(ValidatedEvent, value); }
+            remove { Events.RemoveHandler(ValidatedEvent, value); }
+        }
 
         /// <summary>
         /// Occurs when <see cref="Parent"/> of the control has been changed
         /// </summary>
-        public event EventHandler ParentChanged;
+        public event EventHandler ParentChanged
+        {
+            add { Events.AddHandler(ParentChangedEvent, value); }
+            remove { Events.RemoveHandler(ParentChangedEvent, value); }
+        }
+
+        /// <summary>
+        /// Occurs when <see cref="BindingContext"/> of the control has been changed
+        /// </summary>
+        public event EventHandler BindingContextChanged
+        {
+            add { Events.AddHandler(BindingContextChangedEvent, value); }
+            remove { Events.AddHandler(BindingContextChangedEvent, value); }
+        }
 
         /// <summary>
         /// Occurs when component has been disposed
         /// </summary>
-        public event EventHandler Disposed;
+        public event EventHandler Disposed
+        {
+            add { Events.AddHandler(DisposedEvent, value); }
+            remove { Events.RemoveHandler(DisposedEvent, value); }
+        }
 
         /// <summary>
         /// Raises <see cref="Disposed"/> event
         /// </summary>
         protected virtual void OnDisposed(EventArgs e)
         {
-            var handler = Disposed;
-            if (handler != null)
-                handler(this, e);
+            if (HasEvents)
+            {
+                var handler = (EventHandler)Events[DisposedEvent];
+                if (handler != null)
+                    handler(this, e);
+            }
         }
 
         /// <summary>
@@ -276,9 +352,12 @@ namespace Expemerent.UI.Controls
         /// </summary>
         protected virtual void OnValidating(CancelEventArgs e)
         {
-            var handler = Validating;
-            if (handler != null)
-                handler(this, e);
+            if (HasEvents)
+            {
+                var handler = (CancelEventHandler)Events[ValidatingEvent];
+                if (handler != null)
+                    handler(this, e);
+            }
         }
 
         /// <summary>
@@ -286,9 +365,12 @@ namespace Expemerent.UI.Controls
         /// </summary>
         protected virtual void OnValidated(EventArgs e)
         {
-            var handler = Validated;
-            if (handler != null)
-                handler(this, e);
+            if (HasEvents)
+            {
+                var handler = (EventHandler)Events[ValidatedEvent];
+                if (handler != null)
+                    handler(this, e);
+            }
         }
 
         /// <summary>
@@ -296,9 +378,12 @@ namespace Expemerent.UI.Controls
         /// </summary>
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
         {
-            var handler = PropertyChanged;
-            if (handler != null)
-                handler(this, e);
+            if (HasEvents)
+            {
+                var handler = (PropertyChangedEventHandler)Events[PropertyChangedEvent];
+                if (handler != null)
+                    handler(this, e);
+            }
         }
 
         /// <summary>
@@ -306,85 +391,29 @@ namespace Expemerent.UI.Controls
         /// </summary>
         protected virtual void OnParentChanged(EventArgs e)
         {
-            var handler = ParentChanged;
-            if (handler != null)
-                handler(this, e);
+            if (HasEvents)
+            {
+                var handler = (EventHandler)Events[ParentChangedEvent];
+                if (handler != null)
+                    handler(this, e);
+            }
+        }
+
+        /// <summary>
+        /// Raises <see cref="BindingContextChanged"/> event
+        /// </summary>
+        protected virtual void OnBindingContextChanged(EventArgs e)
+        {
+            if (HasEvents)
+            {
+                var handler = (EventHandler)Events[BindingContextChangedEvent];
+                if (handler != null)
+                    handler(this, e);
+            }
         }
         #endregion
 
         #region Protected imterface
-        /// <summary>
-        /// Gets element attribute
-        /// </summary>
-        protected string GetStyle(string name)
-        {
-            var val = default(String);
-            var element = Element;
-            if (element != null)
-            {
-                val = element.Style[name];
-                Styles[name] = val;
-            }
-            else if (!Styles.TryGetValue(name, out val))
-            {
-                val = String.Empty;
-            }
-
-            return val ?? String.Empty;
-        }
-
-        /// <summary>
-        /// Sets element attribute
-        /// </summary>
-        protected void SetStyle(string name, string value)
-        {
-            Styles[name] = value;
-            var element = Element;
-            if (element != null)
-            {
-                element.Style[name] = value;
-                element.Update();
-            }
-
-            OnPropertyChanged(new PropertyChangedEventArgs(String.Empty));
-        }
-
-        /// <summary>
-        /// Gets element attribute
-        /// </summary>
-        protected string GetAttribute(string name)
-        {
-            var val = String.Empty;
-            var element = Element;
-            if (element != null)
-            {
-                val = element.Attributes[name];
-                Attributes[name] = val;
-            }
-            else if (!Attributes.TryGetValue(name, out val))
-            {
-                val = String.Empty;
-            }
-
-            return val ?? String.Empty;
-        }
-
-        /// <summary>
-        /// Sets element attribute
-        /// </summary>
-        protected void SetAttribute(string name, string value)
-        {
-            Attributes[name] = value;
-            var element = Element;
-            if (element != null)
-            {
-                element.Attributes[name] = value;
-                element.Update();
-            }
-
-            OnPropertyChanged(new PropertyChangedEventArgs(String.Empty));
-        }
-
         /// <summary>
         /// Gets element state 
         /// </summary>
@@ -417,17 +446,15 @@ namespace Expemerent.UI.Controls
         /// </summary>
         protected virtual Element GetElement()
         {
-            if (Parent != null && Parent.View != null)
-            {
-                var rootElement = Parent.View.RootElement;
-                return rootElement != null ? rootElement.Find(Selector) : null;
-            }
+            var rootElement = Parent != null ? Parent.RootElement : null;
+            if (rootElement != null)
+                return rootElement.Find(Selector);
 
             return null;
         }
 
         /// <summary>
-        /// Updates DOM element
+        /// Forces control to update handle of the DOM element
         /// </summary>
         protected internal virtual void UpdateDomElement()
         {
@@ -461,17 +488,17 @@ namespace Expemerent.UI.Controls
             var element = Element;
             element.SetState(_stateToSet, _stateToClear);
 
-            if (_attributes != null)
+            if (_controlAttributes != null)
             {
-                foreach (var item in _attributes)
+                foreach (var item in _controlAttributes)
                 {
                     element.Attributes[item.Key] = item.Value;
                 }
             }
 
-            if (_styles != null)
+            if (_controlStyle != null)
             {
-                foreach (var item in _styles)
+                foreach (var item in _controlStyle)
                 {
                     element.Style[item.Key] = item.Value;
                 }
@@ -549,7 +576,95 @@ namespace Expemerent.UI.Controls
 
             ProcessBindingContextChange();
             UpdateDomElement();
-        }        
+
+            OnParentChanged(EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Gets element attribute
+        /// </summary>
+        private string GetStyle(string name)
+        {
+            var val = default(String);
+            var element = Element;
+            if (element != null)
+                val = element.Style[name];
+            else if (!ControlStyle.TryGetValue(name, out val))
+                val = String.Empty;
+
+            return val ?? String.Empty;
+        }
+
+        /// <summary>
+        /// Sets element attribute
+        /// </summary>
+        private void SetStyle(string name, string value)
+        {
+            ControlStyle[name] = value;
+            var element = Element;
+            if (element != null)
+            {
+                element.Style[name] = value;
+                element.Update();
+            }
+
+            OnPropertyChanged(new PropertyChangedEventArgs(String.Empty));
+        }
+
+        /// <summary>
+        /// Gets element attribute
+        /// </summary>
+        private string GetAttribute(string name)
+        {
+            var val = String.Empty;
+            var element = Element;
+            if (element != null)
+                val = element.Attributes[name];
+            else if (!ControlAttributes.TryGetValue(name, out val))
+                val = String.Empty;
+
+            return val ?? String.Empty;
+        }
+
+        /// <summary>
+        /// Sets element attribute
+        /// </summary>
+        private void SetAttribute(string name, string value)
+        {
+            ControlAttributes[name] = value;
+            var element = Element;
+            if (element != null)
+            {
+                element.Attributes[name] = value;
+                element.Update();
+            }
+
+            OnPropertyChanged(new PropertyChangedEventArgs(String.Empty));
+        }
+
+        /// <summary>
+        /// Gets amount of element's attributes
+        /// </summary>
+        private int GetAttributeCount()
+        {
+            var element = Element;
+            if (element != null)
+                return element.Attributes.Count;
+            else
+                return ControlAttributes.Count;
+        }
+
+        /// <summary>
+        /// Gets amount of element's attributes
+        /// </summary>
+        private void ClearAttributes()
+        {
+            var element = Element;
+            if (element != null)
+                element.Attributes.Clear();
+            
+            ControlAttributes.Clear();
+        }
         #endregion
 
         #region Dispose implementation
@@ -591,5 +706,66 @@ namespace Expemerent.UI.Controls
         /// </summary>
         ISite IComponent.Site { get; set; }
         #endregion        
+
+        #region IStyleAccessor implementation
+        /// <summary>
+        /// Gets or sets style attribute
+        /// </summary>
+        string IStyleAccessor.this[string name] 
+        {
+            get { return GetStyle(name); }
+            set { SetStyle(name, value); }
+        }
+        #endregion
+
+        #region IAttributeAccessor implementation
+        /// <summary>
+        /// Gets or sets element attribute
+        /// </summary>
+        string IAttributeAccessor.this[string name] 
+        {
+            get { return GetAttribute(name); }
+            set { SetAttribute(name, value); }
+        }
+
+        /// <summary>
+        /// Gets a number of element's attribues
+        /// </summary>
+        int IAttributeAccessor.Count { get { return GetAttributeCount(); } }
+
+        /// <summary>
+        /// Clears attributes collection
+        /// </summary>
+        void IAttributeAccessor.Clear()
+        {
+            ClearAttributes();
+        }
+        #endregion
+
+        #region IEnumerable<KeyValuePair<string,string>> Members
+        /// <summary>
+        /// Gets attribues enumerator
+        /// </summary>
+        IEnumerator<KeyValuePair<string, string>> IEnumerable<KeyValuePair<string, string>>.GetEnumerator()
+        {
+            var element = Element;
+            if (element != null)
+                return element.Attributes.GetEnumerator();
+            else
+                return ControlAttributes.GetEnumerator();
+        }
+
+        #endregion
+
+        #region IEnumerable Members
+        /// <summary>
+        /// Gets attribues enumerator
+        /// </summary>
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return Attributes.GetEnumerator();
+        }
+
+        #endregion
     }
 }

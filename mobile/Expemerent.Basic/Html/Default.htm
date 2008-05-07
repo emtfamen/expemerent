@@ -1,25 +1,33 @@
 ﻿<html>
-	<head>
-	<title>Expandable List Behavior Demo</title>
-	</head>
-	<body>
-	    <h3 id="title">Проверка</h3>
-	    Hello <br />
-	    <input id="input_text" type="text" value="testing" />
-	    <input id="static_text" type="text" />
-	    <input id="slider" type="hslider" value="hello" />
-	    <span id="slider_text" />
-	    <hr />
-	    Hello <br />Hello <br />Hello <br />Hello <br />Hello <br />Hello <br />
-	    Hello <br />Hello <br />Hello <br />Hello <br />Hello <br />Hello <br />
-	    Hello <br />Hello <br />Hello <br />Hello <br />Hello <br />Hello <br />
-	    Hello <br />Hello <br />Hello <br />Hello <br />Hello <br />Hello <br />
-	    Hello <br />Hello <br />Hello <br />Hello <br />Hello <br />Hello <br />
-	    Hello <br />Hello <br />Hello <br />Hello <br />Hello <br />Hello <br />
-	    Hello <br />Hello <br />Hello <br />Hello <br />Hello <br />Hello <br />
-	    Hello <br />Hello <br />Hello <br />Hello <br />Hello <br />Hello <br />
-	    Hello <br />Hello <br />Hello <br />Hello <br />Hello <br />Hello <br />
-	    Hello <br />Hello <br />Hello <br />Hello <br />Hello <br />Hello <br />
-	    <img src="bender.png" />
-	</body>
+    <head>
+        <title>Просто заголовок</title>
+    </head>
+    <body>
+        <div style="flow: h-flow">
+            <widget id="contacts" type="select" style="width: 100pt;height: 100%%; min-height: 10em" />
+            <fieldset>
+                <legend>Contact</legend>
+                <table>
+                    <tr>
+                        <td>First name:</td>
+                        <td><input type="text" id="first_name" /></td>
+                    </tr>
+                    <tr>
+                        <td>Last name:</td>
+                        <td><input type="text" id="last_name" /></td>
+                    </tr>
+                    <tr>
+                        <td>Address:</td>
+                        <td><input type="text" id="address" /></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <input type="button" value="Delete" id="delete" />
+                            <input type="button" value="AddNew" id="addnew" />
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+        </div>
+    </body>
 </html>
