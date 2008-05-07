@@ -90,6 +90,17 @@ namespace htmlayout
       }
     }
     
+    void clear()
+    {
+      gui_task* next;
+      while(next = pop())
+        delete next;
+    }
+    bool is_empty() const
+    { 
+      return head == 0; 
+    }
+
   private:
     gui_task* pop()
     {

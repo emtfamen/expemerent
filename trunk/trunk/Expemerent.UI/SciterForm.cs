@@ -271,9 +271,9 @@ namespace Expemerent.UI
         }
 
         /// <summary>
-        /// Handles focus events
+        /// Causes validation in all sciter controls
         /// </summary>
-        protected void Validate()
+        protected void PerformValidation()
         {
             if (IsControlsCollectionCreated)
             {
@@ -307,12 +307,12 @@ namespace Expemerent.UI
         }
 
         /// <summary>
-        /// Gets sciter view
+        /// Gets the root element (will be a document.rootElement)
         /// </summary>
-        SciterView ISciterControl.View
+        Element ISciterControl.RootElement
         {
             [DebuggerStepThrough]
-            get { return View; }
+            get { return View != null ? View.RootElement : null; }
         } 
         #endregion
 

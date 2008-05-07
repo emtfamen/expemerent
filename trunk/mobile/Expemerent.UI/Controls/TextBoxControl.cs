@@ -8,10 +8,15 @@ using System.ComponentModel;
 namespace Expemerent.UI.Controls
 {
     /// <summary>
-    /// 
+    /// Provides a common implementation of TextBox 
     /// </summary>
     public class TextBoxControl : InputControl
     {
+        /// <summary>
+        /// Event key for the <see cref="TextChanged"/> event
+        /// </summary>
+        private readonly static object TextChangedEvent = new object();
+
         /// <summary>
         /// Element text
         /// </summary>
@@ -27,16 +32,23 @@ namespace Expemerent.UI.Controls
         /// <summary>
         /// Occurs when button was pressed
         /// </summary>
-        public event EventHandler TextChanged;
+        public event EventHandler TextChanged
+        {
+            add { Events.AddHandler(TextChangedEvent, value); }
+            remove { Events.RemoveHandler(TextChangedEvent, value); }
+        }
 
         /// <summary>
         /// Raises onclick event
         /// </summary>
         protected virtual void OnTextChanged(EventArgs e)
         {
-            var handler = TextChanged;
-            if (handler != null)
-                handler(this, e);
+            if (HasEvents)
+            {
+                var handler = (EventHandler)Events[TextChangedEvent];
+                if (handler != null)
+                    handler(this, e);
+            }
         }
 
         /// <summary>
@@ -79,9 +91,7 @@ namespace Expemerent.UI.Controls
             if (e.Phase == Phase.Bubbling && e.BehaviorEvent == BehaviorEventType.EditValueChanged)
             {
                 _text = Element.Text;
-
                 OnTextChanged(EventArgs.Empty);
-                e.Handled = true;
             }
 
             base.OnBehaviorEvent(e);

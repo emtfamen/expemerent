@@ -1,7 +1,8 @@
 ﻿using Expemerent.UI.Controls;
 using System.Windows.Forms;
+using Expemerent.UI.Dom;
 
-namespace Expemerent.UI
+namespace Expemerent.UI.Controls
 {
     /// <summary>
     /// Defines interface to the Windows.Forms controls with sciter content
@@ -9,9 +10,9 @@ namespace Expemerent.UI
     public interface ISciterControl
     {
         /// <summary>
-        /// Gets View instance for this control
+        /// Gets reference to the control root element 
         /// </summary>
-        SciterView View { get; }
+        Element RootElement { get; }
 
         /// <summary>
         /// Gets a collection of components owned by the control

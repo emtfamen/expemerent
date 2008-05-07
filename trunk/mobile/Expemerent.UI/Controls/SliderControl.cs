@@ -9,6 +9,11 @@ namespace Expemerent.UI.Controls
     public class SliderControl : InputControl    
     {
         /// <summary>
+        /// Event key for the <see cref="ValueChanged"/> event
+        /// </summary>
+        private static readonly object ValueChangedEvent = new object();
+
+        /// <summary>
         /// Creates a new instance of the <see cref="SliderControl"/> class
         /// </summary>
         public SliderControl()
@@ -18,16 +23,23 @@ namespace Expemerent.UI.Controls
         /// <summary>
         /// Occurs when button was pressed
         /// </summary>
-        public event EventHandler ValueChanged;
+        public event EventHandler ValueChanged
+        {
+            add { Events.AddHandler(ValueChangedEvent, value); }
+            remove { Events.RemoveHandler(ValueChangedEvent, value); }
+        }
 
         /// <summary>
         /// Raises onclick event
         /// </summary>
         protected virtual void OnValueChanged(EventArgs e)
         {
-            var handler = ValueChanged;
-            if (handler != null)
-                handler(this, e);
+            if (HasEvents)
+            {
+                var handler = (EventHandler)Events[ValueChangedEvent];
+                if (handler != null)
+                    handler(this, e);
+            }
         }
 
         /// <summary>
@@ -37,13 +49,13 @@ namespace Expemerent.UI.Controls
         {
             get 
             {
-                var value = GetAttribute("value");
+                var value = Attributes["value"];
                 if (!String.IsNullOrEmpty(value))
                     return Int32.Parse(value);
                 
                 return 0;
             }
-            set { SetAttribute("value", value.ToString()); }
+            set { Attributes["value"] = value.ToString(); }
         }
 
         /// <summary>
@@ -54,7 +66,6 @@ namespace Expemerent.UI.Controls
             if (e.Phase == Phase.Bubbling && e.BehaviorEvent == BehaviorEventType.ButtonStateChanged)
             {
                 OnValueChanged(EventArgs.Empty);
-                e.Handled = true;
             }
 
             base.OnBehaviorEvent(e);

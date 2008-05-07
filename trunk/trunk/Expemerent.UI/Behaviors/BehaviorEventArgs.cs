@@ -76,7 +76,7 @@ namespace Expemerent.UI.Behaviors
         EditValueChanged = BEHAVIOR_EVENT_PARAMS.BEHAVIOR_EVENTS.EDIT_VALUE_CHANGED, 
 
         /// <summary>
-        /// selection in <select> changed
+        /// selection in &lt;select&gt; changed
         /// </summary>
         SelectSelectionChanged = BEHAVIOR_EVENT_PARAMS.BEHAVIOR_EVENTS.SELECT_SELECTION_CHANGED, 
         

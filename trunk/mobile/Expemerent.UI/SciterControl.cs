@@ -130,7 +130,7 @@ namespace Expemerent.UI
         /// <summary>
         /// Returns true if collection of sciter controls has been created
         /// </summary>
-        private bool IsControlsCollectionCreated
+        private bool IsControlsCollectionCreated 
         {
             [DebuggerStepThrough]
             get { return _sciterControls != null; }
@@ -154,7 +154,7 @@ namespace Expemerent.UI
         {
             #region Arguments checking
             if (String.IsNullOrEmpty(resourceName))
-                throw new ArgumentNullException("resourceName");
+                throw new ArgumentNullException("resourceName"); 
             #endregion
 
             _loadHtmlRequest = view => view.LoadResource(typeof(TResourceBase), resourceName);
@@ -193,7 +193,7 @@ namespace Expemerent.UI
             [DebuggerStepThrough]
             get { return _behaviors ?? (_behaviors = new Dictionary<string, SciterBehavior>()); }
             private set { _behaviors = null; }
-        }
+        } 
         #endregion
 
         #region Event handling
@@ -239,7 +239,7 @@ namespace Expemerent.UI
                     behavior = newEvent.Behavior;
                 }
             }
-
+            
             e.Behavior = behavior ?? e.Behavior;
         }
 
@@ -271,9 +271,9 @@ namespace Expemerent.UI
         }
 
         /// <summary>
-        /// Handles focus events
+        /// Causes validation in all sciter controls
         /// </summary>
-        protected void Validate()
+        protected void PerformValidation()
         {
             if (IsControlsCollectionCreated)
             {
@@ -307,13 +307,13 @@ namespace Expemerent.UI
         }
 
         /// <summary>
-        /// Gets sciter view
+        /// Gets the root element (will be a document.rootElement)
         /// </summary>
-        SciterView ISciterControl.View
+        Element ISciterControl.RootElement
         {
             [DebuggerStepThrough]
-            get { return View; }
-        }
+            get { return View != null ? View.RootElement : null; }
+        } 
         #endregion
 
         #region Dispose
@@ -327,7 +327,7 @@ namespace Expemerent.UI
                 _sciterControls.FreeElements();
 
             base.Dispose(disposing);
-        }
+        } 
         #endregion
 
         #region ISciterBehavior Members
@@ -378,7 +378,7 @@ namespace Expemerent.UI
         /// Handles timer event
         /// </summary>
         void ISciterBehavior.ProcessTimer(ElementEventArgs e)
-        {
+        { 
         }
 
         /// <summary>

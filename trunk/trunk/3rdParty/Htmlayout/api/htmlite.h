@@ -171,6 +171,19 @@ EXTERN_C  HPRESULT HLAPI HTMLiteRenderOnBitmap(HTMLITE hLite, HBITMAP hbmp,
  **/
 EXTERN_C  HPRESULT HLAPI HTMLiteSetDataReady(HTMLITE hLite, LPCSTR url, LPCBYTE data, DWORD dataSize);
 
+/**Use this function outside of HLN_LOAD_DATA request. This function is needed when you
+ * you have your own http client implemented in your application.
+ *
+ * \param[in] hLite \b HTMLITE, handle.
+ * \param[in] uri \b LPCWSTR, URI of the data requested by HTMLayout.
+ * \param[in] data \b LPBYTE, pointer to data buffer.
+ * \param[in] dataLength \b DWORD, length of the data in bytes.
+ * \param[in] dataType \b UINT, type of resource to load. See HTMLayoutResourceType.
+ * \return \b BOOL, TRUE if HTMLayout accepts the data or \c FALSE if error occured 
+ **/
+
+EXTERN_C  HPRESULT HLAPI HTMLiteSetDataReadyAsync(HTMLITE hLite, LPCSTR uri, LPBYTE data, DWORD dataSize, UINT type);
+
 /**Get minimum width of loaded document 
  * ATTN: for this method to work document shall have following style:
  *    html { overflow: none; }

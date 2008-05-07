@@ -7,10 +7,15 @@ using System.Diagnostics;
 namespace Expemerent.UI.Controls
 {
     /// <summary>
-    /// Control interface to button behavior
+    /// Base implementation of the Button control
     /// </summary>
     public class ButtonControl : InputControl
     {
+        /// <summary>
+        /// Event key for the <see cref="Click"/> event
+        /// </summary>
+        private readonly static object ClickEvent = new object();
+
         /// <summary>
         /// Creates a new instance of the <see cref="ButtonControl"/> class
         /// </summary>
@@ -21,16 +26,23 @@ namespace Expemerent.UI.Controls
         /// <summary>
         /// Occurs when button was pressed
         /// </summary>
-        public event EventHandler Click;
+        public event EventHandler Click
+        {
+            add { Events.AddHandler(ClickEvent, value); }
+            remove { Events.RemoveHandler(ClickEvent, value); }
+        }
 
         /// <summary>
         /// Raises onclick event
         /// </summary>
         protected virtual void OnClick(EventArgs e)
         {
-            var handler = Click;
-            if (handler != null)
-                handler(this, e);
+            if (HasEvents)
+            {
+                var handler = (EventHandler)Events[ClickEvent];
+                if (handler != null)
+                    handler(this, e);
+            }
         }
 
         /// <summary>
@@ -41,7 +53,6 @@ namespace Expemerent.UI.Controls
             if (e.Phase == Phase.Bubbling && e.BehaviorEvent == BehaviorEventType.ButtonPress)
             {
                 OnClick(EventArgs.Empty);
-                e.Handled = true;
             }
 
             base.OnBehaviorEvent(e);

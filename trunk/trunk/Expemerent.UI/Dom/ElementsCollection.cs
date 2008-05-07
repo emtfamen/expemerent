@@ -22,6 +22,11 @@ namespace Expemerent.UI.Dom
         /// </summary>
         public abstract Element this[int index] { get; }
 
+        /// <summary>
+        /// Gets element index in the collection
+        /// </summary>
+        public abstract int IndexOf(Element element);
+
         #region IEnumerable<Element> Members
 
         /// <summary>
@@ -83,6 +88,14 @@ namespace Expemerent.UI.Dom
         {
             return Elements.GetEnumerator();
         }
+
+        /// <summary>
+        /// Gets element index in the collection
+        /// </summary>
+        public override int IndexOf(Element element)
+        {
+            return Elements.IndexOf(element);
+        }
     }
 
     /// <summary>
@@ -139,6 +152,14 @@ namespace Expemerent.UI.Dom
             {
                 yield return this[i];
             }
+        }
+
+        /// <summary>
+        /// Gets element index in the collection
+        /// </summary>
+        public override int IndexOf(Element element)
+        {
+            return SciterDomApi.GetElementIndex(element);
         }
     }
 }
