@@ -38,6 +38,7 @@
 namespace json
 {
   using aux::slice;
+  using aux::wchars;
 
   struct named_value;
   class  string;
@@ -592,18 +593,6 @@ namespace json
     return 0;
   }
 
-  inline bool value::operator == ( const value& rs ) const { 
-      if(v_type != rs.v_type ) return false;
-      if(data.l_val == rs.data.l_val ) return true;
-      if( v_type == V_STRING )
-        return wcscmp(data.s_val->data(), rs.data.s_val->data()) == 0;
-      if( v_type == V_ARRAY )
-        return array_data::equal(data.a_val, rs.data.a_val);
-      //if( v_type == V_MAP )
-      //  return array_data::equal(data.a_val, rs.data.a_val);
-      return false; 
-    }
-
   inline value value::nth(int n) const 
   { 
     if( v_type != V_ARRAY ) return value();
@@ -687,13 +676,16 @@ namespace json
     
     string& operator = (const string& v) { clear(); init(v.psd); return *this; }
     string& operator = (const wchar_t* s) { clear(); if(s) init(string_data::allocate(s)); return *this; }
+    string& operator = (pod::wchar_buffer& wcb) { clear(); if(wcb.length()) init(string_data::allocate(wcb.data(),wcb.length())); }
        
     ~string() { clear(); }
 
     const wchar_t*  chars() const       { return psd? psd->data():L""; }
     int             length() const      { return psd? int(psd->length):0; } 
     operator  const wchar_t*() const    { return chars(); }
-    operator  const aux::wchars() const { return aux::wchars(chars(),length()); }
+    operator  const wchars() const      { return wchars(chars(),length()); }
+
+    bool operator == (const string& rs) const { return (wchars)(*this) == (wchars)(rs); }
   };
 
   inline value::value(const string& s) :v_type(V_UNDEFINED) { set(s); }
@@ -721,6 +713,24 @@ namespace json
             }
     }
     return string();
+  }
+
+  inline bool value::operator == ( const value& rs ) const 
+  { 
+    if(v_type != rs.v_type ) 
+    {
+      if( is_string() ||  rs.is_string())
+        return to_string() == rs.to_string();
+      return false;
+    }
+    if(data.l_val == rs.data.l_val ) return true;
+    if( v_type == V_STRING )
+      return wcscmp(data.s_val->data(), rs.data.s_val->data()) == 0;
+    if( v_type == V_ARRAY )
+      return array_data::equal(data.a_val, rs.data.a_val);
+    //if( v_type == V_MAP )
+    //  return array_data::equal(data.a_val, rs.data.a_val);
+    return false; 
   }
 
   inline void value::set_bytes( slice<byte> bv, bool copy )
