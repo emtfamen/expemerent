@@ -71,7 +71,7 @@ namespace Expemerent.UI
                 _view = value;
                 if (_view != null)
                 {
-                    SciterDomApi.WindowAttachEventHandler(Handle, this, EVENT_GROUPS.HANDLED | EVENT_GROUPS.HANDLE_FOCUS);
+                    SciterDomApi.WindowAttachEventHandler(Handle, this, EVENT_GROUPS.HANDLE_METHOD_CALL | EVENT_GROUPS.HANDLE_SCRIPTING_METHOD_CALL);
 
                     _view.AttachBehavior += (s, e) => OnAttachBehavior(e);
                     _view.DocumentComplete += (s, e) => OnDocumentComplete(e);
@@ -412,7 +412,7 @@ namespace Expemerent.UI
         /// <summary>
         /// Handles scripting calls
         /// </summary>
-        void ISciterBehavior.ProcessScriptingMethodCall(ScriptingMethodCall e)
+        void ISciterBehavior.ProcessScriptingMethodCall(ScriptingMethodCallEventArgs e)
         {
         }
 

@@ -80,6 +80,8 @@
       <Link>sciter-scintilla.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="Html\highlight-links.htm" />
+    <EmbeddedResource Include="Html\sliding-list.htm" />
     <EmbeddedResource Include="Html\scintilla.htm" />
   </ItemGroup>
   <ItemGroup>

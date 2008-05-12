@@ -387,7 +387,6 @@
     UINT methodID; // see: #BEHAVIOR_METHOD_IDENTIFIERS
   };
 
-
   #ifdef __cplusplus 
 
   // script alike calls

@@ -74,8 +74,8 @@ namespace Expemerent.UI.Native
 
             public IntPtr request_id;
 
-            IntPtr principal;
-            IntPtr initiator;
+            public IntPtr principal;
+            public IntPtr initiator;
 
             public String GetUri()
             {
@@ -123,6 +123,8 @@ namespace Expemerent.UI.Native
 
             public IntPtr elementProc; /**< [out] pointer to ElementEventProc function.*/
             public IntPtr elementTag; /**< [out] tag value, passed as is into pointer ElementEventProc function.*/
+
+            public EVENT_GROUPS elementEvents { get { return EVENT_GROUPS.HANDLE_ALL; } set { ; } }
 
             public String GetBehaviorName()
             {

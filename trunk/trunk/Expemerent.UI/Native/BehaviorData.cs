@@ -319,7 +319,7 @@ namespace Expemerent.UI.Native
         /// <summary>
         ///key scan code, or character unicode for KEY_CHAR
         ///</summary>
-        internal UINT key_code;
+        internal int key_code;
 
         /// <summary>
         ///KEYBOARD_STATES   
@@ -505,23 +505,23 @@ namespace Expemerent.UI.Native
         ///</summary>
         internal BOOL is_on_icon;
 
-#if HTMLAYOUT
         /// <summary>
         ///element that is being dragged over, this field is not NULL if (cmd & DRAGGING) != 0
         ///</summary>
-        internal HELEMENT dragging;    
+        ///TODO: Only in htmlayout
+        ///internal HELEMENT dragging;
 
         /// <summary>
         /// see DRAGGING_TYPE. 
         ///</summary>
-        internal UINT dragging_mode;
-#endif
+        ///TODO: Only in htmlayout
+        ///internal UINT dragging_mode;
     }
 
     [StructLayout(LayoutKind.Sequential)]
     internal struct METHOD_PARAMS
     {
-        internal enum BEHAVIOR_METHOD_IDENTIFIERS
+        internal enum BEHAVIOR_METHOD_IDENTIFIERS 
         {
             DO_CLICK = 0,
             GET_TEXT_VALUE = 1,
@@ -571,7 +571,59 @@ namespace Expemerent.UI.Native
         /// <summary>
         /// see: #BEHAVIOR_METHOD_IDENTIFIERS
         /// </summary>
-        internal UINT methodID;
+        internal int methodID;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct XCALL_PARAMS
+    {
+        /// <summary>
+        /// see: #BEHAVIOR_METHOD_IDENTIFIERS
+        /// </summary>
+        internal int methodID;
+
+        ///<summary>
+        /// method name
+        ///</summary>
+        internal LPCSTR name;
+
+        /// <summary>
+        /// argument count
+        ///</summary>
+        internal UINT argc;
+
+        /// <summary>
+        /// vector of arguments [SCITER_VALUE]
+        ///</summary>
+        internal IntPtr argv;
+
+        /// <summary>
+        /// return value
+        ///</summary>
+        internal JsonValue result;
+
+        /// <summary>
+        /// Returns method name
+        /// </summary>
+        public string GetName()
+        {
+            return MarshalUtility.PtrToStringAnsi(name);
+        }
+
+        /// <summary>
+        /// Returns arguments array
+        /// </summary>
+        public object[] GetArgs()
+        {
+            var args = new object[argc];
+            for (int i = 0; i < argc; i++)
+            {
+                var json_val = (JsonValue)Marshal.PtrToStructure(new IntPtr(argv.ToInt64() + i * JsonValue.SizeOf), typeof(JsonValue));
+                args[i] = json_val.GetValue();
+            }
+
+            return args;
+        }
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -620,5 +672,4 @@ namespace Expemerent.UI.Native
             return args;
         }
     }
-
 }

@@ -11,31 +11,6 @@ namespace Expemerent.UI.Behaviors
     /// </summary>
     public class SciterBehavior : ISciterBehavior
     {
-        #region Private data
-        /// <summary>
-        /// Subscriptions collection
-        /// </summary>
-        private EventHandlerList _events;
-
-        /// <summary>
-        /// Gets a subscriptions collection
-        /// </summary>
-        protected EventHandlerList Events
-        {
-            [DebuggerStepThrough]
-            get { return _events ?? (_events = new EventHandlerList()); }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether behavior have a subscribers
-        /// </summary>
-        protected bool HasEvents
-        {
-            [DebuggerStepThrough]
-            get { return _events != null; }
-        }
-        #endregion
-
         #region Event keys
         /// <summary>
         /// Handles attach event
@@ -98,6 +73,36 @@ namespace Expemerent.UI.Behaviors
         private readonly static object FocusEvent = new object();
         #endregion
 
+        #region Private data
+        /// <summary>
+        /// Subscriptions collection
+        /// </summary>
+        private EventHandlerList _events;
+
+        /// <summary>
+        /// Gets a subscriptions collection
+        /// </summary>
+        protected EventHandlerList Events
+        {
+            [DebuggerStepThrough]
+            get { return _events ?? (_events = new EventHandlerList()); }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether behavior have a subscribers
+        /// </summary>
+        protected bool HasEvents
+        {
+            [DebuggerStepThrough]
+            get { return _events != null; }
+        }
+
+        /// <summary>
+        /// Specifies which notifications should be recieved by the behavior
+        /// </summary>
+        protected internal virtual EventGroups EventGroups { [DebuggerStepThrough] get { return EventGroups.All; } }
+        #endregion
+
         #region ISciterBehavior Members
 
         /// <summary>
@@ -123,7 +128,7 @@ namespace Expemerent.UI.Behaviors
         /// </summary>
         void ISciterBehavior.ProcessMouse(MouseEventArgs e)
         {
-            OnMouseEvent(e);
+            OnMouse(e);
         }
 
         /// <summary>
@@ -131,7 +136,7 @@ namespace Expemerent.UI.Behaviors
         /// </summary>
         void ISciterBehavior.ProcessKey(KeyEventArgs e)
         {
-            OnKeyEvent(e);
+            OnKey(e);
         }
 
         /// <summary>
@@ -139,7 +144,7 @@ namespace Expemerent.UI.Behaviors
         /// </summary>
         void ISciterBehavior.ProcessFocus(FocusEventArgs e)
         {
-            OnFocusEvent(e);
+            OnFocus(e);
         }
 
         /// <summary>
@@ -147,7 +152,7 @@ namespace Expemerent.UI.Behaviors
         /// </summary>
         void ISciterBehavior.ProcessDraw(DrawEventArgs e)
         {
-            OnDrawEvent(e);
+            OnDraw(e);
         }
 
         /// <summary>
@@ -193,7 +198,7 @@ namespace Expemerent.UI.Behaviors
         /// <summary>
         /// Handles scripting calls
         /// </summary>
-        void ISciterBehavior.ProcessScriptingMethodCall(ScriptingMethodCall e)
+        void ISciterBehavior.ProcessScriptingMethodCall(ScriptingMethodCallEventArgs e)
         {
             OnScriptingMethodCall(e);
         }
@@ -293,7 +298,7 @@ namespace Expemerent.UI.Behaviors
         /// <summary>
         /// Handles scripting method
         /// </summary>
-        public event EventHandler<ScriptingMethodCall> ScriptingMethodCall
+        public event EventHandler<ScriptingMethodCallEventArgs> ScriptingMethodCall
         {
             add { Events.AddHandler(ScriptingMethodCallEvent, value); }
             remove { Events.RemoveHandler(ScriptingMethodCallEvent, value); }
@@ -320,127 +325,197 @@ namespace Expemerent.UI.Behaviors
         #endregion
 
         #region Protected implementation
-
+        /// <summary>
+        /// Raises <see cref="Attached"/> event
+        /// </summary>
         protected virtual void OnAttached(ElementEventArgs e)
         {
             if (HasEvents)
             {
                 var handler = (EventHandler<ElementEventArgs>)Events[AttachedEvent];
                 if (handler != null)
+                {
+                    e.Handled = true;
                     handler(this, e);
+                }
             }
         }
 
+        /// <summary>
+        /// Raises <see cref="Detached"/> event
+        /// </summary>
         protected virtual void OnDetached(ElementEventArgs e)
         {
             if (HasEvents)
             {
                 var handler = (EventHandler<ElementEventArgs>)Events[DetachedEvent];
                 if (handler != null)
+                {
+                    e.Handled = true;
                     handler(this, e);
+                }
             }
         }
 
-        protected virtual void OnMouseEvent(MouseEventArgs e)
+        /// <summary>
+        /// Raises <see cref="Mouse"/> event
+        /// </summary>
+        protected virtual void OnMouse(MouseEventArgs e)
         {
             if (HasEvents)
             {
                 var handler = (EventHandler<MouseEventArgs>)Events[MouseEvent];
                 if (handler != null)
+                {
+                    e.Handled = true;
                     handler(this, e);
+                }
             }
         }
 
+        /// <summary>
+        /// Raises <see cref="Timer"/> event
+        /// </summary>
         protected virtual void OnTimer(ElementEventArgs e)
         {
             if (HasEvents)
             {
                 var handler = (EventHandler<ElementEventArgs>)Events[TimerEvent];
                 if (handler != null)
+                {
+                    e.Handled = true;
                     handler(this, e);
+                }
             }
         }
 
-        protected virtual void OnDrawEvent(DrawEventArgs e)
+        /// <summary>
+        /// Raises <see cref="Draw"/> event
+        /// </summary>
+        protected virtual void OnDraw(DrawEventArgs e)
         {
             if (HasEvents)
             {
                 var handler = (EventHandler<DrawEventArgs>)Events[DrawEvent];
                 if (handler != null)
+                {
+                    e.Handled = true;
                     handler(this, e);
+                }
             }
         }
 
-        protected virtual void OnFocusEvent(FocusEventArgs e)
+        /// <summary>
+        /// Raises <see cref="Focus"/> event
+        /// </summary>
+        protected virtual void OnFocus(FocusEventArgs e)
         {
             if (HasEvents)
             {
                 var handler = (EventHandler<FocusEventArgs>)Events[FocusEvent];
                 if (handler != null)
+                {
+                    e.Handled = true;
                     handler(this, e);
+                }
             }
         }
 
-        protected virtual void OnKeyEvent(KeyEventArgs e)
+        /// <summary>
+        /// Raises <see cref="Key"/> event
+        /// </summary>
+        protected virtual void OnKey(KeyEventArgs e)
         {
             if (HasEvents)
             {
                 var handler = (EventHandler<KeyEventArgs>)Events[KeyEvent];
                 if (handler != null)
+                {
+                    e.Handled = true;
                     handler(this, e);
+                }
             }
         }
 
-        protected virtual void OnScriptingMethodCall(ScriptingMethodCall e)
+        /// <summary>
+        /// Raises <see cref="ScriptingMethodCall"/> event
+        /// </summary>
+        protected virtual void OnScriptingMethodCall(ScriptingMethodCallEventArgs e)
         {
             if (HasEvents)
             {
-                var handler = (EventHandler<ScriptingMethodCall>)Events[ScriptingMethodCallEvent];
+                var handler = (EventHandler<ScriptingMethodCallEventArgs>)Events[ScriptingMethodCallEvent];
                 if (handler != null)
+                {
+                    e.Handled = true;
                     handler(this, e);
+                }
             }
         }
 
+        /// <summary>
+        /// Raises <see cref="BehaviorEvent"/> event
+        /// </summary>
         protected virtual void OnBehaviorEvent(BehaviorEventArgs e)
         {
             if (HasEvents)
             {
                 var handler = (EventHandler<BehaviorEventArgs>)Events[BehaviorEventEvent];
                 if (handler != null)
+                {
+                    e.Handled = true;
                     handler(this, e);
+                }
             }
         }
 
+        /// <summary>
+        /// Raises <see cref="MethodCall"/> event
+        /// </summary>
         protected virtual void OnMethodCall(MethodCallEventArgs e)
         {
             if (HasEvents)
             {
                 var handler = (EventHandler<MethodCallEventArgs>)Events[MethodCallEvent];
                 if (handler != null)
+                {
+                    e.Handled = true;
                     handler(this, e);
+                }
             }
         }
 
+        /// <summary>
+        /// Raises <see cref="Size"/> event
+        /// </summary>
         protected virtual void OnSize(ElementEventArgs e)
         {
             if (HasEvents)
             {
                 var handler = (EventHandler<ElementEventArgs>)Events[SizeEvent];
                 if (handler != null)
+                {
+                    e.Handled = true;
                     handler(this, e);
+                }
             }
         }
 
+        /// <summary>
+        /// Raises <see cref="DataArrived"/> event
+        /// </summary>
         protected virtual void OnDataArrived(DataArrivedEventArgs e)
         {
             if (HasEvents)
             {
                 var handler = (EventHandler<DataArrivedEventArgs>)Events[DataArrivedEvent];
                 if (handler != null)
+                {
+                    e.Handled = true;
                     handler(this, e);
+                }
             }
         }
-
         #endregion
     }
 }

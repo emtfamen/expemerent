@@ -50,6 +50,39 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "htmlayout", "htmlayout", "{
 		3rdParty\Htmlayout\api\json-value.h = 3rdParty\Htmlayout\api\json-value.h
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "behaviors", "behaviors", "{BA92060A-E232-46E6-9F7D-A6A349AE526A}"
+	ProjectSection(SolutionItems) = preProject
+		3rdParty\Htmlayout\api\behaviors\behavior_accesskeys.cpp = 3rdParty\Htmlayout\api\behaviors\behavior_accesskeys.cpp
+		3rdParty\Htmlayout\api\behaviors\behavior_actions.cpp = 3rdParty\Htmlayout\api\behaviors\behavior_actions.cpp
+		3rdParty\Htmlayout\api\behaviors\behavior_aux.h = 3rdParty\Htmlayout\api\behaviors\behavior_aux.h
+		3rdParty\Htmlayout\api\behaviors\behavior_chart.cpp = 3rdParty\Htmlayout\api\behaviors\behavior_chart.cpp
+		3rdParty\Htmlayout\api\behaviors\behavior_clock.cpp = 3rdParty\Htmlayout\api\behaviors\behavior_clock.cpp
+		3rdParty\Htmlayout\api\behaviors\behavior_clock_graphin.cpp = 3rdParty\Htmlayout\api\behaviors\behavior_clock_graphin.cpp
+		3rdParty\Htmlayout\api\behaviors\behavior_collapsible_by_icon.cpp = 3rdParty\Htmlayout\api\behaviors\behavior_collapsible_by_icon.cpp
+		3rdParty\Htmlayout\api\behaviors\behavior_command.cpp = 3rdParty\Htmlayout\api\behaviors\behavior_command.cpp
+		3rdParty\Htmlayout\api\behaviors\behavior_editable_select.cpp = 3rdParty\Htmlayout\api\behaviors\behavior_editable_select.cpp
+		3rdParty\Htmlayout\api\behaviors\behavior_expandable_list.cpp = 3rdParty\Htmlayout\api\behaviors\behavior_expandable_list.cpp
+		3rdParty\Htmlayout\api\behaviors\behavior_font_size.cpp = 3rdParty\Htmlayout\api\behaviors\behavior_font_size.cpp
+		3rdParty\Htmlayout\api\behaviors\behavior_form.cpp = 3rdParty\Htmlayout\api\behaviors\behavior_form.cpp
+		3rdParty\Htmlayout\api\behaviors\behavior_grid.cpp = 3rdParty\Htmlayout\api\behaviors\behavior_grid.cpp
+		3rdParty\Htmlayout\api\behaviors\behavior_gripper.cpp = 3rdParty\Htmlayout\api\behaviors\behavior_gripper.cpp
+		3rdParty\Htmlayout\api\behaviors\behavior_hover.cpp = 3rdParty\Htmlayout\api\behaviors\behavior_hover.cpp
+		3rdParty\Htmlayout\api\behaviors\behavior_hyperlink.cpp = 3rdParty\Htmlayout\api\behaviors\behavior_hyperlink.cpp
+		3rdParty\Htmlayout\api\behaviors\behavior_path.cpp = 3rdParty\Htmlayout\api\behaviors\behavior_path.cpp
+		3rdParty\Htmlayout\api\behaviors\behavior_popup.cpp = 3rdParty\Htmlayout\api\behaviors\behavior_popup.cpp
+		3rdParty\Htmlayout\api\behaviors\behavior_rtc_current_objects.cpp = 3rdParty\Htmlayout\api\behaviors\behavior_rtc_current_objects.cpp
+		3rdParty\Htmlayout\api\behaviors\behavior_scroller.cpp = 3rdParty\Htmlayout\api\behaviors\behavior_scroller.cpp
+		3rdParty\Htmlayout\api\behaviors\behavior_select_buddy.cpp = 3rdParty\Htmlayout\api\behaviors\behavior_select_buddy.cpp
+		3rdParty\Htmlayout\api\behaviors\behavior_select_checkmark.cpp = 3rdParty\Htmlayout\api\behaviors\behavior_select_checkmark.cpp
+		3rdParty\Htmlayout\api\behaviors\behavior_shellicon.cpp = 3rdParty\Htmlayout\api\behaviors\behavior_shellicon.cpp
+		3rdParty\Htmlayout\api\behaviors\behavior_sizer.cpp = 3rdParty\Htmlayout\api\behaviors\behavior_sizer.cpp
+		3rdParty\Htmlayout\api\behaviors\behavior_splitter.cpp = 3rdParty\Htmlayout\api\behaviors\behavior_splitter.cpp
+		3rdParty\Htmlayout\api\behaviors\behavior_tabs.cpp = 3rdParty\Htmlayout\api\behaviors\behavior_tabs.cpp
+		3rdParty\Htmlayout\api\behaviors\behavior_virtual_grid.cpp = 3rdParty\Htmlayout\api\behaviors\behavior_virtual_grid.cpp
+		3rdParty\Htmlayout\api\behaviors\data_source_behavior.cpp = 3rdParty\Htmlayout\api\behaviors\data_source_behavior.cpp
+		3rdParty\Htmlayout\api\behaviors\notifications.h = 3rdParty\Htmlayout\api\behaviors\notifications.h
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,5 +104,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{2288C479-C2B8-43F5-9DD1-BAE1CDB33865} = {3414090E-E612-4D97-8D6B-B8C14837FBAF}
 		{818C7856-4827-425C-9265-64FE8F2C9DF0} = {3414090E-E612-4D97-8D6B-B8C14837FBAF}
+		{BA92060A-E232-46E6-9F7D-A6A349AE526A} = {818C7856-4827-425C-9265-64FE8F2C9DF0}
 	EndGlobalSection
 EndGlobal

@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using Expemerent.UI.Dom;
-using System.Drawing;
-using Expemerent.UI.Behaviors;
 using System.Diagnostics;
+using System.Drawing;
 using System.Runtime.InteropServices;
+using Expemerent.UI.Behaviors;
+using Expemerent.UI.Dom;
 
 namespace Expemerent.UI.Native
 {
@@ -42,6 +41,80 @@ namespace Expemerent.UI.Native
     internal partial struct SciterDomApi
     {
         #region Public interface
+
+        public bool SendEvent(Element he, BehaviorEventType eventCode, IntPtr reason, Element source)
+        {
+            var handled = default(bool);
+            CheckResult(HTMLayoutSendEvent(he.Handle, (int)eventCode, source != null ? source.Handle : he.Handle, reason, out handled));
+
+            return handled;
+        }
+
+        public void PostEvent(Element he, BehaviorEventType eventCode, IntPtr reason, Element source)
+        {
+            CheckResult(HTMLayoutPostEvent(he.Handle, (int)eventCode, source != null ? source.Handle : he.Handle, reason));
+        }
+
+        public bool CallScriptingMethod(Element he, BehaviorMethods methodId, out object result)
+        {
+            result = null;
+            switch (methodId)
+            {
+                case BehaviorMethods.DoClick:
+                    var methodParam = new METHOD_PARAMS() { methodID = (int)METHOD_PARAMS.BEHAVIOR_METHOD_IDENTIFIERS.DO_CLICK };
+                    var res = HTMLayoutCallBehaviorMethod(he.Handle, ref methodParam);
+
+                    if (res == ScDomResult.SCDOM_OK_NOT_HANDLED)
+                        return false;
+                    
+                    CheckResult(res);
+                    return true;
+            }
+
+            return false;
+        }
+        /// <summary>
+        /// SciterIsElementVisible - deep visibility, determines if element visible - has no visiblity:hidden and no display:none defined 
+        /// for itself or for any its parents.
+        /// </summary> 
+        public bool IsElementVisible(Element he)
+        {
+            var visible = default(bool);
+            CheckResult(HTMLayoutIsElementVisible(he.Handle, out visible));
+
+            return visible;
+        }
+
+        /// <summary>
+        /// SciterIsElementEnabled - deep enable state, determines if element enabled - is not disabled by itself or no one 
+        /// </summary>
+        public bool IsElementEnabled(Element he)
+        {
+            var enabled = default(bool);
+            CheckResult(HTMLayoutIsElementEnabled(he.Handle, out enabled));
+
+            return enabled;
+        }
+
+        /// <summary>
+        /// Scroll to view.
+        /// </summary>
+        public void ScrollToView(Element he, bool top)
+        {
+            CheckResult(HTMLayoutScrollToView(he.Handle, top));
+        }
+
+        /// <summary>
+        /// Returns element index within parent's collection
+        /// </summary>
+        public int GetElementIndex(Element he)
+        {
+            var index = default(int);
+            CheckResult(HTMLayoutGetElementIndex(he.Handle, out index));
+
+            return index;
+        }
+
         /// <summary>
         /// Gets element location
         /// </summary>
@@ -85,6 +158,17 @@ namespace Expemerent.UI.Native
         {
             var result = HTMLayout_UnuseElement(he);
             Debug.Assert(result == ScDomResult.SCDOM_OK);
+        }
+
+        /// <summary>
+        /// Returns parent element satisfying given css selector
+        /// </summary>
+        public Element SelectParent(Element element, string cssSelector, int depth)        
+        {
+            var parent = default(IntPtr);
+            CheckResult(HTMLayoutSelectParent(element.Handle, MarshalUtility.StringToAnsi(cssSelector), depth, out parent));
+
+            return Element.Create(parent);
         }
 
         /// <summary>
@@ -425,14 +509,14 @@ namespace Expemerent.UI.Native
         }
 
         /// <summary>
-        /// 
+        /// Returns parent of the element
         /// </summary>
-        public int GetElementIndex(Element element)
+        public Element GetParentElement(Element element)
         {
-            var index = default(int);
-            CheckResult(HTMLayoutGetElementIndex(element.Handle, out index));
+            var parent = default(IntPtr);
+            CheckResult(HTMLayoutGetParentElement(element.Handle, out parent));
 
-            return index;
+            return Element.Create(parent);
         }
         #endregion
 

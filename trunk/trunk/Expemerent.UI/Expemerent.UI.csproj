@@ -65,13 +65,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AttachBehaviorEventArgs.cs" />
+    <Compile Include="Behaviors\BehaviorAttribute.cs" />
     <Compile Include="Behaviors\BehaviorEventArgs.cs" />
+    <Compile Include="Behaviors\BehaviorMethods.cs" />
+    <Compile Include="Behaviors\BuiltIn\AccessKeys.cs" />
+    <Compile Include="Behaviors\BuiltIn\CollapsibleList.cs" />
+    <Compile Include="Behaviors\BuiltIn\ExpandableList.cs" />
     <Compile Include="Behaviors\DataArrivedEventArgs.cs" />
     <Compile Include="Behaviors\ElementEventArgs.cs" />
     <Compile Include="Behaviors\DrawEventArgs.cs" />
     <Compile Include="Behaviors\FocusEventArgs.cs" />
     <Compile Include="Behaviors\InputEventArgs.cs" />
     <Compile Include="Behaviors\ISciterBehavior.cs" />
+    <Compile Include="Behaviors\ScriptingMethodCallEventArgs.cs" />
     <Compile Include="Behaviors\UserInputEventArgs.cs" />
     <Compile Include="CallbackHostEventArgs.cs" />
     <Compile Include="Controls\BindableControl.cs" />
@@ -106,7 +112,6 @@
     <Compile Include="Behaviors\KeyEventArgs.cs" />
     <Compile Include="Behaviors\MethodCallEventArgs.cs" />
     <Compile Include="Behaviors\MouseEventArgs.cs" />
-    <Compile Include="Behaviors\ScriptingMethodCall.cs" />
     <Compile Include="DataLoadedEventArgs.cs" />
     <Compile Include="DocumentCompleteEventArgs.cs" />
     <Compile Include="Dom\Element.cs" />

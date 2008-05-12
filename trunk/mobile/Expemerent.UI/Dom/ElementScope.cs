@@ -4,8 +4,9 @@ using System.Text;
 using Expemerent.UI.Dom;
 using System.Diagnostics;
 using System.Threading;
+using Expemerent.UI.Native;
 
-namespace Expemerent.UI.Native
+namespace Expemerent.UI.Dom
 {
     /// <summary>
     /// Defines a logical scope which will protect <see cref="Element"/> handles from became invalid

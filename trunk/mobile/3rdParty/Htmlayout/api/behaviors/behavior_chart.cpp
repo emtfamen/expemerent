@@ -26,7 +26,7 @@ struct chart: public canvas
     json::value data;
     
     // ctor
-    chart():canvas(HANDLE_TIMER | HANDLE_BEHAVIOR_EVENT, DRAW_CONTENT)
+    chart():canvas(HANDLE_TIMER | HANDLE_BEHAVIOR_EVENT | HANDLE_METHOD_CALL, DRAW_CONTENT)
     {
       step = 0;
       steps = 32;
@@ -49,13 +49,30 @@ struct chart: public canvas
           data = del.get_value(); // if it is <script type="application/json"> then the value is parsed automatically.
       }
     } 
-   
+  
     virtual void detached  (HELEMENT he ) 
     { 
       HTMLayoutSetTimer( he, 0 ); // remove timer if any
       data.clear();
       super::detached(he);
     } 
+
+    // demonstrates calls from CSSS! script
+    virtual BOOL on_script_call(HELEMENT he, LPCSTR name, UINT argc, json::value* argv, json::value& retval) 
+    { 
+      if(aux::streq(name, "animate"))
+      {
+        if( argc == 1 && argv[0].is_int() ) // we accept single parameter - n - number of steps.
+          steps = argv[0].get(32);
+
+        // simply call initial animation
+        step = 0;
+        attached(he);
+        return TRUE; // done, method found
+      }
+      return FALSE; 
+    }
+
 
     virtual BOOL on_timer  (HELEMENT he ) 
     { 
