@@ -1,9 +1,34 @@
 ﻿using System;
 using System.Text;
 using Expemerent.UI.Dom;
+using Expemerent.UI.Native;
 
 namespace Expemerent.UI.Behaviors
 {
+    [Flags]
+    public enum KeyboardState
+    {
+        /// <summary>
+        /// Empty state
+        /// </summary>
+        None = 0,
+
+        /// <summary>
+        /// The CONTROL modifier key.
+        /// </summary>
+        Control = KEYBOARD_STATES.CONTROL_KEY_PRESSED,
+
+        /// <summary>
+        /// The SHIFT modifier key.
+        /// </summary>
+        Shift = KEYBOARD_STATES.SHIFT_KEY_PRESSED,
+
+        /// <summary>
+        /// The ALT modifier key.
+        /// </summary>
+        Alt = KEYBOARD_STATES.ALT_KEY_PRESSED 
+    }
+
     /// <summary>
     /// Base class for all events related to the user input
     /// </summary>
@@ -20,16 +45,6 @@ namespace Expemerent.UI.Behaviors
         /// <summary>
         /// Gets a value indicating whether the Control key was pressed.
         /// </summary>
-        public bool Control { get; protected internal set; }
-        
-        /// <summary>
-        /// Gets a value indicating whether the Shift key was pressed.
-        /// </summary>
-        public bool Shift { get; protected internal set; }
-
-        /// <summary>
-        /// Gets a value indicating whether the Alt key was pressed.
-        /// </summary>
-        public bool Alt { get; protected internal set; }
+        public KeyboardState KeyboardState { get; protected internal set; }
     }
 }

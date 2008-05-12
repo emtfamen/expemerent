@@ -278,18 +278,18 @@ namespace Expemerent.UI.Native
         /// First event will be send in SINKING mode (with SINKING flag) - from root to element element itself.
         /// Then from element element to its root on parents chain without SINKING flag (bubbling phase).
         /// </summary>
-        private delegate ScDomResult SciterSendEvent(IntPtr he, uint appEventCode, IntPtr heSource, uint reason, out bool handled);
+        private delegate ScDomResult SciterSendEvent(IntPtr he, int appEventCode, IntPtr heSource, IntPtr reason, out bool handled);
 
         /// <summary>
         /// PostEvent - post sinking/bubbling event to the child/parent chain of element element.
         /// Function will return immediately posting event into input queue of the application. 
         /// </summary>
-        private delegate ScDomResult SciterPostEvent(IntPtr he, uint appEventCode, IntPtr heSource, uint reason);
+        private delegate ScDomResult SciterPostEvent(IntPtr he, int appEventCode, IntPtr heSource, IntPtr reason);
 
         /// <summary>
         /// SciterCallMethod - calls behavior specific method.
         /// </summary>
-        private delegate ScDomResult SciterCallBehaviorMethod(IntPtr he, [MarshalAs(UnmanagedType.LPArray)] METHOD_PARAMS[] param);
+        private delegate ScDomResult SciterCallBehaviorMethod(IntPtr he, ref METHOD_PARAMS param);
 
         /// <summary>
         /// SciterRequestElementData - request data download for the element.

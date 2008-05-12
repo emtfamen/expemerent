@@ -139,11 +139,21 @@ namespace Expemerent.UI.Behaviors
         ////     target = the row, 
         ////     reason = index of the row (fixed_rows..inder)
 
-        //BEHAVIOR_EVENTS.ELEMENT_COLLAPSED = 0x90, // element was collapsed, so far only behavior:tabs is sending these two to the panels
-        //BEHAVIOR_EVENTS.ELEMENT_EXPANDED, // element was expanded,
+        /// <summary>
+        /// element was collapsed, so far only behavior:tabs is sending these two to the panels
+        /// </summary>
+        ElementCollapsed = BEHAVIOR_EVENT_PARAMS.BEHAVIOR_EVENTS.ELEMENT_COLLAPSED, 
 
-        //BEHAVIOR_EVENTS.ACTIVATE_CHILD, // activate (select) child, 
-        //// used for example by accesskeys behaviors to send activation request, e.g. tab on behavior:tabs. 
+        /// <summary>
+        /// element was expanded,
+        /// </summary>
+        ElementExpanded = BEHAVIOR_EVENT_PARAMS.BEHAVIOR_EVENTS.ELEMENT_EXPANDED, 
+
+        /// <summary>
+        /// activate (select) child, 
+        /// used for example by accesskeys behaviors to send activation request, e.g. tab on behavior:tabs. 
+        /// </summary>
+        ActivateChild = BEHAVIOR_EVENT_PARAMS.BEHAVIOR_EVENTS.ACTIVATE_CHILD, 
 
         //BEHAVIOR_EVENTS.DO_SWITCH_TAB = ACTIVATE_CHILD, // command to switch tab programmatically, handled by behavior:tabs 
         //// use it as HTMLayoutPostEvent(tabsElementOrItsChild, DO_SWITCH_TAB, tabElementToShow, 0);

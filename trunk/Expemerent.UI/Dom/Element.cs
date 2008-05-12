@@ -86,10 +86,47 @@ namespace Expemerent.UI.Dom
 
         #region Element properties & attributes
         /// <summary>
+        /// Gets "deep" visible value
+        /// </summary>
+        public bool IsVisible
+        {
+            [DebuggerStepThrough]
+            get { return SciterDomApi.IsElementVisible(this); }
+        }
+
+        /// <summary>
+        /// Gets "deep" enabled value
+        /// </summary>
+        public bool IsEnabled
+        {
+            [DebuggerStepThrough]
+            get { return SciterDomApi.IsElementEnabled(this); }
+        }
+
+        /// <summary>
+        /// Gets element index within parent collection
+        /// </summary>
+        public int ElementIndex
+        {
+            [DebuggerStepThrough]
+            get { return SciterDomApi.GetElementIndex(this); }
+        }
+
+        /// <summary>
+        /// Gets element parent
+        /// </summary>
+        public Element Parent
+        {
+            [DebuggerStepThrough]
+            get { return SciterDomApi.GetParentElement(this); }
+        }
+
+        /// <summary>
         /// Gets element tag
         /// </summary>
         public string Tag
         {
+            [DebuggerStepThrough]
             get { return SciterDomApi.GetElementType(this); }
         }
 
@@ -98,7 +135,9 @@ namespace Expemerent.UI.Dom
         /// </summary>
         public string Text
         {
+            [DebuggerStepThrough]
             get { return SciterDomApi.GetElementText(this); }
+            [DebuggerStepThrough]
             set { SciterDomApi.SetElementText(this, value ?? String.Empty); }
         }
 
@@ -107,7 +146,9 @@ namespace Expemerent.UI.Dom
         /// </summary>
         public string InnerHtml
         {
+            [DebuggerStepThrough]
             get { return SciterDomApi.GetElementHtml(this, false); }
+            [DebuggerStepThrough]
             set { SciterDomApi.SetElementHtml(this, value ?? String.Empty, SET_ELEMENT_HTML.SIH_REPLACE_CONTENT); }
         }
 
@@ -116,7 +157,9 @@ namespace Expemerent.UI.Dom
         /// </summary>
         public string OuterHtml
         {
+            [DebuggerStepThrough]
             get { return SciterDomApi.GetElementHtml(this, true); }
+            [DebuggerStepThrough]
             set { SciterDomApi.SetElementHtml(this, value ?? String.Empty, SET_ELEMENT_HTML.SOH_REPLACE); }
         } 
 
@@ -171,7 +214,23 @@ namespace Expemerent.UI.Dom
         public void Update(bool forceUpdate)
         {
             SciterDomApi.UpdateElement(this, forceUpdate);
-        } 
+        }
+
+        /// <summary>
+        /// Scrolls element to the view
+        /// </summary>
+        public void ScrollToView()
+        {
+            ScrollToView(false);
+        }
+
+        /// <summary>
+        /// Scrolls element to the view
+        /// </summary>
+        public void ScrollToView(bool topOfView)
+        {
+            SciterDomApi.ScrollToView(this, topOfView);
+        }
         #endregion
 
         #region Selecting child elements
@@ -223,6 +282,22 @@ namespace Expemerent.UI.Dom
         }
 
         /// <summary>
+        /// Will find first parent satisfying given css selector(s), will check element itself
+        /// </summary>
+        public Element FindParent(string selector)
+        {
+            return SciterDomApi.SelectParent(this, selector, 0);            
+        }
+
+        /// <summary>
+        /// Tests element against css selector
+        /// </summary>
+        public bool Test(string selector)
+        {
+            return SciterDomApi.SelectParent(this, selector, 1) != null;
+        }
+
+        /// <summary>
         /// Searches for an element that matches the conditions 
         /// </summary>
         public Element Find(string selector)
@@ -245,7 +320,7 @@ namespace Expemerent.UI.Dom
                 element => (predicate(element) ? result = Element.Create(element.Handle) : result = null) != null);
 
             return result;
-        }        
+        }
         #endregion
 
         #region Scripting and behaviors
@@ -275,7 +350,35 @@ namespace Expemerent.UI.Dom
         public void DetachBehavior(SciterBehavior behavior)
         {
             SciterDomApi.DetachEventHandler(this, behavior);
-        }        
+        }
+
+        /// <summary>
+        /// Calls behavior specific method
+        /// </summary>
+        public bool CallBehaviorMethod(BehaviorMethods methodId)
+        {
+            var result = default(object);
+            return SciterDomApi.CallScriptingMethod(this, methodId, out result);
+        }
+
+        /// <summary>
+        /// Send event by sinking/bubbling on the parent/child chain of this element
+        /// </summary>
+        public bool SendEvent(BehaviorEventType eventCode, Element source)
+        {
+            var reason = default(IntPtr);
+            return SciterDomApi.SendEvent(this, eventCode, reason, source);
+        }
+
+        /// <summary>
+        /// Post event by sinking/bubbling on the parent/child chain of this element
+        /// </summary>
+        public void PostEvent(BehaviorEventType eventCode, Element source)
+        {
+            var reason = default(IntPtr);
+            SciterDomApi.PostEvent(this, eventCode, reason, source);
+        }
+
         #endregion
 
         #region Lifetime management
@@ -342,9 +445,17 @@ namespace Expemerent.UI.Dom
         /// <summary>
         /// Changes element state
         /// </summary>
+        public void SetState(ElementState stateToSet)
+        {
+            SetState(stateToSet, ElementState.None);
+        }
+
+        /// <summary>
+        /// Changes element state
+        /// </summary>
         public void SetState(ElementState stateToSet, ElementState stateToClear)
         {
-            SetState(stateToSet, stateToClear, false);
+            SetState(stateToSet, stateToClear, true);
         }
 
         /// <summary>

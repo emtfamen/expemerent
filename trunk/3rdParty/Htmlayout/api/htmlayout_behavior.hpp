@@ -93,6 +93,13 @@ namespace htmlayout
         return on_method_call(he, params.methodID, &params );
       }
 
+    // handle CSSS! script calls
+    virtual BOOL handle_script_call (HELEMENT he, XCALL_PARAMS& params ) 
+      {
+        return on_script_call(he, params.method_name, params.argc, params.argv, params.retval );
+      }
+
+
     // notification events from builtin behaviors - synthesized events: BUTTON_CLICK, VALUE_CHANGED
     // see enum BEHAVIOR_EVENTS
     virtual BOOL handle_event (HELEMENT he, BEHAVIOR_EVENT_PARAMS& params ) 
@@ -117,6 +124,15 @@ namespace htmlayout
     virtual void on_size   (HELEMENT he ) { }
 
     virtual BOOL on_method_call (HELEMENT he, UINT methodID, METHOD_PARAMS* params ) { return FALSE; /*not handled*/ }
+
+    // calls from CSSS! script. Override this if you want your own methods to the CSSS! namespace.
+    // Follwing declaration:
+    // #my-active-on {
+    //    when-click: r = self.my-method(1,"one");
+    // } 
+    // will end up with on_script_call(he, "my-method" , 2, argv, retval ); 
+    // where argv[0] will be 1 and argv[1] will be "one". 
+    virtual BOOL on_script_call(HELEMENT he, LPCSTR name, UINT argc, json::value* argv, json::value& retval) { return FALSE; }
 
     // notification events from builtin behaviors - synthesized events: BUTTON_CLICK, VALUE_CHANGED
     // see enum BEHAVIOR_EVENTS
@@ -148,7 +164,17 @@ namespace htmlayout
           case HANDLE_DRAW:  {  DRAW_PARAMS *p = (DRAW_PARAMS *)prms; return pThis->handle_draw(he, *p ); }
           case HANDLE_TIMER: {  return pThis->handle_timer(he); }
           case HANDLE_BEHAVIOR_EVENT:   { BEHAVIOR_EVENT_PARAMS *p = (BEHAVIOR_EVENT_PARAMS *)prms; return pThis->handle_event(he, *p ); }
-          case HANDLE_METHOD_CALL:      { METHOD_PARAMS *p = (METHOD_PARAMS *)prms; return pThis->handle_method_call(he, *p ); }
+          case HANDLE_METHOD_CALL:      
+            { 
+              METHOD_PARAMS *p = (METHOD_PARAMS *)prms; 
+              if(p->methodID == XCALL)
+              {
+                XCALL_PARAMS *xp = (XCALL_PARAMS *)p;
+                return pThis->handle_script_call(he,*xp);
+              }
+              else
+                return pThis->handle_method_call(he, *p ); 
+            }
           case HANDLE_DATA_ARRIVED:     { DATA_ARRIVED_PARAMS *p = (DATA_ARRIVED_PARAMS *)prms; return pThis->handle_data_arrived(he, *p ); }
           case HANDLE_SIZE:  {  pThis->handle_size(he); return FALSE; }
           case HANDLE_SCROLL:           { SCROLL_PARAMS *p = (SCROLL_PARAMS *)prms; return pThis->handle_scroll(he, *p ); }

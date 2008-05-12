@@ -335,14 +335,14 @@ namespace Expemerent.UI.Native
         /// Then from element element to its root on parents chain without SINKING flag (bubbling phase).
         /// </summary>
         [DllImport("htmlayout.dll")]
-        private static extern ScDomResult HTMLayoutSendEvent(IntPtr he, uint appEventCode, IntPtr heSource, uint reason, out bool handled);
+        private static extern ScDomResult HTMLayoutSendEvent(IntPtr he, int appEventCode, IntPtr heSource, IntPtr reason, out bool handled);
 
         /// <summary>
         /// PostEvent - post sinking/bubbling event to the child/parent chain of element element.
         /// Function will return immediately posting event into input queue of the application. 
         /// </summary>
         [DllImport("htmlayout.dll")]
-        private static extern ScDomResult HTMLayoutPostEvent(IntPtr he, uint appEventCode, IntPtr heSource, uint reason);
+        private static extern ScDomResult HTMLayoutPostEvent(IntPtr he, int appEventCode, IntPtr heSource, IntPtr reason);
 
         /// <summary>
         /// SciterCallMethod - calls behavior specific method.
@@ -351,7 +351,7 @@ namespace Expemerent.UI.Native
         /// TODO: METHOD_PARAMS Should be updated
         /// </remarks>
         [DllImport("htmlayout.dll")]
-        private static extern ScDomResult HTMLayoutCallBehaviorMethod(IntPtr he, [MarshalAs(UnmanagedType.LPArray)] METHOD_PARAMS[] param);
+        private static extern ScDomResult HTMLayoutCallBehaviorMethod(IntPtr he, ref METHOD_PARAMS param);
 
         /// <summary>
         /// SciterRequestElementData - request data download for the element.
@@ -412,7 +412,6 @@ namespace Expemerent.UI.Native
         {
             CheckResult(HTMLayoutDeleteElement(element.Handle));
         }
-
     }
 
     #endregion

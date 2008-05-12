@@ -41,10 +41,8 @@ struct tabs: public behavior
 
       dom::element tab_strip_el = tab_el.parent();
       tab_strip_el.set_state(STATE_CURRENT,0,true); // :current - make tab strip as current element inside focusable.
-      tab_el.set_state(STATE_CURRENT,0,false); // :current - current tab is, well, current.
-      panel_el.set_state(STATE_EXPANDED,0,false); // :expanded - current panel is expanded.
-      
-      //Sic! don't need to call update() here - we are still in DOM composition phase.
+      tab_el.set_state(STATE_CURRENT,0,true); // :current - current tab is, well, current.
+      panel_el.set_state(STATE_EXPANDED,0,true); // :expanded - current panel is expanded.
 
     } 
 
@@ -81,8 +79,8 @@ struct tabs: public behavior
       switch( code )
       {
         case VK_TAB: if( keyboardStates & CONTROL_KEY_PRESSED )
-                        return select_tab( tabs_el, tab_el, 
-                          keyboardStates & SHIFT_KEY_PRESSED? -1:1 );
+                          return select_tab( tabs_el, tab_el, 
+                                 keyboardStates & SHIFT_KEY_PRESSED? -1:1 );
                      break;
         case VK_LEFT: return is_in_focus(tab_el)? select_tab( tabs_el, tab_el, -1 ):FALSE;
         case VK_RIGHT: return is_in_focus(tab_el)? select_tab( tabs_el, tab_el, 1 ):FALSE;
@@ -182,7 +180,6 @@ struct tabs: public behavior
 
       return select_tab( tabs_el, new_tab_el );
     }
-
 
     dom::element target_tab(HELEMENT he, HELEMENT h_tabs_container)
     {

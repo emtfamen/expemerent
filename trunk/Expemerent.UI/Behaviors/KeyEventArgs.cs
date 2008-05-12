@@ -2,6 +2,7 @@
 using Expemerent.UI.Dom;
 using Expemerent.UI.Native;
 using System.Windows.Forms;
+using System.Text;
 
 namespace Expemerent.UI.Behaviors
 {
@@ -34,8 +35,24 @@ namespace Expemerent.UI.Behaviors
         public KeyEventType KeyEventType { get; protected internal set; }
 
         /// <summary>
+        /// Gets or sets internal key representation
+        /// </summary>
+        public int KeyValue { get; protected internal set; }
+
+        /// <summary>
         /// Gets the keyboard code
         /// </summary>
-        public Keys KeyCode { get; protected internal set; }
+        public Keys KeyCode { get { return (Keys)KeyValue & Keys.KeyCode; } }
+
+        /// <summary>
+        /// Gets the character for the KeyPress event
+        /// </summary>
+        public char KeyChar 
+        { 
+            get 
+            {
+                return Encoding.Default.GetChars(BitConverter.GetBytes(KeyValue))[0];
+            } 
+        }
     }
 }

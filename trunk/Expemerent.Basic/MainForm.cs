@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using Expemerent.UI;
 using Expemerent.UI.Controls;
+using System.Windows.Forms;
 
 namespace Expemerent.Basic
 {
@@ -56,7 +57,12 @@ namespace Expemerent.Basic
             SciterControls.Add(second);
             SciterControls.Add(list);
 
-            LoadResource<MainForm>("Html/Default.htm");
+            var body = new BindableControl() { Selector = "#body" };
+            body.ScriptingMethodCall += (s, e) => { e.ReturnValue = "green"; };
+            body.MethodCall += (s, e) => { MessageBox.Show("MethodCall"); };
+
+            SciterControls.Add(body);
+            LoadResource<MainForm>("Html/highlight-links.htm");            
         }
 
         #region Support classes

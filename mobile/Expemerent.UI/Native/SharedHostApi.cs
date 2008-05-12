@@ -56,11 +56,34 @@ namespace Expemerent.UI.Native
         unsafe static partial void Behavior_HandleMethodCall(ISciterBehavior behavior, IntPtr he, IntPtr prms, ref bool handled)
         {
             var datantf = (METHOD_PARAMS*)prms;
-            var e = new MethodCallEventArgs(Element.Create(he));
+            var methodId = (METHOD_PARAMS.BEHAVIOR_METHOD_IDENTIFIERS)datantf->methodID;
+            switch (methodId)
+            {
+                case METHOD_PARAMS.BEHAVIOR_METHOD_IDENTIFIERS.XCALL:
+                    {
+                        var data = (XCALL_PARAMS*)datantf;
+                        var e = new ScriptingMethodCallEventArgs(Element.Create(he))
+                        {
+                            Arguments = data->GetArgs(),
+                            MethodName = data->GetName()
+                        };
 
+                        behavior.ProcessScriptingMethodCall(e);
+                        if (e.Handled)
+                            data->result.SetValue(e.ReturnValue);
+
+                        handled = e.Handled;
+                    }
+                    break;
+                default:
+                    {
+                        var e = new MethodCallEventArgs(Element.Create(he));
             behavior.ProcessMethodCall(e);
 
             handled = e.Handled;
+        }
+                    break;
+            }
         }
 
         /// <summary>
@@ -107,11 +130,9 @@ namespace Expemerent.UI.Native
             var e = new KeyEventArgs(Element.Create(he), (Phase)datantf->cmd & Phase.All)
             {
                 Target = Element.Create(datantf->target),
-                Alt = (datantf->alt_state & KEYBOARD_STATES.ALT_KEY_PRESSED) != 0,
-                Control = (datantf->alt_state & KEYBOARD_STATES.CONTROL_KEY_PRESSED) != 0,
-                Shift = (datantf->alt_state & KEYBOARD_STATES.SHIFT_KEY_PRESSED) != 0,
+                KeyboardState = (KeyboardState)datantf->alt_state,
                 KeyEventType = (KeyEventType)((int)datantf->cmd & (int)~Phase.All),
-                KeyCode = (Keys)datantf->key_code
+                KeyValue = datantf->key_code
             };
 
             behavior.ProcessKey(e);
@@ -149,7 +170,7 @@ namespace Expemerent.UI.Native
         unsafe static partial void Behavior_HandleScriptingMethodCall(ISciterBehavior behavior, IntPtr he, IntPtr prms, ref bool handled)
         {
             var datantf = (SCRIPTING_METHOD_PARAMS*)prms;
-            var e = new ScriptingMethodCall(Element.Create(he))
+            var e = new ScriptingMethodCallEventArgs(Element.Create(he))
             {
                 Arguments = datantf->GetArgs(),
                 MethodName = datantf->GetName()
@@ -177,9 +198,7 @@ namespace Expemerent.UI.Native
                 PositionInDoc = datantf->pos_document,
                 CursorType = (CursorType)datantf->cursor_type,
                 MouseEvent = (MouseEvent)datantf->cmd & (MouseEvent)~Phase.All,
-                Alt = (datantf->alt_state & KEYBOARD_STATES.ALT_KEY_PRESSED) != 0,
-                Control = (datantf->alt_state & KEYBOARD_STATES.CONTROL_KEY_PRESSED) != 0,
-                Shift = (datantf->alt_state & KEYBOARD_STATES.SHIFT_KEY_PRESSED) != 0
+                KeyboardState = (KeyboardState)datantf->alt_state,
             };
 
             behavior.ProcessMouse(e);
@@ -241,6 +260,7 @@ namespace Expemerent.UI.Native
             {
                 datantf->elementProc = ElementEventProcEntryPoint;
                 datantf->elementTag = InstanceProtector.Protect(e.Behavior);
+                datantf->elementEvents = (EVENT_GROUPS)e.EventGroups;
             }
         }
 

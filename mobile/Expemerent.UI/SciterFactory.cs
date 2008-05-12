@@ -70,6 +70,16 @@ namespace Expemerent.UI
         /// <summary>
         /// Resolves resource using registered handlers
         /// </summary>
+        public static void RegisterBehavior<TBehavior>()
+            where TBehavior : SciterBehavior, new()
+        {
+            var attr = (BehaviorAttribute)Attribute.GetCustomAttribute(typeof(TBehavior), typeof(BehaviorAttribute));
+            RegisterBehavior<TBehavior>(attr != null ? attr.BehaviorName : typeof(TBehavior).Name);
+        }
+
+        /// <summary>
+        /// Resolves resource using registered handlers
+        /// </summary>
         /// <remarks>resource stream or null if not found</remarks>
         internal static Stream ResolveStream(string resource, ResourceType resourceType)
         {

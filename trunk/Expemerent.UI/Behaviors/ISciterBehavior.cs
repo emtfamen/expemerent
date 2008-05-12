@@ -66,7 +66,7 @@ namespace Expemerent.UI.Behaviors
         /// <summary>
         /// Handles scripting calls
         /// </summary>
-        void ProcessScriptingMethodCall(ScriptingMethodCall e);
+        void ProcessScriptingMethodCall(ScriptingMethodCallEventArgs e);
 
         /// <summary>
         /// Handles scroll

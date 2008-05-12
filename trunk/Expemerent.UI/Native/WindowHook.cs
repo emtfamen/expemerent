@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Security;
+using Expemerent.UI.Dom;
 
 namespace Expemerent.UI.Native
 {
@@ -96,7 +97,7 @@ namespace Expemerent.UI.Native
         /// </summary>
         private IntPtr WindowProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam)
         {
-            using (var prot = ElementScope.Create())
+            using (var scope = ElementScope.Create())
             {
                 Debug.Assert(_originalWndProc != IntPtr.Zero, "Window hook was not installed");
 

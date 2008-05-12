@@ -4,6 +4,7 @@ using Expemerent.UI.Dom;
 using Expemerent.UI.Native;
 using Expemerent.UI.Protocol;
 using System.Windows.Forms;
+using Expemerent.UI.Behaviors.BuiltIn;
 
 namespace Expemerent.UI
 {
@@ -52,6 +53,16 @@ namespace Expemerent.UI
         #endregion
 
         #region Construction
+        /// <summary>
+        /// Static initialization
+        /// </summary>
+        static SciterView()
+        {
+            SciterFactory.RegisterBehavior<AccessKeys>();
+            SciterFactory.RegisterBehavior<ExpandableList>();
+            SciterFactory.RegisterBehavior<CollapsibleList>();
+        }
+
         /// <summary>
         /// Creates a new instance of the <see cref="SciterView"/> class
         /// </summary>

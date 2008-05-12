@@ -63,6 +63,8 @@ struct virtual_grid: public event_handler
       first_row_idx = drp.firstRecord;
       num_rows      = drp.totalRecords;
 
+      //self.update(MEASURE_INPLACE);
+
       //tbl.update();
     }
 
