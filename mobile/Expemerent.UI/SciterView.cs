@@ -5,15 +5,16 @@ using Expemerent.UI.Native;
 using Expemerent.UI.Protocol;
 using System.Windows.Forms;
 using Expemerent.UI.Behaviors.BuiltIn;
+using Expemerent.UI.Behaviors;
 
 namespace Expemerent.UI
 {
     /// <summary>
     /// View class for working with sciter in forms and controls
     /// </summary>
-    public class SciterView : ISciterNotifications
+    public class SciterView 
     {
-        #region Properties
+        #region Properties        
         /// <summary>
         /// Gets instance of sciter dom api
         /// </summary>
@@ -27,6 +28,11 @@ namespace Expemerent.UI
         /// Gets or sets value of the window handle
         /// </summary>
         internal IntPtr HandleInternal { get; set; }
+
+        /// <summary>
+        /// Gets or sets host instance
+        /// </summary>
+        internal ISciterHost Host { get; set; }
 
         /// <summary>
         /// Gets value of the window handle
@@ -71,76 +77,15 @@ namespace Expemerent.UI
         } 
         #endregion
 
-        #region Public events
-        /// <summary>
-        /// Occurs when window going to be created
-        /// </summary>
-        public event EventHandler<EventArgs> Created;
-
-        /// <summary>
-        /// Occurs when window has been destroyed
-        /// </summary>
-        public event EventHandler<EventArgs> Destroyed;
-
-        /// <summary>
-        /// Occurs when all external data has been loaded
-        /// </summary>
-        public event EventHandler<DocumentCompleteEventArgs> DocumentComplete;
-
-        /// <summary>
-        /// Occurs when download process completed 
-        /// </summary>
-        public event EventHandler<DataLoadedEventArgs> DataLoaded;
-
-        /// <summary>
-        /// Occurs when the sciter is about to download a referred resource. 
-        /// </summary>
-        public event EventHandler<LoadDataEventArgs> LoadData;
-
-        /// <summary>
-        /// Occurs when behavior should be attached to the DOM element
-        /// </summary>
-        public event EventHandler<AttachBehaviorEventArgs> AttachBehavior;
-
-        /// <summary>
-        /// Occurs when sciter wants to notify host
-        /// </summary>
-        public event EventHandler<CallbackHostEventArgs> CallbackHost;
-        #endregion
-
-        #region Events support
-        /// <summary>
-        /// Raises <see cref="Created"/> event
-        /// </summary>
-        protected virtual void OnCreated(EventArgs e)
-        {
-            var handler = Created;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
-        }
-
-        /// <summary>
-        /// Raises <see cref="Destroyed"/> event
-        /// </summary>
-        protected virtual void OnDestroyed(EventArgs e)
-        {
-            var handler = Destroyed;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
-        }
-        
-        #endregion
-
         #region Message processing
         /// <summary>
         /// Controls should route all window events throgh this method. 
         /// </summary>
-        private static IntPtr ProcessMessage(IntPtr wnd, int msg, IntPtr wparam, IntPtr lparam, ref bool handled)
+        private IntPtr ProcessMessage(IntPtr wnd, int msg, IntPtr wparam, IntPtr lparam, ref bool handled)
         {
+            if (msg == User32.WM_DESTROY)
+                Host.ProcessDestroyed(EventArgs.Empty);
+
             handled = false;
             return SciterHostApi.SciterProcND(wnd, msg, wparam, lparam, ref handled);
         }
@@ -151,7 +96,7 @@ namespace Expemerent.UI
         private void InitializeSciter()
         {
             Hook.HandleDestroyed += delegate 
-            { 
+            {
                 HandleInternal = IntPtr.Zero; 
                 Hook = null; 
             };
@@ -159,7 +104,7 @@ namespace Expemerent.UI
             // Processing WM_CREATE through sciter
             bool handled = false;
             SciterHostApi.SciterProcND(Handle, User32.WM_CREATE, IntPtr.Zero, IntPtr.Zero, ref handled);
-            SciterHostApi.SciterSetCallback(Handle, this);
+            SciterHostApi.SciterSetCallback(Handle, Host);
         }
         #endregion
 
@@ -167,13 +112,12 @@ namespace Expemerent.UI
         /// <summary>
         /// Attaches SciterView to the existing window
         /// </summary>
-        public static SciterView Attach(Control control)
+        public static SciterView Attach(ISciterHost host)
         {
-            SciterView view = new SciterView()
-            {
-                HandleInternal = control.Handle,
-                Hook = WindowHook.Install(control, SciterView.ProcessMessage)
-            };
+            SciterView view = new SciterView();
+            view.Host = host;
+            view.HandleInternal = host.Handle;
+            view.Hook = WindowHook.Install(host.Handle, view.ProcessMessage);
             view.InitializeSciter();
 
             return view;
@@ -267,69 +211,14 @@ namespace Expemerent.UI
         {
             Scripting.RegisterClass<TType>(this);
         }
-        #endregion
-
-        #region ISciterNotifications Members
-        /// <summary>
-        /// Occurs when all external data has been loaded
-        /// </summary>
-        void ISciterNotifications.FireDocumentComplete(DocumentCompleteEventArgs e)
-        {
-            var handler = DocumentComplete;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
-        }
 
         /// <summary>
-        /// Occurs when the sciter is about to download a referred resource. 
+        /// Attached event handler to the Window
         /// </summary>
-        void ISciterNotifications.FireLoadData(LoadDataEventArgs e)
+        internal void AttachEventHandler(ISciterBehavior handler, EVENT_GROUPS events)
         {
-            var handler = LoadData;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            SciterDomApi.WindowAttachEventHandler(Handle, handler, events);
         }
-
-        /// <summary>
-        /// Occurs when download process completed 
-        /// </summary>
-        void ISciterNotifications.FireDataLoaded(DataLoadedEventArgs e)
-        {
-            var handler = DataLoaded;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
-        }
-
-        /// <summary>
-        /// Occurs when behavior should be attached to the DOM element
-        /// </summary>
-        void ISciterNotifications.FireAttachBehavior(AttachBehaviorEventArgs e)
-        {
-            var handler = AttachBehavior;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
-        }
-
-        /// <summary>
-        /// Occurs when sciter wants to notify host
-        /// </summary>
-        void ISciterNotifications.FireCallbackHost(CallbackHostEventArgs e)
-        {
-            var handler = CallbackHost;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
-        }
-
         #endregion
     }
 }

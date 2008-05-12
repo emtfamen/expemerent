@@ -89,9 +89,6 @@
     <Compile Include="Dom\ElementUtility.cs" />
     <Compile Include="Behaviors\SciterBehavior.cs" />
     <Compile Include="LoadDataEventArgs.cs" />
-    <Compile Include="Native\ISciterNotifications.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Native\JsonValue.cs" />
     <Compile Include="Native\PopupPlacement.cs" />
     <Compile Include="Native\ResourceType.cs" />
@@ -105,7 +102,7 @@
     <Compile Include="Protocol\ResProtocol.cs" />
     <Compile Include="ResourceType.cs" />
     <Compile Include="SciterControl.cs">
-      <SubType>Component</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="SciterException.cs" />
     <Compile Include="SciterFactory.cs" />
@@ -138,11 +135,14 @@
     <Compile Include="Controls\TextBoxControl.cs" />
     <Compile Include="Dom\IAttributeAccessor.cs" />
     <Compile Include="Dom\IStyleAccessor.cs" />
+    <Compile Include="ISciterHost.cs" />
+    <Compile Include="ISciterNotifications.cs" />
     <Compile Include="Native\HtmlayoutDomApi.cs" />
     <Compile Include="Native\HtmlayoutHostApi.cs" />
     <Compile Include="Native\MarshalUtility.cs" />
     <Compile Include="Native\SharedDomApi.cs" />
     <Compile Include="Native\SharedHostApi.cs" />
+    <Compile Include="SciterHost.cs" />
     <Content Include="$(SolutionDir)\3rdParty\Htmlayout\bin\windows mobile 5.0 pocket pc sdk (armv4i)\htmlayout.dll">
       <Link>htmlayout.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

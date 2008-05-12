@@ -442,7 +442,7 @@ namespace Expemerent.UI.Native
         {
             var datantf = (SCN_CALLBACK_HOST*)pns;
             var e = new CallbackHostEventArgs((CallbackHostEventArgs.HostChannelType)datantf->channel, datantf->p1.GetValue(), datantf->p2.GetValue());
-            host.FireCallbackHost(e);
+            host.ProcessCallbackHost(e);
 
             if (e.ReturnValue != null)
                 datantf->r.SetValue(e.ReturnValue);

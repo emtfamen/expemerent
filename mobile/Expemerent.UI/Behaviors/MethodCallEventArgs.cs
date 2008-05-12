@@ -14,7 +14,7 @@ namespace Expemerent.UI.Behaviors
         /// </summary>
         internal MethodCallEventArgs(Element element) : base(element)
         {
-            //METHOD_PARAMS
+            
         }
 
         /// <summary>

@@ -358,7 +358,7 @@ namespace Expemerent.UI.Dom
         public bool CallBehaviorMethod(BehaviorMethods methodId)
         {
             var result = default(object);
-            return SciterDomApi.CallScriptingMethod(this, methodId, out result);
+            return SciterDomApi.CallBehaviorMethod(this, methodId, out result);
         }
 
         /// <summary>

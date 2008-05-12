@@ -42,6 +42,11 @@ namespace Expemerent.UI.Native
     {
         #region Public interface
 
+        /// <summary>
+        /// SendEvent - sends sinking/bubbling event to the child/parent chain of element element.
+        /// First event will be send in SINKING mode (with SINKING flag) - from root to element element itself.
+        /// Then from element element to its root on parents chain without SINKING flag (bubbling phase).
+        /// </summary>
         public bool SendEvent(Element he, BehaviorEventType eventCode, IntPtr reason, Element source)
         {
             var handled = default(bool);
@@ -50,12 +55,19 @@ namespace Expemerent.UI.Native
             return handled;
         }
 
+        /// <summary>
+        /// PostEvent - post sinking/bubbling event to the child/parent chain of element element.
+        /// Function will return immediately posting event into input queue of the application. 
+        /// </summary>
         public void PostEvent(Element he, BehaviorEventType eventCode, IntPtr reason, Element source)
         {
             CheckResult(HTMLayoutPostEvent(he.Handle, (int)eventCode, source != null ? source.Handle : he.Handle, reason));
         }
 
-        public bool CallScriptingMethod(Element he, BehaviorMethods methodId, out object result)
+        /// <summary>
+        /// SciterCallMethod - calls behavior specific method.
+        /// </summary>
+        public bool CallBehaviorMethod(Element he, BehaviorMethods methodId, out object result)
         {
             result = null;
             switch (methodId)

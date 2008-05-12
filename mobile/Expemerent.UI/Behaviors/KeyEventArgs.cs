@@ -35,7 +35,7 @@ namespace Expemerent.UI.Behaviors
         public KeyEventType KeyEventType { get; protected internal set; }
 
         /// <summary>
-        /// Gets the keyboard code
+        /// Gets or sets internal key representation
         /// </summary>
         public int KeyValue { get; protected internal set; }
 

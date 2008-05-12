@@ -508,10 +508,10 @@ namespace Expemerent.UI.Native
         /// <summary>
         ///element that is being dragged over, this field is not NULL if (cmd & DRAGGING) != 0
         ///</summary>
+        ///TODO: Only in htmlayout
+        ///internal HELEMENT dragging;
 
         /// <summary>
-        /// see DRAGGING_TYPE. 
-        ///</summary>
         /// see DRAGGING_TYPE. 
         ///</summary>
         ///TODO: Only in htmlayout
