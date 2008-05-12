@@ -1,36 +1,35 @@
 using System;
 
-namespace Expemerent.UI.Native
+namespace Expemerent.UI
 {
     /// <summary>
     /// Defines all notification messages sent by sciter
     /// </summary>
-    internal interface ISciterNotifications
+    public interface ISciterNotifications
     {
         /// <summary>
         /// Occurs when all external data has been loaded
         /// </summary>
-        void FireDocumentComplete(DocumentCompleteEventArgs e);
+        void ProcessDocumentComplete(DocumentCompleteEventArgs e);
 
         /// <summary>
         /// Occurs when the sciter is about to download a referred resource. 
         /// </summary>
-        void FireLoadData(LoadDataEventArgs e);
+        void ProcessLoadData(LoadDataEventArgs e);
 
         /// <summary>
         /// Occurs when download process completed 
         /// </summary>
-        void FireDataLoaded(DataLoadedEventArgs e);
+        void ProcessDataLoaded(DataLoadedEventArgs e);
 
         /// <summary>
         /// Occurs when behavior should be attached to the DOM element
         /// </summary>
-        void FireAttachBehavior(AttachBehaviorEventArgs e);
+        void ProcessAttachBehavior(AttachBehaviorEventArgs e);
 
         /// <summary>
         /// Occurs when sciter wants to notify host
         /// </summary>
-        /// <param name="e"></param>
-        void FireCallbackHost(CallbackHostEventArgs e);
+        void ProcessCallbackHost(CallbackHostEventArgs e);
     }
 }

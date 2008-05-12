@@ -29,7 +29,7 @@ namespace Expemerent.UI.Native
         /// <summary>
         /// Control instance to hook
         /// </summary>
-        private readonly Control _control;
+        private readonly IntPtr _handle;
         
         /// <summary>
         /// Stored instance of the ProcessMessage delegete to prevent it from GC
@@ -55,39 +55,29 @@ namespace Expemerent.UI.Native
         /// Installs hook on the existing control. 
         /// This operation should be done before creation of the window handle
         /// </summary>
-        public static WindowHook Install(Control control, WndProcCallback callback)
+        public static WindowHook Install(IntPtr handle, WndProcCallback callback)
         {
-            return new WindowHook(control, callback);
+            return new WindowHook(handle, callback);
         }
 
         /// <summary>
         /// Makes a connection between a specified window handle
         /// and the callback to be called when that message is received.
         /// </summary>
-        private WindowHook(Control control, WndProcCallback callback)
+        private WindowHook(IntPtr handle, WndProcCallback callback)
         {
-            _control = control;
+            Debug.Assert(handle != IntPtr.Zero, "Window handle cannot be null");
+            Debug.Assert(callback != null, "Callback method should be specified");
+
+            _handle = handle;
 
             _mainWndProc = WindowProc;
             _callback = callback;
-
-            _control.HandleDestroyed += control_HandleDestroyed;
             
             // Subclassing window
-            _originalWndProc = User32.SetWindowLong(_control.Handle, User32.GWL_WNDPROC, Marshal.GetFunctionPointerForDelegate(_mainWndProc));
+            _originalWndProc = User32.SetWindowLong(_handle, User32.GWL_WNDPROC, Marshal.GetFunctionPointerForDelegate(_mainWndProc));
         }
-
-        /// <summary>
-        /// The event handler called when a control's handle is destroyed.
-        /// We remove the HookedProcInformation from hwndDict and
-        /// put it back into ctlDict in case the control get re-
-        /// created and we still want to hook its messages.
-        /// </summary>
-        private void control_HandleDestroyed(object sender, EventArgs e)
-        {
-            revertWndProc();
-        }
-       
+      
         /// <summary>
         /// This is a generic wndproc. It is the callback for all hooked
         /// windows. If we get into this function, we look up the hwnd in the
@@ -100,8 +90,10 @@ namespace Expemerent.UI.Native
             using (var scope = ElementScope.Create())
             {
                 Debug.Assert(_originalWndProc != IntPtr.Zero, "Window hook was not installed");
-
                 bool handled = false;
+
+                if (msg == User32.WM_DESTROY)
+                    revertWndProc();
 
                 IntPtr retval = _callback(hwnd, msg, wParam, lParam, ref handled);
                 if (handled)
@@ -118,11 +110,9 @@ namespace Expemerent.UI.Native
         {
             Debug.Assert(_originalWndProc != IntPtr.Zero, "Window hook was not installed");            
             
-            User32.SetWindowLong(_control.Handle, User32.GWL_WNDPROC, _originalWndProc);
+            User32.SetWindowLong(_handle, User32.GWL_WNDPROC, _originalWndProc);
             
-            _control.HandleDestroyed -= control_HandleDestroyed;
             _originalWndProc = IntPtr.Zero;
-
             OnHandleDestroyed(EventArgs.Empty);
         }
 

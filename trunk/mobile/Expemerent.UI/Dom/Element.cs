@@ -214,7 +214,7 @@ namespace Expemerent.UI.Dom
         public void Update(bool forceUpdate)
         {
             SciterDomApi.UpdateElement(this, forceUpdate);
-        } 
+        }
 
         /// <summary>
         /// Scrolls element to the view
@@ -282,7 +282,7 @@ namespace Expemerent.UI.Dom
         }
 
         /// <summary>
-        /// Searches for an element that matches the conditions 
+        /// Will find first parent satisfying given css selector(s), will check element itself
         /// </summary>
         public Element FindParent(string selector)
         {
@@ -320,7 +320,7 @@ namespace Expemerent.UI.Dom
                 element => (predicate(element) ? result = Element.Create(element.Handle) : result = null) != null);
 
             return result;
-        }        
+        }
         #endregion
 
         #region Scripting and behaviors
@@ -350,7 +350,7 @@ namespace Expemerent.UI.Dom
         public void DetachBehavior(SciterBehavior behavior)
         {
             SciterDomApi.DetachEventHandler(this, behavior);
-        }        
+        }
 
         /// <summary>
         /// Calls behavior specific method
@@ -358,7 +358,7 @@ namespace Expemerent.UI.Dom
         public bool CallBehaviorMethod(BehaviorMethods methodId)
         {
             var result = default(object);
-            return SciterDomApi.CallScriptingMethod(this, methodId, out result);
+            return SciterDomApi.CallBehaviorMethod(this, methodId, out result);
         }
 
         /// <summary>

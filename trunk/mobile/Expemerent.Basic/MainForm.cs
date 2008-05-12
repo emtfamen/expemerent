@@ -42,7 +42,9 @@ namespace Expemerent.Basic
                 var list = new ListBoxControl() { Selector = "#contacts", DisplayMember = "First" };
                 var addnew = new ButtonControl() { Selector = "#addnew" };
                 var delete = new ButtonControl() { Selector = "#delete" };
+                var close = new ButtonControl() { Selector = "#close" };
 
+                close.Click += (s, e) => Close();
                 list.Format += (s, e) => { var contact = ((Contact)e.Value); e.Value = contact.FirstName + ", " + contact.LastName; };
                 addnew.Click += (s, e) => { bindingSource.Position = bindingSource.Add(new Contact()); };
                 delete.Click += (s, e) => { bindingSource.RemoveCurrent(); };
@@ -53,13 +55,14 @@ namespace Expemerent.Basic
 
                 list.DataSource = bindingSource;
 
+                SciterControls.Add(close);
                 SciterControls.Add(addnew);
                 SciterControls.Add(delete);
                 SciterControls.Add(first);
                 SciterControls.Add(second);
                 SciterControls.Add(list);
 
-                LoadResource<MainForm>("Html/Default.htm");
+                LoadHtmlResource<MainForm>("Html/Default.htm");
             }
         }
 

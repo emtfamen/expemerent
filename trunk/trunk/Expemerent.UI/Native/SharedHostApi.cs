@@ -254,7 +254,7 @@ namespace Expemerent.UI.Native
             var datantf = (SCN_ATTACH_BEHAVIOR*)pns;
             var e = new AttachBehaviorEventArgs(Element.Create(datantf->element), datantf->GetBehaviorName());
                 
-            host.FireAttachBehavior(e);
+            host.ProcessAttachBehavior(e);
 
             e.Behavior = e.Behavior ?? SciterFactory.ResolveBehavior(e.BehaviorName);
             if (e.Behavior != null)
@@ -278,7 +278,7 @@ namespace Expemerent.UI.Native
                 //RequestId = datantf->request_id,
                 ResourceType = (ResourceType)datantf->dataType
             };
-            host.FireLoadData(e);
+            host.ProcessLoadData(e);
 
             byte[] bytes = null;
             if (e.IsDataAvailable)
@@ -296,7 +296,7 @@ namespace Expemerent.UI.Native
         {
             var datantf = (SCN_DATA_LOADED*)pns;
             var e = new DataLoadedEventArgs(datantf->GetUri(), () => datantf->GetData());
-            host.FireDataLoaded(e);
+            host.ProcessDataLoaded(e);
         }
 
         /// <summary>
@@ -304,7 +304,7 @@ namespace Expemerent.UI.Native
         /// </summary>
         static unsafe partial void Host_HandleDocumentComplete(ISciterNotifications host, IntPtr pns)
         {
-            host.FireDocumentComplete(DocumentCompleteEventArgs.Empty);
+            host.ProcessDocumentComplete(DocumentCompleteEventArgs.Empty);
         }
     }
 }
