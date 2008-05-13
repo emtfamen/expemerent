@@ -31,7 +31,7 @@ namespace Expemerent.UI
         /// <summary>
         /// Collection of registered protocol handlers
         /// </summary>
-        private readonly static List<IProtocolHandler> _protocols = new List<IProtocolHandler>() { new ResProtocol() };
+        private readonly static List<IProtocolHandler> _protocols = new List<IProtocolHandler>() { new ResProtocol(), new FileProtocol() };
 
         /// <summary>
         /// Registers protocol handler
@@ -68,7 +68,7 @@ namespace Expemerent.UI
         }
 
         /// <summary>
-        /// Resolves resource using registered handlers
+        /// Registers a static behavior
         /// </summary>
         public static void RegisterBehavior<TBehavior>()
             where TBehavior : SciterBehavior, new()

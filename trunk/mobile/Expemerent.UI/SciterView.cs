@@ -6,6 +6,7 @@ using Expemerent.UI.Protocol;
 using System.Windows.Forms;
 using Expemerent.UI.Behaviors.BuiltIn;
 using Expemerent.UI.Behaviors;
+using System.IO;
 
 namespace Expemerent.UI
 {
@@ -171,6 +172,19 @@ namespace Expemerent.UI
         }
 
         /// <summary>
+        /// Loads html from file 
+        /// </summary>
+        public void LoadResource(String resourceName)
+        {
+            var text = SciterFactory.ResolveBinResource(resourceName, ResourceType.Html);
+
+            if (text == null)
+                throw new FileNotFoundException(String.Format("Resource {0} not found", resourceName));
+
+            SciterHostApi.SciterLoadHtml(Handle, text, resourceName);
+        }
+
+        /// <summary>
         /// Loads html from the resource
         /// </summary>
         public void LoadResource(Type baseType, String resource)
@@ -183,16 +197,16 @@ namespace Expemerent.UI
                 throw new ArgumentNullException("resource"); 
             #endregion
 
-            var nameIndex = resource.LastIndexOf(ResProtocol.PathSeparator);
-            var location = resource.Substring(0, nameIndex);
-            var baseUri = ResProtocol.ProtocolPrefix +
+            var resourceName = ResProtocol.ProtocolPrefix +
                     baseType.AssemblyQualifiedName +
-                    ResProtocol.PathSeparator + location + ResProtocol.PathSeparator;
+                    ResProtocol.PathSeparator + resource;
 
-            var resourceName = baseUri + resource.Substring(nameIndex + 1);
             var text = SciterFactory.ResolveBinResource(resourceName, ResourceType.Html);
             
-            SciterHostApi.SciterLoadHtml(Handle, text, baseUri);
+            if (text == null)
+                throw new FileNotFoundException(String.Format("Resource {0} not found", resourceName));
+
+            SciterHostApi.SciterLoadHtml(Handle, text, resourceName);
         }
 
         /// <summary>
