@@ -134,7 +134,8 @@ namespace Expemerent.UI.Native
         {
             Rectangle rect;
             CheckResult(HTMLayoutGetElementLocation(he.Handle, out rect, (ELEMENT_AREA)areas));
-
+            rect.Width -= rect.Left;
+            rect.Height -= rect.Top;
             return rect;
         }
 
@@ -540,9 +541,7 @@ namespace Expemerent.UI.Native
         private static void CheckResult(ScDomResult result)
         {
             if (result != ScDomResult.SCDOM_OK && result != ScDomResult.SCDOM_OK_NOT_HANDLED)
-            {
-                throw new SciterException(String.Format("Sciter api failed with {0} result", result));
-            }
+                throw new InvalidOperationException(String.Format("Sciter api failed with {0} result", result));
 
             Debug.Assert(result == ScDomResult.SCDOM_OK);
         }

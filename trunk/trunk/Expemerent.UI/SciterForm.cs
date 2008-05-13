@@ -32,7 +32,7 @@ namespace Expemerent.UI
         private SciterHost Host
         {
             [DebuggerStepThrough]
-            get { return _host; }
+            get { return _host ?? (_host = new SciterHost(this)); }
         } 
         #endregion
 
@@ -42,7 +42,6 @@ namespace Expemerent.UI
         /// </summary>
         public SciterForm()
         {
-            _host = new SciterHost(this);
         } 
         #endregion
 
@@ -104,11 +103,20 @@ namespace Expemerent.UI
         /// <summary>
         /// Loads Html from the resource. The html loading can be delayed if window handle was not created.
         /// </summary>
-        /// <typeparam name="TResourceBase">Used as a base URI in the data requests</typeparam>
-        /// <param name="resourceName">Relative resource name</param>
+        /// <typeparam name="TResourceBase">Used as base namespace to find a managed resource</typeparam>
+        /// <param name="resourceName">Relative, case sensitive, resource name</param>
         public void LoadHtmlResource<TResourceBase>(string resourceName)
         {
             Host.LoadResource<TResourceBase>(resourceName);
+        }
+
+        /// <summary>
+        /// Loads Html from the resource. The html loading can be delayed if window handle was not created.
+        /// </summary>
+        /// <param name="resourceName">Case sensitive, resource name</param>
+        public void LoadHtmlResource(String resourceName)
+        {
+            Host.LoadResource(resourceName);
         }
 
         /// <summary>
@@ -119,6 +127,14 @@ namespace Expemerent.UI
         public void LoadHtml(string baseUri, string html)
         {
             Host.LoadHtml(baseUri, html);
+        }
+
+        /// <summary>
+        /// Reloads previously loaded document
+        /// </summary>
+        public void Reload()
+        {
+            Host.Reload();
         }
         #endregion
 

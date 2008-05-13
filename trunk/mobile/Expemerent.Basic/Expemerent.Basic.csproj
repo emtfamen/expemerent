@@ -76,12 +76,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Html\bender.png" />
     <EmbeddedResource Include="Html\Default.htm" />
     <Content Include="$(SolutionDir)\3rdParty\Htmlayout\bin\windows mobile 5.0 pocket pc sdk (armv4i)\htmlayout.dll">
       <Link>htmlayout.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="Html\images\open.png" />
+    <EmbeddedResource Include="Html\images\redo.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />

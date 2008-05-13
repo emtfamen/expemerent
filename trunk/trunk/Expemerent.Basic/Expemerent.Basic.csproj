@@ -48,9 +48,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ContentControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -72,26 +69,15 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Html\bender.png" />
     <EmbeddedResource Include="Html\Default.htm" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Html\back.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(SolutionDir)\3rdParty\Sciter\bin\sciter-scintilla.dll">
       <Link>sciter-scintilla.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <EmbeddedResource Include="Html\highlight-links.htm" />
-    <EmbeddedResource Include="Html\sliding-list.htm" />
-    <EmbeddedResource Include="Html\scintilla.htm" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Html\schemas\common.tis" />
-    <EmbeddedResource Include="Html\schemas\html.tis" />
-    <EmbeddedResource Include="Html\schemas\tiscript.tis" />
-    <EmbeddedResource Include="Html\scintilla.tis" />
+    <EmbeddedResource Include="Html\images\open.png" />
+    <EmbeddedResource Include="Html\images\redo.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />

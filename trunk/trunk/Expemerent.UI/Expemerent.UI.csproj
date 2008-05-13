@@ -134,13 +134,13 @@
     <Compile Include="Native\User32.cs" />
     <Compile Include="Native\WindowHook.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Protocol\FileProtocol.cs" />
     <Compile Include="Protocol\IProtocolHandler.cs" />
     <Compile Include="Protocol\ResProtocol.cs" />
     <Compile Include="ResourceType.cs" />
     <Compile Include="SciterControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SciterException.cs" />
     <Compile Include="SciterFactory.cs" />
     <Compile Include="SciterForm.cs">
       <SubType>Form</SubType>

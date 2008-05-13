@@ -5,6 +5,7 @@ using Keys = System.Windows.Forms.Keys;
 using System.Security;
 using Expemerent.UI.Behaviors;
 using Expemerent.UI.Dom;
+using System.Drawing;
 
 namespace Expemerent.UI.Native
 {
@@ -265,6 +266,18 @@ namespace Expemerent.UI.Native
         [DllImport(SciterDll)]
         private static extern bool SciterCall(IntPtr hWnd, [MarshalAs(UnmanagedType.LPStr)] string functionName, int argc, [MarshalAs(UnmanagedType.LPArray)] JsonValue[] argv, out JsonValue retval);
 
+        /// <summary>
+        /// Returns minimal width of the document.
+        /// </summary>
+        [DllImport(SciterDll)]
+        private static extern int SciterGetMinWidth(IntPtr hWndHTMLayout);
+
+        /// <summary>
+        /// Returns minimal height of the document.
+        /// </summary>
+        [DllImport(SciterDll)]
+        private static extern int SciterGetMinHeight(IntPtr hWndHTMLayout, int width);
+
         #endregion
 
         #region Public interface
@@ -374,6 +387,16 @@ namespace Expemerent.UI.Native
             return SciterDataReadyAsync(hWndSciter, uri, buffer, buffer == null ? 0 : buffer.Length, requestId);
         }
 
+        /// <summary>
+        /// Returns size of the document to show it without scrollbars
+        /// </summary>
+        public static Size SciterGetOptimalSize(IntPtr hWndSciter)
+        {
+            var width = SciterGetMinWidth(hWndSciter);
+            var height = SciterGetMinHeight(hWndSciter, width);
+
+            return new Size(width, height);
+        }
         #endregion
 
         #region Private implementation
