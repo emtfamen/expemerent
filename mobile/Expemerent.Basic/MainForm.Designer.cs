@@ -30,12 +30,10 @@
         {
             this.SuspendLayout();
             // 
-            // Form1
+            // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.AutoScroll = true;
-            this.ClientSize = new System.Drawing.Size(240, 294);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.ClientSize = new System.Drawing.Size(719, 461);
             this.Name = "MainForm";
             this.Text = "MainForm";
             this.ResumeLayout(false);
@@ -43,6 +41,14 @@
         }
 
         #endregion
+
+
+
+
+
+
+
+
     }
 }
 

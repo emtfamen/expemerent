@@ -90,16 +90,17 @@ namespace Expemerent.UI.Native
             using (var scope = ElementScope.Create())
             {
                 Debug.Assert(_originalWndProc != IntPtr.Zero, "Window hook was not installed");
-                bool handled = false;
+                bool handled = false;                
 
-                if (msg == User32.WM_DESTROY)
-                    revertWndProc();
-
-                IntPtr retval = _callback(hwnd, msg, wParam, lParam, ref handled);
+                var retval = _callback(hwnd, msg, wParam, lParam, ref handled);
                 if (handled)
                     return retval;
 
-                return User32.CallWindowProc(_originalWndProc, hwnd, msg, wParam, lParam);
+                retval = User32.CallWindowProc(_originalWndProc, hwnd, msg, wParam, lParam);
+                if (msg == User32.WM_DESTROY)
+                    revertWndProc();
+
+                return retval;
             }
         }
 

@@ -31,7 +31,7 @@ namespace Expemerent.UI
         /// <summary>
         /// Collection of registered protocol handlers
         /// </summary>
-        private readonly static List<IProtocolHandler> _protocols = new List<IProtocolHandler>() { new ResProtocol() };
+        private readonly static List<IProtocolHandler> _protocols = new List<IProtocolHandler>() { new ResProtocol(), new FileProtocol() };
 
         /// <summary>
         /// Registers protocol handler
