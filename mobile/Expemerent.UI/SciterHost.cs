@@ -150,7 +150,7 @@ namespace Expemerent.UI
                 
                 _view = value;
                 if (_view != null)
-                    View.AttachEventHandler(this, EVENT_GROUPS.HANDLE_METHOD_CALL | EVENT_GROUPS.HANDLE_SCRIPTING_METHOD_CALL | EVENT_GROUPS.HANDLE_INITIALIZATION);                    
+                    _view.AttachEventHandler(this, EVENT_GROUPS.HANDLE_METHOD_CALL | EVENT_GROUPS.HANDLE_SCRIPTING_METHOD_CALL | EVENT_GROUPS.HANDLE_INITIALIZATION);                    
             }
         }
 
@@ -242,6 +242,9 @@ namespace Expemerent.UI
         public void AttachToControl()
         {
             View = SciterView.Attach(this);
+
+            if (_loadHtmlRequest != null)
+                _loadHtmlRequest(View);
         }
 
         /// <summary>
@@ -249,9 +252,6 @@ namespace Expemerent.UI
         /// </summary>
         public void DetachFromControl()
         {
-            if (View.HandleInternal != IntPtr.Zero)
-                throw new InvalidOperationException("View should be detached from window first");
-
             View = null;
             Behaviors = null;
         }
@@ -277,6 +277,23 @@ namespace Expemerent.UI
         /// <summary>
         /// Loads Html from the resource. The html loading can be delayed if window handle was not created.
         /// </summary>
+        /// <param name="resourceName">Resource name</param>
+        public void LoadResource(string resourceName)
+        {
+            #region Arguments checking
+            if (String.IsNullOrEmpty(resourceName))
+                throw new ArgumentNullException("resourceName");
+            #endregion
+
+            _loadHtmlRequest = view => view.LoadResource(resourceName);
+
+            if (View != null)
+                _loadHtmlRequest(View);
+        }
+
+        /// <summary>
+        /// Loads Html from the resource. The html loading can be delayed if window handle was not created.
+        /// </summary>
         /// <typeparam name="baseUri">Used as a base URI in the data requests</typeparam>
         /// <param name="html">Html text</param>
         public void LoadHtml(string baseUri, string html)
@@ -291,6 +308,15 @@ namespace Expemerent.UI
             _loadHtmlRequest = view => view.LoadHtml(baseUri, html);
 
             if (View != null)
+                _loadHtmlRequest(View);
+        }
+
+        /// <summary>
+        /// Reloads previously loaded document
+        /// </summary>
+        public void Reload()
+        {
+            if (View != null && _loadHtmlRequest != null)
                 _loadHtmlRequest(View);
         }
 

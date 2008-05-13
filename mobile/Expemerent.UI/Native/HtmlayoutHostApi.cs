@@ -237,6 +237,18 @@ namespace Expemerent.UI.Native
         /// </summary>
         [DllImport(HtmlayoutDll, EntryPoint = "HTMLayoutDataReady")]
         private static extern bool HtmlayoutDataReady(IntPtr hWndSciter, [MarshalAs(UnmanagedType.LPWStr)] string uri, [MarshalAs(UnmanagedType.LPArray)] byte[] data, int dataLength);
+
+        /// <summary>
+        /// Returns minimal width of the document.
+        /// </summary>
+        [DllImport(HtmlayoutDll, EntryPoint = "HTMLayoutGetMinWidth")]
+        private static extern int SciterGetMinWidth(IntPtr hWndHTMLayout);
+
+        /// <summary>
+        /// Returns minimal height of the document.
+        /// </summary>
+        [DllImport(HtmlayoutDll, EntryPoint = "HTMLayoutGetMinHeight")]
+        private static extern int SciterGetMinHeight(IntPtr hWndHTMLayout, int width);
         #endregion
 
         #region Public interface
