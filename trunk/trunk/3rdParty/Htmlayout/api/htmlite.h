@@ -169,7 +169,7 @@ EXTERN_C  HPRESULT HLAPI HTMLiteRenderOnBitmap(HTMLITE hLite, HBITMAP hbmp,
  * \param[in] dataSize \b DWORD, length of the data in bytes.
  *
  **/
-EXTERN_C  HPRESULT HLAPI HTMLiteSetDataReady(HTMLITE hLite, LPCSTR url, LPCBYTE data, DWORD dataSize);
+EXTERN_C  HPRESULT HLAPI HTMLiteSetDataReady(HTMLITE hLite, LPCWSTR url, LPCBYTE data, DWORD dataSize);
 
 /**Use this function outside of HLN_LOAD_DATA request. This function is needed when you
  * you have your own http client implemented in your application.
@@ -182,7 +182,7 @@ EXTERN_C  HPRESULT HLAPI HTMLiteSetDataReady(HTMLITE hLite, LPCSTR url, LPCBYTE 
  * \return \b BOOL, TRUE if HTMLayout accepts the data or \c FALSE if error occured 
  **/
 
-EXTERN_C  HPRESULT HLAPI HTMLiteSetDataReadyAsync(HTMLITE hLite, LPCSTR uri, LPBYTE data, DWORD dataSize, UINT type);
+EXTERN_C  HPRESULT HLAPI HTMLiteSetDataReadyAsync(HTMLITE hLite, LPCWSTR uri, LPCBYTE data, DWORD dataSize, UINT type);
 
 /**Get minimum width of loaded document 
  * ATTN: for this method to work document shall have following style:
@@ -340,13 +340,21 @@ public:
     return hr == HPR_OK;
   }
 
-  bool  setDataReady(LPCSTR url, LPCBYTE data, DWORD dataSize)
+  bool  setDataReady(LPCBYTE data, DWORD dataSize)
   {
-    HPRESULT hr = HTMLiteSetDataReady(hLite, url, data, dataSize);
+    HPRESULT hr = HTMLiteSetDataReady(hLite, 0, data, dataSize);
+    assert(hr == HPR_OK);
+    return hr == HPR_OK;
+  }
+
+  bool  setDataReadyAsync(LPCWSTR url, LPCBYTE data, DWORD dataSize, UINT dataType)
+  {
+    HPRESULT hr = HTMLiteSetDataReadyAsync(hLite, url, data, dataSize,dataType);
     assert(hr == HPR_OK);
     return hr == HPR_OK;
   }
   
+
   // Get current document measured height for width
   // given in measure scaledWidth/viewportWidth parameters.
   // ATTN: You need call first measure to get valid result.

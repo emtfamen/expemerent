@@ -13,7 +13,7 @@ namespace Expemerent.UI.Native
         /// </summary>
         public static WipeCallback GetWipeDelegate(IntPtr wipe)
         {
-		    return null;
+            throw new NotImplementedException("Wipe not supported on mobile platform");
         }
 
         /// <summary>
