@@ -88,6 +88,7 @@
     <Compile Include="Controls\ContainerControl.cs" />
     <Compile Include="Controls\ControlsCollection.cs" />
     <Compile Include="Controls\ConvertUtility.cs" />
+    <Compile Include="Controls\DataGridControl.cs" />
     <Compile Include="Controls\InputControl.cs">
     </Compile>
     <Compile Include="Controls\ISciterControl.cs" />

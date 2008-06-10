@@ -14,6 +14,34 @@ namespace Expemerent.UI.Controls
     /// </summary>
     public abstract class ListControl : BindableControl
     {
+        #region IItemsContainer interface
+        /// <summary>
+        /// Base interface for containers of items
+        /// </summary>
+        public interface IItemsContainer : IEnumerable<Element>
+        {
+            /// <summary>
+            /// Inserts element at specified position
+            /// </summary>
+            void InsertElement(Element element, int position);
+
+            /// <summary>
+            /// Determines the index of specified element in the container
+            /// </summary>
+            int IndexOf(Element element);
+
+            /// <summary>
+            /// Gets amount of items in the container
+            /// </summary>
+            int Count { get; }
+
+            /// <summary>
+            /// Returns element at the specified index 
+            /// </summary>
+            Element this[int index] { get; }
+        }
+        #endregion
+
         #region Defines possible list item types
         /// <summary>
         /// Type of the item to insert
@@ -31,13 +59,6 @@ namespace Expemerent.UI.Controls
             Selected
         } 
         #endregion
-
-        #region Element factory delegate
-		/// <summary>
-        /// Defines a factory method to create new elements
-        /// </summary>
-        protected delegate ElementRef CreateElementHandler(string tag, string text); 
-	    #endregion
 
         #region Private data
         /// <summary>
@@ -99,7 +120,9 @@ namespace Expemerent.UI.Controls
         /// </summary>
         protected virtual void UnwireDataSource()
         {
-            Debug.Assert(DataManager != null, "Cannot unwire null empty data manager");
+            ClearItems();
+
+            Debug.Assert(DataManager != null, "Cannot unwire null data manager");
 
             DataManager.ItemChanged -= manager_ItemChanged;
             DataManager.ListChanged -= manager_ListChanged;
@@ -108,7 +131,7 @@ namespace Expemerent.UI.Controls
         }
 
         /// <summary>
-        /// Removes dataSource subscriptions
+        /// Subscribes to the dataSource events. This method called when all conditions are ready to bind data
         /// </summary>
         protected virtual void WireDataSource()
         {
@@ -118,6 +141,8 @@ namespace Expemerent.UI.Controls
             DataManager.ListChanged += manager_ListChanged;
             DataManager.PositionChanged += manager_PositionChanged;
             DataManager.MetaDataChanged += manager_MetaDataChanged;
+
+            ClearItems();
         }
 
         /// <summary>
@@ -152,7 +177,7 @@ namespace Expemerent.UI.Controls
         /// </summary>
         private void ProcessPositionChanged()
         {
-            var elements = GetItemsContainer().Children;
+            var elements = GetItemsContainer();
             for (int i = 0; i < elements.Count; ++i)
                 UpdateItemType(i, elements[i]);
 
@@ -170,7 +195,7 @@ namespace Expemerent.UI.Controls
                     {
                         var container = GetItemsContainer();
                         var item = DataManager.List[e.NewIndex];
-                        using (var childHandle = CreateItem(e.NewIndex, item, Element.CreateElement))
+                        using (var childHandle = CreateItem(e.NewIndex, item))
                         {
                             container.InsertElement(childHandle.Element, e.NewIndex);
                         }
@@ -180,7 +205,7 @@ namespace Expemerent.UI.Controls
                 case ListChangedType.ItemChanged:
                     {
                         var container = GetItemsContainer();
-                        var child = container.Children[e.NewIndex];
+                        var child = container[e.NewIndex];
                         UpdateItem(e.NewIndex, DataManager.List[e.NewIndex], child);
                         Element.Update();
                     }
@@ -188,7 +213,7 @@ namespace Expemerent.UI.Controls
                 case ListChangedType.ItemDeleted:
                     {
                         var container = GetItemsContainer();
-                        var child = container.Children[e.NewIndex];
+                        var child = container[e.NewIndex];
                         child.Delete();
                         
                         ProcessPositionChanged();
@@ -199,7 +224,7 @@ namespace Expemerent.UI.Controls
                     {
                         var container = GetItemsContainer();
                         var item = DataManager.List[e.OldIndex];
-                        var child = container.Children[e.NewIndex];
+                        var child = container[e.NewIndex];
                         UpdateItem(e.NewIndex, item, child);
                         Element.Update();
                     }
@@ -234,7 +259,7 @@ namespace Expemerent.UI.Controls
                 var elements = GetItemsContainer();
                 var item = DataManager.List[index];
 
-                UpdateItem(index, item, elements.Children[index]);
+                UpdateItem(index, item, elements[index]);
 
                 // Selected value changed
                 OnPropertyChanged(new PropertyChangedEventArgs(String.Empty));
@@ -252,12 +277,10 @@ namespace Expemerent.UI.Controls
             {
                 DataManager = (CurrencyManager)BindingContext[DataSource];
                 
-                ClearItems();
                 var container = GetItemsContainer();
-
                 for (var i = 0; i < DataManager.List.Count; ++i)
                 {
-                    using (var item = CreateItem(i, DataManager.List[i], Element.CreateElement))
+                    using (var item = CreateItem(i, DataManager.List[i]))
                         container.InsertElement(item.Element, i);
                 }
 
@@ -285,7 +308,21 @@ namespace Expemerent.UI.Controls
         /// <summary>
         /// Updates element type
         /// </summary>
-        protected abstract void UpdateItemType(int position, Element element);
+        protected virtual void UpdateItemType(int position, Element element)
+        {
+            var itemType = GetItemType(position);
+            switch (itemType)
+            {
+                case ListItemType.Item:
+                    element.SetState(ElementState.None, ElementState.Checked | ElementState.Current);
+                    break;
+                case ListItemType.Selected:
+                    element.SetState(ElementState.Checked | ElementState.Current, ElementState.None);
+                    break;
+                default:
+                    break;
+            }
+        }
 
         /// <summary>
         /// Updates item text & type
@@ -293,27 +330,30 @@ namespace Expemerent.UI.Controls
         protected abstract void UpdateItem(int position, object item, Element element);
 
         /// <summary>
-        /// Creates an Element to insert in the list
+        /// Creates an <see cref="Element"/> to insert in the list
         /// </summary>
-        protected abstract ElementRef CreateItem(int position, object item, CreateElementHandler itemFactory);
+        protected abstract ElementRef CreateItem(int position, object item);
         
         /// <summary>
-        /// Returns element where items of the collection should be created
+        /// Returns container where items should be created
         /// </summary>
-        protected abstract Element GetItemsContainer();
+        protected abstract IItemsContainer GetItemsContainer();
 
         /// <summary>
         /// Clears content of the list control
         /// </summary>
         private void ClearItems()
         {
-            // Scope will free deleted items as soon as possible
-            using (var scope = ElementScope.Create())
+            if (ElementRef != null)
             {
-                var container = GetItemsContainer();
-                var items = new List<Element>(container.Children);
-                foreach (var item in items)
-                    item.Delete();
+                // Scope will free deleted items as soon as possible
+                using (var scope = ElementScope.Create())
+                {
+                    var container = GetItemsContainer();
+                    var items = new List<Element>(container);
+                    foreach (var item in items)
+                        item.Delete();
+                }
             }
         }
         #endregion

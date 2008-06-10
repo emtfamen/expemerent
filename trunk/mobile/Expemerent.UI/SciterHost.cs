@@ -323,7 +323,7 @@ namespace Expemerent.UI
         /// <summary>
         /// Causes validation in all sciter controls
         /// </summary>
-        public void PerformValidation()
+        public bool PerformValidation()
         {
             if (HasSciterControls)
             {
@@ -341,7 +341,14 @@ namespace Expemerent.UI
 
                 if (firstFailed != null)
                     firstFailed.SetFocus();
+                else
+                    return true;
+
+                // validation failed
+                return false;
             }
+
+            return true;
         } 
         #endregion
 

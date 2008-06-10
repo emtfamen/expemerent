@@ -98,7 +98,7 @@ namespace Expemerent.UI.Controls
         internal BindableControl FindControl(Element element)
         {
             foreach (var item in Items)
-                if (item.ElementHandle == element.Handle)
+                if (item.ElementRef != null && item.ElementRef.ElementHandle == element.Handle)
                     return item;
 
             return null;

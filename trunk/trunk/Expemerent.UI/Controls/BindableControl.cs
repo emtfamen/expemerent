@@ -167,7 +167,7 @@ namespace Expemerent.UI.Controls
         /// <summary>
         /// Strong reference to the element handle
         /// </summary>
-        private ElementRef ElementRef
+        internal ElementRef ElementRef
         {
             [DebuggerStepThrough]
             get { return _elementRef; }
@@ -178,15 +178,6 @@ namespace Expemerent.UI.Controls
 
                 _elementRef = value;                
             }
-        }
-
-        /// <summary>
-        /// Gets HELEMENT handle
-        /// </summary>
-        internal IntPtr ElementHandle 
-        { 
-            [DebuggerStepThrough]
-            get { return ElementRef != null ? ElementRef.ElementHandle : IntPtr.Zero; } 
         }
 
         /// <summary>
