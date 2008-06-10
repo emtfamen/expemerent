@@ -4,11 +4,89 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using Expemerent.UI.Behaviors;
 using Expemerent.UI.Dom;
+using System.Collections.Generic;
+using System.Collections;
 
 namespace Expemerent.UI.Controls
 {
     public class ListBoxControl : ListControl
     {
+        #region IItemsContainer implementation
+        /// <summary>
+        /// The <see cref="IItemsContainer"/> for the select <see cref="Element"/> 
+        /// </summary>
+        protected class ElementContainer : IItemsContainer
+        {
+            /// <summary>
+            /// Container instance
+            /// </summary>
+            protected Element Element { get; private set; }
+
+            /// <summary>
+            /// Creates a new instance of the <see cref="ElementContainer"/> class
+            /// </summary>
+            public ElementContainer(Element element)
+            {
+                #region Arguments checking
+                if (element == null)
+                    throw new ArgumentNullException("element");
+                #endregion
+
+                Element = element;
+            }
+
+            /// <summary>
+            /// Inserts element at specified position
+            /// </summary>
+            public void InsertElement(Element element, int position)
+            {
+                Element.InsertElement(element, position);
+            }
+
+            /// <summary>
+            /// Determines the index of specified element in the container
+            /// </summary>
+            public int IndexOf(Element element)
+            {
+                return Element.Children.IndexOf(element);
+            }
+
+            /// <summary>
+            /// Gets amount of items in the container
+            /// </summary>
+            public int Count
+            {
+                [DebuggerStepThrough]
+                get { return Element.Children.Count; }
+            }
+
+            /// <summary>
+            /// Returns element at the specified index 
+            /// </summary>
+            public Element this[int index]
+            {
+                [DebuggerStepThrough]
+                get { return Element.Children[index]; }
+            }
+
+            /// <summary>
+            /// Gets items enumerator
+            /// </summary>
+            public IEnumerator<Element> GetEnumerator()
+            {
+                return Element.Children.GetEnumerator();
+            }
+
+            /// <summary>
+            /// Gets items enumerator
+            /// </summary>
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return GetEnumerator();
+            }
+        } 
+        #endregion
+
         /// <summary>
         /// Defines key for <see cref="Format"/> event delegate
         /// </summary>
@@ -157,39 +235,20 @@ namespace Expemerent.UI.Controls
         }
 
         /// <summary>
-        /// Returns element where items of the collection should be created
+        /// Returns container where items should be created
         /// </summary>
-        protected override Element GetItemsContainer()
+        protected override IItemsContainer GetItemsContainer()
         {
             var selectType = Element.Attributes["type"];
             switch (selectType)
             {
                 case "select-dropdown":
-                    return Element.Find(":root > popup[type='select']");
+                    return new ElementContainer(Element.Find(":root > popup[type='select']"));
                 case "select":
-                    return Element;
+                    return new ElementContainer(Element);
                 default:
                     Debug.WriteLine(String.Format("Unexpected select type: {0}", selectType));
-                    return Element;
-            }
-        }
-
-        /// <summary>
-        /// Updates element type
-        /// </summary>
-        protected override void UpdateItemType(int position, Element element)
-        {
-            var itemType = GetItemType(position);
-            switch (itemType)
-            {
-                case ListItemType.Item:
-                    element.SetState(ElementState.None, ElementState.Checked | ElementState.Current);
-                    break;
-                case ListItemType.Selected:
-                    element.SetState(ElementState.Checked | ElementState.Current, ElementState.None);
-                    break;
-                default:
-                    break;
+                    return new ElementContainer(Element);
             }
         }
 
@@ -205,10 +264,9 @@ namespace Expemerent.UI.Controls
         /// <summary>
         /// Creates an Element to insert in the list
         /// </summary>
-        protected override ElementRef CreateItem(int position, object item, CreateElementHandler createElement)
+        protected override ElementRef CreateItem(int position, object item)
         {
-            var itemType = GetItemType(position);
-            var elementHandle = createElement("option", GetItemText(item));
+            var elementHandle = Element.CreateElement("option", GetItemText(item));
             UpdateItemType(position, elementHandle.Element);
 
             return elementHandle;
@@ -226,19 +284,16 @@ namespace Expemerent.UI.Controls
         }
 
         /// <summary>
-        /// Removes dataSource subscriptions
+        /// Subscribes to the dataSource events
         /// </summary>
         protected override void WireDataSource()
         {
             base.WireDataSource();
 
-            if (DataManager != null)
-            {
-                var props = DataManager.GetItemProperties();
+            var props = DataManager.GetItemProperties();
 
-                _displayMemberProperty = props[DisplayMember ?? String.Empty];
-                _valueMemberProperty = props[ValueMember ?? String.Empty];
-            }
+            _displayMemberProperty = props[DisplayMember ?? String.Empty];
+            _valueMemberProperty = props[ValueMember ?? String.Empty];
         }
 
         #region Handling behavior events
@@ -252,7 +307,7 @@ namespace Expemerent.UI.Controls
             if (e.Phase == Phase.Bubbling && e.BehaviorEvent == BehaviorEventType.SelectSelectionChanged)
             {
                 var container = GetItemsContainer();
-                var index = container.Children.IndexOf(e.Source);
+                var index = container.IndexOf(e.Source);
 
                 DataManager.Position = index;
             }

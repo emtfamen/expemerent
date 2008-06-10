@@ -137,6 +137,14 @@ namespace Expemerent.UI
         {
             Host.Reload();
         }
+
+        /// <summary>
+        /// Causes validation in all sciter controls
+        /// </summary>
+        public bool PerformValidation()
+        {
+            return Host.PerformValidation();
+        }
         #endregion
 
         #region Event handling

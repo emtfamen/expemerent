@@ -1,0 +1,13 @@
+D:\Repository\expemerent\mobile\Expemerent.DbTest\obj\Debug\ResolveAssemblyReference.cache
+D:\Repository\expemerent\mobile\Expemerent.DbTest\obj\Debug\Expemerent.DbTest.MainForm.resources
+D:\Repository\expemerent\mobile\Expemerent.DbTest\obj\Debug\Expemerent.DbTest.Properties.Resources.resources
+D:\Repository\expemerent\mobile\Expemerent.DbTest\obj\Debug\Expemerent.DbTest.csproj.GenerateResource.Cache
+D:\Repository\expemerent\mobile\Expemerent.DbTest\bin\Debug\htmlayout.dll
+D:\Repository\expemerent\mobile\Expemerent.DbTest\bin\Debug\Expemerent.DbTest.exe
+D:\Repository\expemerent\mobile\Expemerent.DbTest\bin\Debug\Expemerent.DbTest.pdb
+D:\Repository\expemerent\mobile\Expemerent.DbTest\bin\Debug\Expemerent.UI.Htmlayout.Mobile.dll
+D:\Repository\expemerent\mobile\Expemerent.DbTest\bin\Debug\System.Data.SQLite.DLL
+D:\Repository\expemerent\mobile\Expemerent.DbTest\bin\Debug\System.Data.SqlServerCe.dll
+D:\Repository\expemerent\mobile\Expemerent.DbTest\bin\Debug\Expemerent.UI.Htmlayout.Mobile.pdb
+D:\Repository\expemerent\mobile\Expemerent.DbTest\obj\Debug\Expemerent.DbTest.exe
+D:\Repository\expemerent\mobile\Expemerent.DbTest\obj\Debug\Expemerent.DbTest.pdb

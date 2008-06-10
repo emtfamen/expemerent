@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Expemerent.UI", "Expemerent
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Expemerent.Basic", "Expemerent.Basic\Expemerent.Basic.csproj", "{343ECB2D-2A4C-48F8-B251-3983AE5B2E2E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Expemerent.DbTest", "Expemerent.DbTest\Expemerent.DbTest.csproj", "{BC2825B9-F573-4A5D-B8EA-D8B135D5C54C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,18 @@ Global
 		{343ECB2D-2A4C-48F8-B251-3983AE5B2E2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{343ECB2D-2A4C-48F8-B251-3983AE5B2E2E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{343ECB2D-2A4C-48F8-B251-3983AE5B2E2E}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{BC2825B9-F573-4A5D-B8EA-D8B135D5C54C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC2825B9-F573-4A5D-B8EA-D8B135D5C54C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC2825B9-F573-4A5D-B8EA-D8B135D5C54C}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{BC2825B9-F573-4A5D-B8EA-D8B135D5C54C}.HtmDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC2825B9-F573-4A5D-B8EA-D8B135D5C54C}.HtmDebug|Any CPU.Build.0 = Debug|Any CPU
+		{BC2825B9-F573-4A5D-B8EA-D8B135D5C54C}.HtmDebug|Any CPU.Deploy.0 = Debug|Any CPU
+		{BC2825B9-F573-4A5D-B8EA-D8B135D5C54C}.HtmRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{BC2825B9-F573-4A5D-B8EA-D8B135D5C54C}.HtmRelease|Any CPU.Build.0 = Release|Any CPU
+		{BC2825B9-F573-4A5D-B8EA-D8B135D5C54C}.HtmRelease|Any CPU.Deploy.0 = Release|Any CPU
+		{BC2825B9-F573-4A5D-B8EA-D8B135D5C54C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC2825B9-F573-4A5D-B8EA-D8B135D5C54C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC2825B9-F573-4A5D-B8EA-D8B135D5C54C}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

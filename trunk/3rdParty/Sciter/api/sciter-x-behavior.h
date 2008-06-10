@@ -496,7 +496,7 @@ typedef  ElementEventProc * LPElementEventProc;
         root(this);
       }
       
-      // needs to be overrided
+      // needs to be overriden
       virtual event_handler* create(HELEMENT he) = 0;
   
       // behavior list support
