@@ -144,7 +144,7 @@
     <Compile Include="Native\SharedHostApi.cs" />
     <Compile Include="Protocol\FileProtocol.cs" />
     <Compile Include="SciterHost.cs" />
-    <Content Include="$(SolutionDir)\3rdParty\Htmlayout\bin\windows mobile 5.0 pocket pc sdk (armv4i)\htmlayout.dll">
+    <Content Include="$(SolutionDir)\..\3rdParty\Htmlayout\bin\windows mobile 5.0 pocket pc sdk (armv4i)\htmlayout.dll">
       <Link>htmlayout.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -50,9 +50,12 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data.SQLite, Version=1.0.48.0, Culture=neutral, PublicKeyToken=1fdb50b1b62b4c84, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\3rdParty\SQLite\CompactFramework\System.Data.SQLite.DLL</HintPath>
+      <HintPath>$(SolutionDir)\..\3rdParty\SQLite\CompactFramework\System.Data.SQLite.DLL</HintPath>
     </Reference>
-    <Reference Include="System.Data.SqlServerCe, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3be235df1c8d2ad3, processorArchitecture=MSIL" />
+    <Reference Include="System.Data.SqlServerCe, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3be235df1c8d2ad3, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(SolutionDir)\..\3rdParty\SqlCe\Device\System.Data.SqlServerCe.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
@@ -93,7 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Html\Default.htm" />
-    <Content Include="$(SolutionDir)\3rdParty\Htmlayout\bin\windows mobile 5.0 pocket pc sdk (armv4i)\htmlayout.dll">
+    <Content Include="$(SolutionDir)\..\3rdParty\Htmlayout\bin\windows mobile 5.0 pocket pc sdk (armv4i)\htmlayout.dll">
       <Link>htmlayout.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

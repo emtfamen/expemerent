@@ -155,7 +155,7 @@
   <ItemGroup Condition=" '$(Configuration)' == 'SciterDebug' or '$(Configuration)' == 'SciterRelease'">
     <Compile Include="Native\SciterDomApi.cs" />
     <Compile Include="Native\SciterHostApi.cs" />
-    <Content Include="$(SolutionDir)\3rdParty\Sciter\bin\sciter-x.dll">
+    <Content Include="$(SolutionDir)\..\3rdParty\Sciter\bin\sciter-x.dll">
       <Link>sciter-x.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -163,7 +163,7 @@
   <ItemGroup Condition=" '$(Configuration)' == 'HtmDebug' or '$(Configuration)' == 'HtmRelease'">
     <Compile Include="Native\HtmlayoutDomApi.cs" />
     <Compile Include="Native\HtmlayoutHostApi.cs" />
-    <Content Include="$(SolutionDir)\3rdParty\Htmlayout\bin\htmlayout.dll">
+    <Content Include="$(SolutionDir)\..\3rdParty\Htmlayout\bin\htmlayout.dll">
       <Link>htmlayout.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
