@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Expemerent.UI", "Expemerent.UI\Expemerent.UI.csproj", "{9DFF74A8-33C2-48E7-9A8E-CCA2CB5447CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Expemerent.Basic", "Expemerent.Basic\Expemerent.Basic.csproj", "{343ECB2D-2A4C-48F8-B251-3983AE5B2E2E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Expemerent.DbTest", "Expemerent.DbTest\Expemerent.DbTest.csproj", "{BC2825B9-F573-4A5D-B8EA-D8B135D5C54C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		HtmDebug|Any CPU = HtmDebug|Any CPU
+		HtmRelease|Any CPU = HtmRelease|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9DFF74A8-33C2-48E7-9A8E-CCA2CB5447CF}.Debug|Any CPU.ActiveCfg = HtmDebug|Any CPU
+		{9DFF74A8-33C2-48E7-9A8E-CCA2CB5447CF}.Debug|Any CPU.Build.0 = HtmDebug|Any CPU
+		{9DFF74A8-33C2-48E7-9A8E-CCA2CB5447CF}.HtmDebug|Any CPU.ActiveCfg = HtmDebug|Any CPU
+		{9DFF74A8-33C2-48E7-9A8E-CCA2CB5447CF}.HtmDebug|Any CPU.Build.0 = HtmDebug|Any CPU
+		{9DFF74A8-33C2-48E7-9A8E-CCA2CB5447CF}.HtmRelease|Any CPU.ActiveCfg = HtmRelease|Any CPU
+		{9DFF74A8-33C2-48E7-9A8E-CCA2CB5447CF}.HtmRelease|Any CPU.Build.0 = HtmRelease|Any CPU
+		{9DFF74A8-33C2-48E7-9A8E-CCA2CB5447CF}.Release|Any CPU.ActiveCfg = HtmRelease|Any CPU
+		{9DFF74A8-33C2-48E7-9A8E-CCA2CB5447CF}.Release|Any CPU.Build.0 = HtmRelease|Any CPU
+		{343ECB2D-2A4C-48F8-B251-3983AE5B2E2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{343ECB2D-2A4C-48F8-B251-3983AE5B2E2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{343ECB2D-2A4C-48F8-B251-3983AE5B2E2E}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{343ECB2D-2A4C-48F8-B251-3983AE5B2E2E}.HtmDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{343ECB2D-2A4C-48F8-B251-3983AE5B2E2E}.HtmDebug|Any CPU.Build.0 = Debug|Any CPU
+		{343ECB2D-2A4C-48F8-B251-3983AE5B2E2E}.HtmDebug|Any CPU.Deploy.0 = Debug|Any CPU
+		{343ECB2D-2A4C-48F8-B251-3983AE5B2E2E}.HtmRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{343ECB2D-2A4C-48F8-B251-3983AE5B2E2E}.HtmRelease|Any CPU.Build.0 = Release|Any CPU
+		{343ECB2D-2A4C-48F8-B251-3983AE5B2E2E}.HtmRelease|Any CPU.Deploy.0 = Release|Any CPU
+		{343ECB2D-2A4C-48F8-B251-3983AE5B2E2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{343ECB2D-2A4C-48F8-B251-3983AE5B2E2E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{343ECB2D-2A4C-48F8-B251-3983AE5B2E2E}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{BC2825B9-F573-4A5D-B8EA-D8B135D5C54C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC2825B9-F573-4A5D-B8EA-D8B135D5C54C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC2825B9-F573-4A5D-B8EA-D8B135D5C54C}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{BC2825B9-F573-4A5D-B8EA-D8B135D5C54C}.HtmDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC2825B9-F573-4A5D-B8EA-D8B135D5C54C}.HtmDebug|Any CPU.Build.0 = Debug|Any CPU
+		{BC2825B9-F573-4A5D-B8EA-D8B135D5C54C}.HtmDebug|Any CPU.Deploy.0 = Debug|Any CPU
+		{BC2825B9-F573-4A5D-B8EA-D8B135D5C54C}.HtmRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{BC2825B9-F573-4A5D-B8EA-D8B135D5C54C}.HtmRelease|Any CPU.Build.0 = Release|Any CPU
+		{BC2825B9-F573-4A5D-B8EA-D8B135D5C54C}.HtmRelease|Any CPU.Deploy.0 = Release|Any CPU
+		{BC2825B9-F573-4A5D-B8EA-D8B135D5C54C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC2825B9-F573-4A5D-B8EA-D8B135D5C54C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC2825B9-F573-4A5D-B8EA-D8B135D5C54C}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

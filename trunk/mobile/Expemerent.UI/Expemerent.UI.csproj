@@ -1,0 +1,167 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{9DFF74A8-33C2-48E7-9A8E-CCA2CB5447CF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Expemerent.UI</RootNamespace>
+    <AssemblyName>Expemerent.UI.Htmlayout.Mobile</AssemblyName>
+    <ProjectTypeGuids>{4D628B5B-2FBC-4AA6-8C16-197242AEB884};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <PlatformFamilyName>PocketPC</PlatformFamilyName>
+    <PlatformID>4118C335-430C-497f-BE48-11C3316B135E</PlatformID>
+    <OSVersion>5.1</OSVersion>
+    <DeployDirSuffix>Sciter.Mobile</DeployDirSuffix>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <NativePlatformName>Windows Mobile 5.0 Pocket PC SDK</NativePlatformName>
+    <FormFactorID>
+    </FormFactorID>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'HtmDebug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\HtmDebug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;$(PlatformFamilyName)</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <GenerateSerializationAssemblies>off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'HtmRelease|AnyCPU' ">
+    <OutputPath>bin\HtmRelease\</OutputPath>
+    <DefineConstants>TRACE;$(PlatformFamilyName)</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <GenerateSerializationAssemblies>off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.XML" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AttachBehaviorEventArgs.cs" />
+    <Compile Include="Behaviors\BehaviorEventArgs.cs" />
+    <Compile Include="Behaviors\DataArrivedEventArgs.cs" />
+    <Compile Include="Behaviors\ElementEventArgs.cs" />
+    <Compile Include="Behaviors\DrawEventArgs.cs" />
+    <Compile Include="Behaviors\FocusEventArgs.cs" />
+    <Compile Include="Behaviors\InputEventArgs.cs" />
+    <Compile Include="Behaviors\ISciterBehavior.cs" />
+    <Compile Include="Behaviors\UserInputEventArgs.cs" />
+    <Compile Include="CallbackHostEventArgs.cs" />
+    <Compile Include="Dom\ElementLocation.cs" />
+    <Compile Include="Dom\ElementState.cs" />
+    <Compile Include="Dom\PopupPlacement.cs" />
+    <Compile Include="LazyValue.cs" />
+    <Compile Include="Native\BehaviorData.cs" />
+    <Compile Include="Native\ElementAreas.cs" />
+    <Compile Include="Native\ElementState.cs" />
+    <Compile Include="Native\EventGroups.cs" />
+    <Compile Include="Dom\ElementScope.cs" />
+    <Compile Include="Native\InstanceProtector.cs" />
+    <Compile Include="Behaviors\KeyEventArgs.cs" />
+    <Compile Include="Behaviors\MethodCallEventArgs.cs" />
+    <Compile Include="Behaviors\MouseEventArgs.cs" />
+    <Compile Include="DataLoadedEventArgs.cs" />
+    <Compile Include="DocumentCompleteEventArgs.cs" />
+    <Compile Include="Dom\Element.cs" />
+    <Compile Include="Dom\ElementRef.cs" />
+    <Compile Include="Dom\ElementsCollection.cs" />
+    <Compile Include="Dom\ElementUtility.cs" />
+    <Compile Include="Behaviors\SciterBehavior.cs" />
+    <Compile Include="LoadDataEventArgs.cs" />
+    <Compile Include="Native\JsonValue.cs" />
+    <Compile Include="Native\PopupPlacement.cs" />
+    <Compile Include="Native\ResourceType.cs" />
+    <Compile Include="Native\ScDomResult.cs" />
+    <Compile Include="Native\Scripting.cs" />
+    <Compile Include="Native\SetElementHtml.cs" />
+    <Compile Include="Native\User32.cs" />
+    <Compile Include="Native\WindowHook.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Protocol\IProtocolHandler.cs" />
+    <Compile Include="Protocol\ResProtocol.cs" />
+    <Compile Include="ResourceType.cs" />
+    <Compile Include="SciterControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SciterFactory.cs" />
+    <Compile Include="SciterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SciterView.cs" />
+    <Compile Include="ScriptingClassAttribute.cs" />
+    <Compile Include="ScriptingMethodAttribute.cs" />
+    <Compile Include="ScriptingPropertyAttribute.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Behaviors\BehaviorAttribute.cs" />
+    <Compile Include="Behaviors\BehaviorMethods.cs" />
+    <Compile Include="Behaviors\BuiltIn\AccessKeys.cs" />
+    <Compile Include="Behaviors\BuiltIn\CollapsibleList.cs" />
+    <Compile Include="Behaviors\BuiltIn\ExpandableList.cs" />
+    <Compile Include="Behaviors\ScriptingMethodCallEventArgs.cs" />
+    <Compile Include="Controls\BindableControl.cs" />
+    <Compile Include="Controls\ButtonControl.cs" />
+    <Compile Include="Controls\CheckBoxControl.cs" />
+    <Compile Include="Controls\ContainerControl.cs" />
+    <Compile Include="Controls\ControlsCollection.cs" />
+    <Compile Include="Controls\ConvertUtility.cs" />
+    <Compile Include="Controls\DataGridControl.cs" />
+    <Compile Include="Controls\InputControl.cs" />
+    <Compile Include="Controls\ISciterControl.cs" />
+    <Compile Include="Controls\ListBoxControl.cs" />
+    <Compile Include="Controls\ListControl.cs" />
+    <Compile Include="Controls\SliderControl.cs" />
+    <Compile Include="Controls\TextBoxControl.cs" />
+    <Compile Include="Dom\IAttributeAccessor.cs" />
+    <Compile Include="Dom\IStyleAccessor.cs" />
+    <Compile Include="ISciterHost.cs" />
+    <Compile Include="ISciterNotifications.cs" />
+    <Compile Include="Native\HtmlayoutDomApi.cs" />
+    <Compile Include="Native\HtmlayoutHostApi.cs" />
+    <Compile Include="Native\MarshalUtility.cs" />
+    <Compile Include="Native\SharedDomApi.cs" />
+    <Compile Include="Native\SharedHostApi.cs" />
+    <Compile Include="Protocol\FileProtocol.cs" />
+    <Compile Include="SciterHost.cs" />
+    <Content Include="$(SolutionDir)\3rdParty\Htmlayout\bin\windows mobile 5.0 pocket pc sdk (armv4i)\htmlayout.dll">
+      <Link>htmlayout.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}">
+        <HostingProcess disable="1" />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
