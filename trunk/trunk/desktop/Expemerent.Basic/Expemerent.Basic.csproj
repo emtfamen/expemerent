@@ -72,7 +72,7 @@
     <EmbeddedResource Include="Html\Default.htm" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="$(SolutionDir)\3rdParty\Sciter\bin\sciter-scintilla.dll">
+    <Content Include="$(SolutionDir)\..\3rdParty\Sciter\bin\sciter-scintilla.dll">
       <Link>sciter-scintilla.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
