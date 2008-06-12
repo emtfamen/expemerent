@@ -55,6 +55,14 @@ namespace Expemerent.DbTest
 
             var database_path = new TextBoxControl() { Selector = "#database_location" };
             database_path.DataBindings.Add("Text", options, "DatabasePath");
+            database_path.Validating += (s, e) =>
+            {
+                e.Cancel = !new DirectoryInfo(database_path.Text).Exists;
+                if (e.Cancel)
+                    database_path.Attributes["error"] = "true";
+                else
+                    database_path.Attributes["error"] = null;
+            };
 
             var records_count = new TextBoxControl() { Selector = "#records_count" };
             records_count.DataBindings.Add("Text", options, "RecordsCount");
