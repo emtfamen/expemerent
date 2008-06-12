@@ -9,6 +9,7 @@
             background-color: ThreeDFace;
             font: system;
         }
+        input[error] { color: red; }
 		.options { flow: vertical; }
 		.options > div { flow: horizontal; padding: 0.5ex; }
 		.metrics  
@@ -31,10 +32,9 @@
         {
         	background-color: ThreeDFace;
         	color: WindowText;        	
-        	border: outset thin ThreeDDarkShadow;
+        	border: outset thin threedshadow;
         	font-weight: bold;
         }
-        
         #metrics_grid td:nth-child(1)
         {
         }
@@ -57,7 +57,7 @@
                 <input id="database_location" type="text" style="width: 100%%" />
                 <input id="folder_browse" type="button" value="..." />
             </div>
-            <div>Create new database: <input id="records_count" type="number" /></div>
+            <div>Records count: <input id="records_count" type="number" /></div>
         </fieldset>        
         <div class="metrics">
             <table id="metrics_grid" fixedrows="1" style="overflow: auto; width: 100%%; height: 100%%">

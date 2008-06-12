@@ -19,8 +19,6 @@ namespace Expemerent.Basic
 
         protected override void OnLoad(EventArgs evt)
         {
-            using (var scope = ElementScope.Create())
-            {
                 base.OnLoad(evt);
 
                 var contentControl = new SciterControl();
@@ -59,7 +57,6 @@ namespace Expemerent.Basic
                 Controls.Add(contentControl);
 
                 LoadHtmlResource<MainForm>("Html/Default.htm");
-            }
         }
     }
 }

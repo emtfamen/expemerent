@@ -53,15 +53,7 @@ namespace Expemerent.DbTest.Provider
         public virtual void RunTests()
         {
             var rnd = new Random();
-            _uniqueIds = new List<int>(Options.RecordsCount);
-
-            while (_uniqueIds.Count < Options.RecordsCount)
-                _uniqueIds = Enumerable.Range(0, 2 * Options.RecordsCount)
-                        .Select(step => rnd.Next())
-                        .Union(_uniqueIds)
-                        .Distinct()
-                        .Take(Options.RecordsCount)
-                        .ToList();
+            _uniqueIds = Enumerable.Range(0, Options.RecordsCount).Select(step => rnd.Next()).Distinct().ToList();
 
             using (Reporter.BeginOperation("Total time"))
             {
@@ -137,7 +129,7 @@ namespace Expemerent.DbTest.Provider
                 {
                     cmd.Parameters[0].Value = item;
                     cmd.Parameters[1].Value = String.Format("Subject: {0}", item);
-                    cmd.Parameters[2].Value = String.Format("<body>Subject: {0}</body>", item);
+                    cmd.Parameters[2].Value = String.Format("<body>Message: {0}</body>", item);
 
                     cmd.ExecuteNonQuery();
                 }                
