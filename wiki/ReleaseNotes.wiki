@@ -1,6 +1,5 @@
 #labels Featured
-
 == v0.3.06.99 == 
 === New === 
- * Expemerent.DbTest: SQLCE vs SQLite performance comparison
+ * DbTest project: SQLCE vs SQLite performance comparison
  * DataGridControl
