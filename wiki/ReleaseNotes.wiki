@@ -1,6 +1,7 @@
-#summary Expemerent v0.3.06.99 Release notes.
+#summary Expemerent Release notes.
 #labels Featured
 
-= New = 
+== v0.3.06.99 == 
+=== New === 
  * Expemerent.DbTest: SQLCE vs SQLite performance comparison
  * DataGridControl
