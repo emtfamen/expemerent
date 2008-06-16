@@ -33,7 +33,7 @@ namespace Expemerent.UI
         private SciterHost Host
         {
             [DebuggerStepThrough]
-            get { return _host ?? (_host = new SciterHost(this)); }
+            get { return _host ?? (_host = new SciterHost(this) { AutoValidate = AutoValidate }); }
         } 
         #endregion
 
@@ -115,7 +115,7 @@ namespace Expemerent.UI
         /// Loads Html from the resource. The html loading can be delayed if window handle was not created.
         /// </summary>
         /// <param name="resourceName">Case sensitive, resource name</param>
-        public void LoadHtmlResource(string resourceName)
+        public void LoadHtmlResource(String resourceName)
         {
             Host.LoadResource(resourceName);
         }
@@ -169,6 +169,17 @@ namespace Expemerent.UI
             if (Site == null || !Site.DesignMode)
                 Host.DetachFromControl();
         }
+        #endregion
+
+        #region Internal implementation
+        /// <summary>
+        /// Handles <see cref="AutoValidate"/> property changes
+        /// </summary>
+        protected override void OnAutoValidateChanged(EventArgs e)
+        {
+            base.OnAutoValidateChanged(e);
+            Host.AutoValidate = AutoValidate;
+        } 
         #endregion
 
         #region ISciterControl implementation

@@ -32,7 +32,7 @@ namespace Expemerent.UI
         private SciterHost Host
         {
             [DebuggerStepThrough]
-            get { return _host ?? (_host = new SciterHost(this)); }
+            get { return _host ?? (_host = new SciterHost(this) { AutoValidate = AutoValidate }); }
         } 
         #endregion
 
@@ -168,6 +168,17 @@ namespace Expemerent.UI
             if (Site == null || !Site.DesignMode)
                 Host.DetachFromControl();
         }
+        #endregion
+
+        #region Internal implementation
+        /// <summary>
+        /// Handles <see cref="AutoValidate"/> property changes
+        /// </summary>
+        protected override void OnAutoValidateChanged(EventArgs e)
+        {
+            base.OnAutoValidateChanged(e);
+            Host.AutoValidate = AutoValidate;
+        } 
         #endregion
 
         #region ISciterControl implementation

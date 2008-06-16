@@ -8,6 +8,7 @@ using Expemerent.UI.Behaviors;
 using Expemerent.UI.Controls;
 using Expemerent.UI.Dom;
 using Expemerent.UI.Native;
+using System.Windows.Forms;
 
 namespace Expemerent.UI
 {
@@ -33,7 +34,7 @@ namespace Expemerent.UI
         private SciterHost Host
         {
             [DebuggerStepThrough]
-            get { return _host ?? (_host = new SciterHost(this)); }
+            get { return _host ?? (_host = new SciterHost(this) { AutoValidate = AutoValidate }); }
         } 
         #endregion
 
@@ -115,7 +116,7 @@ namespace Expemerent.UI
         /// Loads Html from the resource. The html loading can be delayed if window handle was not created.
         /// </summary>
         /// <param name="resourceName">Case sensitive, resource name</param>
-        public void LoadHtmlResource(string resourceName)
+        public void LoadHtmlResource(String resourceName)
         {
             Host.LoadResource(resourceName);
         }
@@ -169,6 +170,21 @@ namespace Expemerent.UI
             if (Site == null || !Site.DesignMode)
                 Host.DetachFromControl();
         }
+        #endregion
+
+        #region Internal implementation
+        /// <summary>
+        /// Handles <see cref="AutoValidate"/> property changes
+        /// </summary>
+        public new AutoValidate AutoValidate
+        {
+            get { return base.AutoValidate; }
+            set
+            {
+                base.AutoValidate = value;
+                Host.AutoValidate = AutoValidate;
+            }
+        } 
         #endregion
 
         #region ISciterControl implementation

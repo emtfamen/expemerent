@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
@@ -85,6 +86,7 @@
     </Compile>
     <Compile Include="Provider\DbProviderFactory.cs" />
     <Compile Include="Provider\DbProviderTest.cs" />
+    <Compile Include="Provider\DbResultSet.cs" />
     <Compile Include="Provider\DisposableAction.cs" />
     <Compile Include="Provider\MetricReporter.cs" />
     <Compile Include="Provider\SqlCe\SqlCeProviderFactory.cs" />
