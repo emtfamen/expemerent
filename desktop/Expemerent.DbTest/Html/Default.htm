@@ -1,75 +1,105 @@
 ﻿<html>
-	<head>
-		<title>Embedded engines test</title>
-		<style type="text/css">
-        body 
-        {             
-            padding: 1ex; 
-            margin: 0px; 
+<head>
+    <title>Embedded engines test</title>
+    <style type="text/css">
+        body
+        {
+            padding: 1ex;
+            margin: 0px;
             background-color: ThreeDFace;
             font: system;
         }
-        input[error] { color: red; }
-		.options { flow: vertical; }
-		.options > div { flow: horizontal; padding: 0.5ex; }
-		.metrics  
-		{
-			width: 100%; 
-			height: 100%%; 
-			border: inset thin threedshadow; 
-			background-color: window;
-        }
-        #metrics_grid 
+        input[error]
         {
-        	padding: 0px;
-        	margin: 0px;
+            color: red;
+        }
+        .options
+        {
+            flow: vertical;
+        }
+        .options > div
+        {
+            flow: horizontal;
+            padding: 0.5ex;
+        }
+        .metrics
+        {
+            width: 100%;
+            height: 100%%;
+            border: inset thin threedshadow;
+            background-color: window;
+        }
+        #metrics_grid
+        {
+            padding: 0px;
+            margin: 0px;
         }
         #metrics_grid td
         {
-        	padding: 0.5ex;
+            padding: 0.5ex;
         }
         #metrics_grid tr:nth-child(1)
         {
-        	background-color: ThreeDFace;
-        	color: WindowText;        	
-        	border: outset thin threedshadow;
-        	font-weight: bold;
-        }       
+            background-color: ThreeDFace;
+            color: WindowText;
+            border: outset thin threedshadow;
+            font-weight: bold;
+        }
         #metrics_grid td:nth-child(1)
         {
         }
         #metrics_grid td:nth-child(2)
         {
-        	text-align: right;
-        }        
-		legend { color: highlight; background-color: ThreeDFace; }		
-		</style> 
-	</head>
-	<body>
-        <fieldset class="options"> 
-            <legend>Database options</legend>
-            <div>
-                Provider: 
-                <select size="1" id="database_provider" style="width: 100%%"/>                 
-            </div>
-            <div>
-                Database location: 
-                <input id="database_location" type="text" style="width: 100%%" />
-                <input id="folder_browse" type="button" value="..." />
-            </div>
-            <div>Records count: <input id="records_count" type="number" /></div>
-        </fieldset>        
-        <div class="metrics">
-            <table id="metrics_grid" fixedrows="1" style="overflow: auto; width: 100%%; height: 100%%">
-                <tr>
-                    <td datafield="Operation">Test</td>
-                    <td datafield="Duration">Duration</td>
-                </tr>
-            </table>
+            text-align: right;
+        }
+        legend
+        {
+            color: highlight;
+            background-color: ThreeDFace;
+        }
+    </style>
+</head>
+<body>
+    <fieldset class="options">
+        <legend>Database options</legend>
+        <div>
+            Provider:
+            <select size="1" id="database_provider" style="width: 100%%" />
         </div>
-        <hr />
-	    <div style="text-align: right">
-	        <input id="start_tests" type="button" value="Start tests" />
-        </div>
-	</body>
+        <table>
+            <tr>
+                <td>New database:</td>
+                <td><input id="new_database" type="checkbox" /></td>
+            </tr>
+            <tr>
+                <td>Selection test:</td>
+                <td><input id="selection_test" type="checkbox" /></td>
+            </tr>
+            <tr>
+                <td>ResultSet test:</td>
+                <td><input id="resultset_test" type="checkbox" /></td>
+            </tr>
+            <tr>
+                <td>Records count:</td>
+                <td><input id="records_count" type="number" size="7" /></td>
+            </tr>
+        </table>
+    </fieldset>
+    <div class="metrics">
+        <table id="metrics_grid" fixedrows="1" style="overflow: auto; width: 100%%; height: 100%%">
+            <tr>
+                <td datafield="Operation">
+                    Test
+                </td>
+                <td datafield="Duration">
+                    Duration
+                </td>
+            </tr>
+        </table>
+    </div>
+    <hr />
+    <div style="text-align: right">
+        <input id="start_tests" type="button" value="Start tests" />
+    </div>
+</body>
 </html>

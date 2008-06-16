@@ -60,16 +60,68 @@ namespace Expemerent.DbTest.Provider.SqlCe
         }
 
         /// <summary>
+        /// Returns resultset with records filtered by specified criteria
+        /// </summary>
+        protected override DbResultSet ExecuteResultSet(DbConnection conn, DbTransaction tran, string statement)
+        {
+            using (var cmd = new SqlCeCommand(statement, (SqlCeConnection)conn, (SqlCeTransaction)tran))
+            {
+                return new ResultSetImpl(cmd.ExecuteResultSet(ResultSetOptions.Scrollable));
+            }
+        }
+
+        /// <summary>
         /// Gets statemnts with database schema definition
         /// </summary>
         protected override IEnumerable<String> Schema
         {
             get
             {
-                return new List<string>()
+                yield return @"CREATE TABLE Messages(MessageID int primary key, Subject varbinary(256), Body image)";
+            }
+        }
+
+        private class ResultSetImpl : DbResultSet
+        {
+            /// <summary>
+            /// ResultSet instance
+            /// </summary>
+            private SqlCeResultSet _resultSet;
+
+            /// <summary>
+            /// Creates a new instance of the <see cref="ResultSetImpl"/> class
+            /// </summary>
+            public ResultSetImpl(SqlCeResultSet resultSet)
+            {
+                _resultSet = resultSet;
+            }
+
+            /// <summary>
+            /// Reads records from absolute position
+            /// </summary>
+            public override void ReadAbsolute(int position, int count, Action<IDataRecord> process)
+            {
+                for (int i = 0; i < count; ++i)
                 {
-                    @"CREATE TABLE Messages(MessageID int primary key, Subject nvarchar(256), Body ntext)"
-                };
+                    if (_resultSet.ReadAbsolute(position + i))
+                        process(_resultSet);
+                }
+            }
+
+            /// <summary>
+            /// Gets amount of records in the resultset
+            /// </summary>
+            public override int Count 
+            {
+                get { return _resultSet.RecordsAffected; }
+            }
+
+            /// <summary>
+            /// Releases resources
+            /// </summary>
+            public override void Dispose()
+            {
+                _resultSet.Dispose();
             }
         }
     }

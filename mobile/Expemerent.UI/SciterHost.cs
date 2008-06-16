@@ -63,6 +63,11 @@ namespace Expemerent.UI
         private ISciterControl _owner;
 
         /// <summary>
+        /// See <see cref="AutoValidate"/> property
+        /// </summary>
+        private AutoValidate _autoValidate = AutoValidate.Disable;
+
+        /// <summary>
         /// See <see cref="SciterControls"/> property
         /// </summary>
         private ControlsCollection _sciterControls;
@@ -135,6 +140,23 @@ namespace Expemerent.UI
         }
 
         /// <summary>
+        /// Gets or sets auto validate options
+        /// </summary>
+        public AutoValidate AutoValidate
+        {
+            get { return _autoValidate; }
+            set
+            {
+                #region Arguments checking
+                if (value == AutoValidate.Inherit)
+                    throw new ArgumentOutOfRangeException("value");                
+                #endregion
+
+                _autoValidate = value;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets instance of the <see cref="SciterView"/> class
         /// </summary>
         public SciterView View
@@ -148,9 +170,14 @@ namespace Expemerent.UI
                     throw new InvalidOperationException("It is not allowed to replace an existing View object"); 
                 #endregion
                 
+                EVENT_GROUPS events = EVENT_GROUPS.HANDLE_METHOD_CALL 
+                    | EVENT_GROUPS.HANDLE_SCRIPTING_METHOD_CALL 
+                    | EVENT_GROUPS.HANDLE_INITIALIZATION
+                    | EVENT_GROUPS.HANDLE_FOCUS;
+
                 _view = value;
                 if (_view != null)
-                    _view.AttachEventHandler(this, EVENT_GROUPS.HANDLE_METHOD_CALL | EVENT_GROUPS.HANDLE_SCRIPTING_METHOD_CALL | EVENT_GROUPS.HANDLE_INITIALIZATION);                    
+                    _view.AttachEventHandler(this, events);
             }
         }
 
@@ -468,6 +495,31 @@ namespace Expemerent.UI
                     handler(_owner, e);
                 }
             }
+        } 
+        #endregion
+
+        #region Internal implementation
+        /// <summary>
+        /// Handles focus change events
+        /// </summary>
+        protected override void OnFocus(FocusEventArgs e)
+        {
+            if (e.Phase == Phase.Sinking && e.IsLostFocus && AutoValidate != AutoValidate.Disable)
+            {
+                var element = e.Element;
+                var control = SciterControls.FindControl(element);
+                if (control != null && control.CausesValidation)
+                {
+                    var failed = !control.PerformValidation();
+                    if (failed && AutoValidate == AutoValidate.EnablePreventFocusChange)
+                    {
+                        e.Handled = true;
+                        e.Cancel = true;
+                        Owner.Control.BeginInvoke((EventHandler) delegate { control.SetFocus(); });
+                    }
+                }
+            }
+            base.OnFocus(e);
         } 
         #endregion
     }

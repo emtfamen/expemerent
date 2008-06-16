@@ -59,6 +59,7 @@ namespace Expemerent.UI.Controls
                 var stateToClear = value ? 0 : ElementState.Checked;
                 
                 SetElementState(stateToSet, stateToClear); 
+                OnCheckedChanged(EventArgs.Empty);
             }
         }
 

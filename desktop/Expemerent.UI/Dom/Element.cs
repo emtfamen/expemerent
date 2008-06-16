@@ -576,27 +576,13 @@ namespace Expemerent.UI.Dom
             SciterDomApi.ClearAttributes(this);
         }
 
-        #endregion
-
-        #region IEnumerable<KeyValuePair<string,string>> Members
         /// <summary>
         /// Gets attribues enumerator
         /// </summary>
-        IEnumerator<KeyValuePair<string, string>> IEnumerable<KeyValuePair<string,string>>.GetEnumerator()
+        IEnumerator<KeyValuePair<string, string>> IAttributeAccessor.GetEnumerator()
         {
             for (int i = 0; i < Attributes.Count; i++)
                 yield return SciterDomApi.GetAttribute(this, i);
-        }
-
-        #endregion
-
-        #region IEnumerable Members
-        /// <summary>
-        /// Gets attribues enumerator
-        /// </summary>
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return Attributes.GetEnumerator();
         }
 
         #endregion

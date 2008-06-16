@@ -731,30 +731,17 @@ namespace Expemerent.UI.Controls
         {
             ClearAttributes();
         }
-        #endregion
 
-        #region IEnumerable<KeyValuePair<string,string>> Members
         /// <summary>
         /// Gets attribues enumerator
         /// </summary>
-        IEnumerator<KeyValuePair<string, string>> IEnumerable<KeyValuePair<string, string>>.GetEnumerator()
+        IEnumerator<KeyValuePair<string, string>> IAttributeAccessor.GetEnumerator()
         {
             var element = Element;
             if (element != null)
                 return element.Attributes.GetEnumerator();
             else
                 return ControlAttributes.GetEnumerator();
-        }
-
-        #endregion
-
-        #region IEnumerable Members
-        /// <summary>
-        /// Gets attribues enumerator
-        /// </summary>
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return Attributes.GetEnumerator();
         }
 
         #endregion

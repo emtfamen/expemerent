@@ -7,6 +7,7 @@ using Expemerent.UI.Behaviors;
 using Expemerent.UI.Controls;
 using Expemerent.UI.Dom;
 using Expemerent.UI.Native;
+using System.Windows.Forms;
 
 namespace Expemerent.UI
 {
@@ -32,7 +33,7 @@ namespace Expemerent.UI
         private SciterHost Host
         {
             [DebuggerStepThrough]
-            get { return _host ?? (_host = new SciterHost(this)); }
+            get { return _host ?? (_host = new SciterHost(this) { AutoValidate = AutoValidate }); }
         } 
         #endregion
 
@@ -168,6 +169,21 @@ namespace Expemerent.UI
             if (Site == null || !Site.DesignMode)
                 Host.DetachFromControl();
         }
+        #endregion
+
+        #region Internal implementation
+        /// <summary>
+        /// Handles <see cref="AutoValidate"/> property changes
+        /// </summary>
+        public new AutoValidate AutoValidate
+        {
+            get { return base.AutoValidate; }
+            set
+            {
+                base.AutoValidate = value;
+                Host.AutoValidate = AutoValidate;
+            }
+        } 
         #endregion
 
         #region ISciterControl implementation

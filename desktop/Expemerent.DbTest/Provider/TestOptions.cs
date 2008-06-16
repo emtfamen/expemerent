@@ -26,9 +26,69 @@ namespace Expemerent.DbTest.Provider
         /// See <see cref="DatabaseFile"/> property
         /// </summary>
         private string _databasePath;
+
+        /// <summary>
+        /// See <see cref="CreateDatabase"/> property
+        /// </summary>
+        private bool _createDatabase;
+
+        /// <summary>
+        /// See <see cref="SelectionTest"/> property
+        /// </summary>
+        private bool _selectionTest = true;
+
+        /// <summary>
+        /// See <see cref="ResultSetTest"/> property
+        /// </summary>
+        private bool _resultSetTest = true;
         #endregion
 
         #region Public properties
+        /// <summary>
+        /// Gets or sets "Create Database" flag
+        /// </summary>
+        public bool CreateDatabase
+        {
+            get { return _createDatabase; }
+            set
+            {
+                _createDatabase = value;
+                OnPropertyChanged("CreateDatabase");
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets "selection test" flag
+        /// </summary>
+        public bool SelectionTest
+        {
+            get { return _selectionTest; }
+            set
+            {
+                if (_selectionTest != value)
+                {
+                    _selectionTest = value;
+                    OnPropertyChanged("SelectionTest");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets "resultset test" flag
+        /// </summary>
+        public bool ResultSetTest
+        {
+            get { return _resultSetTest; }
+            set
+            {
+                if (_resultSetTest != value)
+                {
+                    _resultSetTest = value;
+                    OnPropertyChanged("ResultSetTest");
+                }
+            }
+        }
+
         /// <summary>
         /// Gets or sets path to the database file
         /// </summary>
@@ -38,7 +98,7 @@ namespace Expemerent.DbTest.Provider
             set
             {
                 _databasePath = value;
-                OnPropertyChanged();
+                OnPropertyChanged("DatabasePath");
             }
         }
 
@@ -51,7 +111,7 @@ namespace Expemerent.DbTest.Provider
             set
             {
                 _recordsCount = value;
-                OnPropertyChanged();
+                OnPropertyChanged("RecordsCount");
             }
         } 
         #endregion
@@ -65,11 +125,11 @@ namespace Expemerent.DbTest.Provider
         /// <summary>
         /// Raises <see cref="PropertyChanged"/> event
         /// </summary>
-        protected void OnPropertyChanged()
+        protected void OnPropertyChanged(string propertyName)
         {
             var handler = PropertyChanged;
             if (handler != null)
-                handler(this, PropertyChangedEvent);
+                handler(this, new PropertyChangedEventArgs(propertyName));
         } 
         #endregion        
     }
