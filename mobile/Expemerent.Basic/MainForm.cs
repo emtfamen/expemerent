@@ -19,44 +19,83 @@ namespace Expemerent.Basic
 
         protected override void OnLoad(EventArgs evt)
         {
-                base.OnLoad(evt);
+            base.OnLoad(evt);
+            
+            var contentControl = new SciterControl();
 
-                var contentControl = new SciterControl();
+            var openButton = new ButtonControl() { Selector = "#open" };
+            var reloadButton = new ButtonControl() { Selector = "#reload" };
+            var content = new BindableControl() { Selector = "#content" };
 
-                var openButton = new ButtonControl() { Selector = "#open" };
-                var reloadButton = new ButtonControl() { Selector = "#reload" };
-                var content = new BindableControl() { Selector = "#content" };
+            Action resizeContent = () => 
+                { 
+                    var rect = content.Element.GetLocation(ElementLocation.ContentBox);
+                    contentControl.Top = rect.Top;
+                    contentControl.Left = rect.Left;
+                    contentControl.Width = rect.Width;
+                    contentControl.Height = rect.Height;
+                };
 
-                Action resizeContent = () =>
+            content.Attached += (s, e) => resizeContent();
+            content.Size += (s, e) => resizeContent();
+
+            reloadButton.Click += (s, e) =>
+                {
+                    contentControl.Reload();
+                };
+
+            openButton.Click += (s, e) =>
+                {
+                    var dlg = new OpenFileDialog() { Filter = "Html files (*.htm)|*.htm|All files (*.*)|*.*" };
+                    if (dlg.ShowDialog() == DialogResult.OK)
+                        contentControl.LoadHtmlResource(FileProtocol.ProtocolPrefix + dlg.FileName);
+                };
+
+            SciterControls.Add(openButton);
+            SciterControls.Add(reloadButton);
+            SciterControls.Add(content);
+
+            ScriptingMethodCall += (s, e) =>
+                {
+                    switch (e.MethodName)
                     {
-                        var rect = content.Element.GetLocation(ElementLocation.ContentBox);
-                        contentControl.Top = rect.Top;
-                        contentControl.Left = rect.Left;
-                        contentControl.Width = rect.Width;
-                        contentControl.Height = rect.Height;
-                    };
+                        case "application_name": // Returns application title
+                            e.ReturnValue = Text;
+                            break;
+                    }
+                };
 
-                content.Attached += (s, e) => resizeContent();
-                content.Size += (s, e) => resizeContent();
-
-                reloadButton.Click += (s, e) =>
+            contentControl.HandleCreated += (s, e) => contentControl.RegisterClass<Scripting.Application>();
+            contentControl.ScriptingMethodCall += (s, e) =>
+                {
+                    switch (e.MethodName)
                     {
-                        contentControl.Reload();
-                    };
-                openButton.Click += (s, e) =>
-                    {
-                        var dlg = new OpenFileDialog() { Filter = "Html files (*.htm)|*.htm|All files (*.*)|*.*" };
-                        if (dlg.ShowDialog() == DialogResult.OK)
-                            contentControl.LoadHtmlResource(FileProtocol.ProtocolPrefix + dlg.FileName);
-                    };
+                        case "application_name": // Returns application title
+                            e.ReturnValue = Text;
+                            break;
+                        case "sum": // Returns sum of two arguments
+                            e.ReturnValue = Convert.ToDouble(e.Arguments[0]) + Convert.ToDouble(e.Arguments[1]);
+                            break;
+                        case "echo":
+                            e.ReturnValue = e.Arguments[0];
+                            break;
+                        case "dict":
+                            e.ReturnValue = new { first = 1, second = 2, third = 3 };
+                            break;
+                        case "callback":
+                            contentControl.Call("callback", "hello");
+                            contentControl.Call("callback", 1);
+                            contentControl.Call("callback", true);
+                            contentControl.Call("callback", 1.0);
+                            contentControl.Call("callback", DateTime.Now);
+                            contentControl.Call("callback", 1M);
+                            contentControl.Call("callback", new byte[] { 0x1, 0x2, 0x3} );
+                            break;
+                    }   
+                };
 
-                SciterControls.Add(openButton);
-                SciterControls.Add(reloadButton);
-                SciterControls.Add(content);
-
-                Controls.Add(contentControl);
-
-                LoadHtmlResource<MainForm>("Html/Default.htm");
+            Controls.Add(contentControl);
+            LoadHtmlResource<MainForm>("Html/Default.htm");
         }
     }
 }

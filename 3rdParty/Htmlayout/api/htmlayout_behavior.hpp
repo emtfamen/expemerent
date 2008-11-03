@@ -70,10 +70,13 @@ namespace htmlayout
       { 
         return on_focus( he, params.target, params.cmd ); 
       }
-    virtual BOOL handle_timer  (HELEMENT he ) 
+    virtual BOOL handle_timer  (HELEMENT he,TIMER_PARAMS& params ) 
       { 
+        if(params.timerId)
+          return on_timer( he, params.timerId );
         return on_timer( he );
       }
+
     virtual void handle_size  (HELEMENT he ) 
       { 
         on_size( he );
@@ -120,6 +123,7 @@ namespace htmlayout
     virtual BOOL on_key    (HELEMENT he, HELEMENT target, UINT event_type, UINT code, UINT keyboardStates ) { return FALSE; }
     virtual BOOL on_focus  (HELEMENT he, HELEMENT target, UINT event_type ) { return FALSE; }
     virtual BOOL on_timer  (HELEMENT he ) { return FALSE; /*stop this timer*/ }
+    virtual BOOL on_timer  (HELEMENT he, UINT_PTR extTimerId ) { return FALSE; /*stop this timer*/ }
     virtual BOOL on_draw   (HELEMENT he, UINT draw_type, HDC hdc, const RECT& rc ) { return FALSE; /*do default draw*/ }
     virtual void on_size   (HELEMENT he ) { }
 
@@ -162,7 +166,7 @@ namespace htmlayout
           case HANDLE_KEY:   {  KEY_PARAMS *p = (KEY_PARAMS *)prms; return pThis->handle_key( he, *p ); }
           case HANDLE_FOCUS: {  FOCUS_PARAMS *p = (FOCUS_PARAMS *)prms; return pThis->handle_focus( he, *p ); }
           case HANDLE_DRAW:  {  DRAW_PARAMS *p = (DRAW_PARAMS *)prms; return pThis->handle_draw(he, *p ); }
-          case HANDLE_TIMER: {  return pThis->handle_timer(he); }
+          case HANDLE_TIMER: {  TIMER_PARAMS *p = (TIMER_PARAMS *)prms; return pThis->handle_timer(he, *p); }
           case HANDLE_BEHAVIOR_EVENT:   { BEHAVIOR_EVENT_PARAMS *p = (BEHAVIOR_EVENT_PARAMS *)prms; return pThis->handle_event(he, *p ); }
           case HANDLE_METHOD_CALL:      
             { 

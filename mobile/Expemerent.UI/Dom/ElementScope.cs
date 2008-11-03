@@ -261,21 +261,21 @@ namespace Expemerent.UI.Dom
                 var element = GetElementFast(helement);
                 if (element == null)
                 {
-                if (_elementsInUse != null && _elementsInUse.TryGetValue(helement, out element))
-                    return element;
+                    if (_elementsInUse != null && _elementsInUse.TryGetValue(helement, out element))
+                        return element;
 
-                if (_previous != null)
-                    element = _previous.GetElement(helement);
+                    if (_previous != null)
+                        element = _previous.GetElement(helement);
 
-                if (element == null && Object.ReferenceEquals(Current, this))
-                {
-                    SciterHostApi.SciterDomApi.UseElement(helement);
-                    element = Element.CreateInternal(helement);
+                    if (element == null && Object.ReferenceEquals(Current, this))
+                    {
+                        SciterHostApi.SciterDomApi.UseElement(helement);
+                        element = Element.CreateInternal(helement);
 
                         if (_elementsInUse == null && !SetElementFast(helement, element))
                         {
-                    _elementsInUse = _elementsInUse ?? new Dictionary<IntPtr, Element>();
-                    _elementsInUse.Add(helement, element);                    
+                            _elementsInUse = _elementsInUse ?? new Dictionary<IntPtr, Element>();
+                            _elementsInUse.Add(helement, element);
                         }
                     }
                 }

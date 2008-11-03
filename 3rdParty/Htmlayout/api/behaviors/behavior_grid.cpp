@@ -86,7 +86,7 @@ struct grid: public behavior
       if( prev.is_valid() )
       {
         if( prev != row ) 
-          prev.set_state(0,STATE_CURRENT, false); // drop state flags
+          prev.set_state(0,STATE_CURRENT); // drop state flags
       }
       row.set_state(STATE_CURRENT); // set state flags
       row.scroll_to_view(false,smooth);
@@ -139,7 +139,7 @@ struct grid: public behavior
       if( row.is_valid() ) row.set_state( 0,STATE_ANCHOR,false);
       row = table.child(idx);
       if( row.is_valid() )
-		    row.set_state( STATE_ANCHOR | STATE_CHECKED,0,false);
+		    row.set_state( STATE_ANCHOR,0,false);
 	  }
 
 	  void check_range (const dom::element& table, int idx, bool check)
@@ -219,8 +219,8 @@ UPDATE_CURSOR:
       if( event_type != MOUSE_DOWN && event_type != MOUSE_DCLICK )
         return false;
 
-      if(mouseButtons != MAIN_MOUSE_BUTTON) 
-        return false;
+      //if(mouseButtons != MAIN_MOUSE_BUTTON) 
+      //  return false;
 
       // el must be table;
       dom::element table = he;
@@ -234,11 +234,11 @@ UPDATE_CURSOR:
           dom::element header_cell = target_header(row,target);
           if( header_cell.is_valid() )  
               on_column_click(table, header_cell);
-          return true;
+          return mouseButtons == MAIN_MOUSE_BUTTON;
         }
         set_current_row(table, row, keyboardStates,  event_type == MOUSE_DCLICK);
       }
-      return true; // as it is always ours then stop event bubbling
+      return mouseButtons == MAIN_MOUSE_BUTTON; // as it is always ours then stop event bubbling
     }
 
     virtual BOOL on_key(HELEMENT he, HELEMENT target, UINT event_type, UINT code, UINT keyboardStates ) 
@@ -462,7 +462,6 @@ struct sortable_grid: public grid
 
     int fr = fixed_rows( table );
     table.sort(rs,fr);
-    table.update(true);
   }
 };
 

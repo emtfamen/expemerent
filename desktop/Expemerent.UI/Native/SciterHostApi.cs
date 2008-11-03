@@ -99,7 +99,8 @@ namespace Expemerent.UI.Native
             public IntPtr data; /**< [in] pointer to loaded data.*/
             public int dataSize; /**< [in] loaded data size (in bytes).*/
             public RESOURCE_TYPE dataType; /**< [in] SciterResourceType */
-
+            public int status;
+            
             public String GetUri()
             {
                 return Marshal.PtrToStringUni(uri);
@@ -186,7 +187,7 @@ namespace Expemerent.UI.Native
         /// <summary>
         /// Name of the SciterDll 
         /// </summary>
-        private const string SciterDll = "sciter-x.dll";
+        internal const string SciterDll = "sciter-x.dll";
 
         /// <summary>
         /// SciterHostCallback
@@ -207,11 +208,6 @@ namespace Expemerent.UI.Native
         /// Marshalled element entry point 
         /// </summary>
         public static readonly IntPtr ElementEventProcEntryPoint;
-
-        /// <summary>
-        /// Cached instance of sciterApi object
-        /// </summary>
-        private static readonly SciterDomApi _sciterApi;
         #endregion
 
         #region Intialization
@@ -222,8 +218,6 @@ namespace Expemerent.UI.Native
         {
             _nativeCallback = Host_NativeCallback;
             _nativeElementProc = Behavior_NativeCallbackI4;
-
-            _sciterApi = CreateSciterApiInterface();
 
             ElementEventProcEntryPoint = Marshal.GetFunctionPointerForDelegate(_nativeElementProc);
         } 
@@ -278,6 +272,12 @@ namespace Expemerent.UI.Native
         [DllImport(SciterDll)]
         private static extern int SciterGetMinHeight(IntPtr hWndHTMLayout, int width);
 
+        /// <summary>
+        /// applies all pending updates and calls ::UpdateWindow()
+        /// </summary>
+        [DllImport(SciterDll)]
+        private static extern int SciterUpdateWindow(IntPtr hWndHTMLayout);
+
         #endregion
 
         #region Public interface
@@ -298,15 +298,6 @@ namespace Expemerent.UI.Native
         /// </summary>
         [DllImport(SciterDll)]
         public static extern bool SciterNativeThrow(IntPtr hvm, [MarshalAs(UnmanagedType.LPWStr)]string errorMsg);
-
-        /// <summary>
-        /// Returns reference to the sciter API object
-        /// </summary>
-        public static SciterDomApi SciterDomApi
-        {
-            [DebuggerStepThrough]
-            get { return _sciterApi; }
-        }
 
         /// <summary>
         /// Calls scripting function
@@ -396,17 +387,6 @@ namespace Expemerent.UI.Native
             var height = SciterGetMinHeight(hWndSciter, width);
 
             return new Size(width, height);
-        }
-        #endregion
-
-        #region Private implementation
-        /// <summary>
-        /// Creates an instance of SciterApi object
-        /// </summary>
-        private static SciterDomApi CreateSciterApiInterface()
-        {
-            IntPtr api = SciterGetDomApi_Native();
-            return (SciterDomApi)Marshal.PtrToStructure(api, typeof(SciterDomApi));
         }
         #endregion
 

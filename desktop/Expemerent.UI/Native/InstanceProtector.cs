@@ -46,7 +46,6 @@ namespace Expemerent.UI.Native
         {
             lock (_syncRoot)
             {
-
                 var handle = _instances[cookie];
                 var obj = handle.Target;
 

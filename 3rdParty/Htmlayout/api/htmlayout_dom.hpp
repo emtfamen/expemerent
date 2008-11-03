@@ -17,7 +17,7 @@
 #ifndef __htmlayout_dom_hpp__
 #define __htmlayout_dom_hpp__
 
-#include "json-value.h"
+#include "value.h"
 
 #include "htmlayout_dom.h"
 #include "htmlayout_aux.h"
@@ -52,7 +52,8 @@ namespace htmlayout
     };
     class expando; // DOM element expando structure
 
-	/**DOM element.*/
+	/**DOM element. 
+     Smart pointer, pretty much std::shared_ptr thing */
    
     class element
     {
@@ -113,6 +114,12 @@ namespace htmlayout
 	   * \return \b bool, true if element is valid, false otherwise
 	   **/
       bool is_valid() const { return he != 0; }
+
+	  /**Tests whether element is memeber of the DOM or is it detached.
+	   * \return \b bool, true if element is in the DOM, false otherwise
+	   **/
+      bool is_alive() const { return root() != 0; }
+
 
 	  /**Get number of child elements.
 	   * \return \b int, number of child elements
@@ -279,7 +286,7 @@ namespace htmlayout
 	   * \par Example:
 	   * \code e.set_style_attribute("background-color", L"red"); \endcode
 	   **/
-	  void set_style_attribute( const char* name, const wchar_t* value ) const 
+	  void set_style_attribute( const char* name, const wchar_t* value )  
       { 
         HTMLayoutSetStyleAttribute(he, name, value);
       }
@@ -290,11 +297,17 @@ namespace htmlayout
 	   * \par Example:
 	   * \code e.clear_style_attribute("background-color"); \endcode
 	   **/
-	  void clear_style_attribute( const char* name ) const 
+	  void clear_style_attribute( const char* name )  
       { 
         HTMLayoutSetStyleAttribute(he, name, 0);
       }
 
+	  /** Clear all style attribute that was defined by set_style_attribute.
+	   */
+	  void clear_all_style_attributes() 
+      { 
+        HTMLayoutSetStyleAttribute(he, 0, 0);
+      }
 
 
 	  /**Get root DOM element of the HTMLayout document.
@@ -399,6 +412,13 @@ namespace htmlayout
         HTMLayoutSelectElements( he, selectors, callback_func, pcall);
       }
 
+      inline void select_elements( callback *pcall,  
+                          const wchar_t* selectors // CSS selectors, comma separated list
+                        ) const
+      {
+        HTMLayoutSelectElementsW( he, selectors, callback_func, pcall);
+      }
+
  
      /**Get element by id.
  	   * \param id \b char*, value of the "id" attribute.
@@ -419,12 +439,16 @@ namespace htmlayout
        }
 
  
- 	  /**Apply changes and refresh element area in its window.
- 	   * \param[in] render_now \b bool, if true element will be redrawn immediately.
+ 	  /** Request update of styles and/or position of the element and refresh element area in its window.
+ 	   * \param[in] remeasure \b bool, true if method element will be redrawn immediately.
+     *
+     * This method is optional since v 3.3.0.4   
+     * Engine will call update internaly when handling DOM mutating methods.  
+     *
  	   **/
-       void update( bool render_now = false ) const 
+       void update( bool remeasure = false ) const 
        { 
-          HTMLayoutUpdateElement(he, render_now? TRUE:FALSE); 
+          HTMLayoutUpdateElement(he, remeasure? TRUE:FALSE); 
        }
 
  	  /**Apply changes and refresh element area in its window.
@@ -676,6 +700,8 @@ namespace htmlayout
         unuse();
       }
 
+      // Find first child element matching the selector
+      // :root is the element itself
       HELEMENT find_first( const char* selector, ... ) const
       {
         char buffer[2049]; buffer[0]=0;
@@ -689,6 +715,8 @@ namespace htmlayout
         return find_first.hfound;
       }
 
+      // Find first child element matching the selector
+      // :root is the element itself
       HELEMENT find_first( const wchar_t* selector, ... ) const
       {
         wchar_t buffer[2049]; buffer[0]=0;
@@ -702,8 +730,8 @@ namespace htmlayout
         return find_first.hfound;
       }
 
-
-
+      // Find all child elements matching the selector
+      // :root is the element itself
       void find_all( callback* cb, const char* selector, ... ) const
       {
         char buffer[2049]; buffer[0]=0;
@@ -715,7 +743,21 @@ namespace htmlayout
         //assert(find_first.hfound);
       }
 
+      // Find all child elements matching the selector
+      // :root is the element itself
+      void find_all( callback* cb, const wchar_t* selector, ... ) const
+      {
+        wchar_t buffer[2049]; buffer[0]=0;
+        va_list args;
+        va_start ( args, selector );
+        _vsnwprintf( buffer, 2048, selector, args );
+        va_end ( args );
+        select_elements( cb, buffer); // find all elements satisfying given CSS selector
+        //assert(find_first.hfound);
+      }
+
       // will find first parent satisfying given css selector(s), will check element itself
+      // :root is document root object
       HELEMENT find_nearest_parent(const char* selector, ...) const
       {
         char buffer[2049]; buffer[0]=0;
@@ -730,7 +772,24 @@ namespace htmlayout
         return heFound;
       }
 
+      // will find first parent satisfying given css selector(s), will check element itself
+      // :root is document root object
+      HELEMENT find_nearest_parent(const wchar_t* selector, ...) const
+      {
+        wchar_t buffer[2049]; buffer[0]=0;
+        va_list args;
+        va_start ( args, selector );
+        _vsnwprintf( buffer, 2048, selector, args );
+        va_end ( args );
+        
+        HELEMENT heFound = 0;
+        HLDOM_RESULT r = HTMLayoutSelectParentW(he, buffer, 0, &heFound);
+        assert(r == HLDOM_OK); r;
+        return heFound;
+      }
+
       // test this element against CSS selector(s) 
+      // :root is document root object
       bool test(const char* selector, ...) const
       {
         char buffer[2049]; buffer[0]=0;
@@ -740,6 +799,21 @@ namespace htmlayout
         va_end ( args );
         HELEMENT heFound = 0;
         HLDOM_RESULT r = HTMLayoutSelectParent(he, buffer, 1, &heFound);
+        assert(r == HLDOM_OK); r;
+        return heFound != 0;
+      }
+
+      // test this element against CSS selector(s) 
+      // :root is document root object
+      bool test(const wchar_t* selector, ...) const
+      {
+        wchar_t buffer[2049]; buffer[0]=0;
+        va_list args;
+        va_start ( args, selector );
+        _vsnwprintf( buffer, 2048, selector, args );
+        va_end ( args );
+        HELEMENT heFound = 0;
+        HLDOM_RESULT r = HTMLayoutSelectParentW(he, buffer, 1, &heFound);
         assert(r == HLDOM_OK); r;
         return heFound != 0;
       }
@@ -775,6 +849,13 @@ namespace htmlayout
         HLDOM_RESULT r = HTMLayoutSetElementState(he,bitsToSet,bitsToClear, update?TRUE:FALSE);
         assert(r == HLDOM_OK); r;
       }
+
+      void toggle_state(/*ELEMENT_STATE_BITS*/ unsigned int bitsToSet, bool onOff)
+      {
+        HLDOM_RESULT r = HTMLayoutSetElementState(he,onOff?bitsToSet:0, onOff?0:bitsToSet, TRUE);
+        assert(r == HLDOM_OK); r;
+      }
+
 
       void start_timer(UINT millis, UINT tid = 0)
       {
@@ -888,6 +969,16 @@ namespace htmlayout
       void post_event(unsigned int event_code, unsigned int reason = 0, HELEMENT heSource = 0)
       {
         HLDOM_RESULT r = HTMLayoutPostEvent(he, event_code, heSource? heSource: he, reason);
+        assert(r == HLDOM_OK); r;
+      }
+
+      /** move element to new location given by x_view_rel, y_view_rel - view relative coordinates.
+       *  Method defines local styles, so to "stick" it back to the original location you
+       *  should call element::clear_all_style_attributes().
+       **/
+      void move(int x_view_rel, int y_view_rel)
+      {
+        HLDOM_RESULT r = HTMLayoutMoveElement(he, x_view_rel, y_view_rel);
         assert(r == HLDOM_OK); r;
       }
 
@@ -1097,16 +1188,20 @@ namespace htmlayout
           return call_behavior_method(&sp);
         }
 
-        json::string text_value() const
+        std::wstring text_value() const
         {
           TEXT_VALUE_PARAMS sp(false);
           if( const_cast<editbox*>(this)->call_behavior_method(&sp) && sp.text && sp.length)
           {
-              return json::string(sp.text, sp.length);
+              return std::wstring(sp.text, sp.length);
           }
-          return json::string();
+          return std::wstring();
         }
 
+        void text_value(const std::wstring& s)
+        {
+          text_value(s.c_str(), s.length());
+        }
         void text_value(const wchar_t* text, size_t length)
         {
           TEXT_VALUE_PARAMS sp(true);
@@ -1144,7 +1239,14 @@ namespace htmlayout
         
         int int_value( ) const
         {
-           return _wtoi( text_value() );
+           return aux::wtoi( text_value().c_str() );
+        }
+
+        std::wstring selected_text()
+        {
+          pod::buffer<wchar_t> wos;
+          get_selected_text(wos);
+          return std::wstring(wos.data(), wos.length());
         }
 
         void get_selected_text(pod::buffer<wchar_t>& wos)
@@ -1153,12 +1255,12 @@ namespace htmlayout
           call_behavior_method(&s);
         }
 
+
         void get_selected_html(pod::buffer<byte>& bos)
         {
           html_selection_params s(bos); 
           call_behavior_method(&s);
         }
-
 
     };
 

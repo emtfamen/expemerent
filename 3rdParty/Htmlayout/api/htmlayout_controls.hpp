@@ -22,6 +22,7 @@
 
 #include <stdio.h> // snprintf
 
+#include "value.h" 
 #include "htmlayout_dom.hpp"
 #include "htmlayout_value.hpp"
 #include "htmlayout_aux.h" // utf8 
@@ -44,18 +45,18 @@ namespace htmlayout
     }
   };
 
-  inline value_t get_radio_index( dom::element& el )
+  inline json::value get_radio_index( dom::element& el )
   {
     selected_cb selected;
     dom::element r = el.parent(); // ATTN: I assume here that all radios in the group belong to the same parent!
     r.find_all(&selected, "[type='radio'][name='%S']", el.get_attribute("name"));
     for( unsigned int n = 0; n < selected.elements.size(); ++n )
       if ( selected.elements[n].get_state(STATE_CHECKED) )
-        return value_t(int(n)); 
-    return value_t();
+        return json::value(int(n)); 
+    return json::value();
   }
 
-  inline void set_radio_index( dom::element& el, const value_t& t  )
+  inline void set_radio_index( dom::element& el, const json::value& t  )
   {
     selected_cb selected;
     dom::element r = el.parent(); // ATTN: I assume here that all radios in the group belong to the same parent!
@@ -65,14 +66,31 @@ namespace htmlayout
     {
       dom::element& e = selected.elements[n];
       if ( n == idx)
-          e.set_state(STATE_CHECKED, 0);
-      else
-          e.set_state(0, STATE_CHECKED);
+      {
+        e.set_value(json::value(true));
+        break;
+      }
+    }
+  }
+
+  // the same as above but for arbitrary root/name 
+  inline void set_radio_index( dom::element root, const char* name, unsigned int idx  )
+  {
+    selected_cb selected;
+    root.find_all(&selected, "[type='radio'][name='%S']", name);
+    for( unsigned int n = 0; n < selected.elements.size(); ++n )
+    {
+      dom::element& e = selected.elements[n];
+      if ( n == idx)
+      {
+        e.set_value(json::value(true));
+        break;
+      }
     }
   }
 
   // returns bit mask - checkboxes set
-  inline value_t get_checkbox_bits(dom::element& el )
+  inline json::value get_checkbox_bits(dom::element& el )
   {
     selected_cb selected;
     dom::element r = el.parent(); // ATTN: I assume here that all checkboxes in the group belong to the same parent!
@@ -80,11 +98,11 @@ namespace htmlayout
     int m = 1, v = 0;
     for( unsigned int n = 0; n < selected.elements.size(); ++n, m <<= 1 )
       if ( selected.elements[n].get_state(STATE_CHECKED) ) v |= m;
-    return selected.elements.size()==1?value_t(v==1):value_t(v); // for alone checkbox we return true/false 
+    return selected.elements.size()==1?json::value(v==1):json::value(v); // for alone checkbox we return true/false 
   }
 
   // sets checkboxes by bit mask 
-  inline void set_checkbox_bits(dom::element& el, const value_t& t )
+  inline void set_checkbox_bits(dom::element& el, const json::value& t )
   {
     selected_cb selected;
     dom::element r = el.parent(); // ATTN: I assume here that all checkboxes in the group belong to the same parent!
@@ -100,19 +118,19 @@ namespace htmlayout
     }
   }
   
-  inline value_t get_option_value(const dom::element& opt )
+  inline json::value get_option_value(const dom::element& opt )
   {
     const wchar_t* val = opt.get_attribute("value");
-    if( val ) return value_t::from_string(val);
-    return value_t(opt.text());
+    if( val ) return json::value::from_string(val);
+    return json::value(opt.text());
   }
 
 /* OBSOLETE stuff
 
   // single select
-  inline value_t get_select_value(dom::element& el )
+  inline json::value get_select_value(dom::element& el )
   {
-    value_t v;
+    json::value v;
     dom::element opt = el.find_first("option:checked,[role='option']:checked"); // select all selected <option>s
     if( opt.is_valid() )
       v = get_option_value(opt);
@@ -120,9 +138,9 @@ namespace htmlayout
   }
 
   // single select
-  inline void set_select_value(dom::element& el, const value_t& t )
+  inline void set_select_value(dom::element& el, const json::value& t )
   {
-    value_t v;
+    json::value v;
     std::wstring ws = t.to_string();
     dom::element new_opt = el.find_first("option[value='%S'],[role='option'][value='%S']", ws.c_str(), ws.c_str()); // find it
     if( new_opt.is_valid() )
@@ -130,31 +148,31 @@ namespace htmlayout
   }
 
   // multi-select - returns array of selected values
-  inline value_t get_select_values(dom::element& el )
+  inline json::value get_select_values(dom::element& el )
   {
     selected_cb selected;
     el.find_all(&selected, "option:checked,[role='option']:checked"); // select all selected <option>s
 
     if(selected.elements.size() == 0) 
-      return value_t();
+      return json::value();
 
-    std::vector<value_t> values(selected.elements.size());
+    std::vector<json::value> values(selected.elements.size());
 
     for( unsigned int n = 0; n < selected.elements.size(); ++n )
       values[n] = get_option_value(selected.elements[n]);
 
-    return value_t(&values[0], values.size()); 
+    return json::value(&values[0], values.size()); 
   }
 
   // multi-select - select values
-  inline void set_select_values(dom::element& el, const value_t& val_array )
+  inline void set_select_values(dom::element& el, const json::value& val_array )
   {
     
     selected_cb selected;
     el.find_all(&selected, "option:checked,[role='option']:checked"); // select all currently selected <option>s
 
     //if(selected.elements.size() == 0) 
-    //std::vector<value_t> values(selected.elements.size());
+    //std::vector<json::value> values(selected.elements.size());
 
     for( int n = selected.elements.size() - 1; n >= 0 ; --n )
       selected.elements[n].set_state(0, STATE_CHECKED); // reset values
@@ -198,9 +216,9 @@ namespace htmlayout
 
 /** Get value of the DOM element. Returns value for elements recognized by get_ctl_type() function. 
  * \param[in] el \b const dom::element&, The element.
- * \return \b value_t, value of the element.
+ * \return \b json::value, value of the element.
  **/
-  inline value_t get_value(dom::element& el )
+  inline json::value get_value(dom::element& el )
   {
     switch(get_ctl_type(el))
     {
@@ -225,19 +243,19 @@ namespace htmlayout
         if( !aux::wcseq(el.get_attribute("type"),L"hidden"))
           break;
         //else fall below if it is hidden
-      case CTL_BUTTON:          return value_t(el.get_attribute("value"));
+      case CTL_BUTTON:          return json::value(el.get_attribute("value"));
       case CTL_CHECKBOX:        return get_checkbox_bits(el);
       case CTL_RADIO:           return get_radio_index(el);
-      case CTL_HTMLAREA:        return value_t(el.get_html(false/*inner*/));
+      case CTL_HTMLAREA:        return json::value( aux::utf2w(el.get_html(false/*inner*/)));
     }
-    return value_t();
+    return json::value();
   }
 
 /** Set value of the DOM element. Sets value for elements recognized by get_ctl_type() function. 
  * \param[in] el \b const dom::element&, The element.
- * \param[in] v \b const value_t&, The value.
+ * \param[in] v \b const json::value&, The value.
  **/
-  inline void set_value(dom::element& el, const value_t& v )
+  inline void set_value(dom::element& el, const json::value& v )
   {
     switch(get_ctl_type(el))
     {
@@ -265,8 +283,8 @@ namespace htmlayout
       case CTL_RADIO:           set_radio_index(el,v);  break;
       case CTL_HTMLAREA:        
        {
-          utf8::ostream os; os << v.get( L"" );
-          el.set_html( os.data(), os.length() );
+          aux::w2utf utf8(v.get( L"" )); 
+          el.set_html( utf8, utf8.length() );
           el.update();
         } break;
       case CTL_NO:
@@ -276,8 +294,8 @@ namespace htmlayout
   }
 
 /** Collection (map) of Name/Value pairs. **/
-  typedef std::map<std::wstring, value_t> named_values;
-  typedef std::map<std::wstring, value_t>::iterator named_values_iterator;
+  typedef std::map<std::wstring, json::value> named_values;
+  typedef std::map<std::wstring, json::value>::iterator named_values_iterator;
 
 /** Get values of all "controls" contained inside the DOM element. 
  *  Function will gather values of elements having name attribute defined

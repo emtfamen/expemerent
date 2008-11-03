@@ -1,19 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Collections;
 using System.Runtime.InteropServices;
 using Expemerent.UI.Native;
+using System.Reflection;
 
 namespace Expemerent.UI.Native
 {
     internal static class MarshalUtility
     {
         /// <summary>
-        /// Marshalls pointer to the wipe callback
+        /// Converts object properties to the key:value pairs
         /// </summary>
-        public static WipeCallback GetWipeDelegate(IntPtr wipe)
+        internal static IDictionary ObjectToDict(object obj)
         {
-            throw new NotImplementedException("Wipe not supported on mobile platform");
+            var dict = new Dictionary<object, object>();
+            if (obj != null)
+            {
+                var type = obj.GetType();
+                var props = type.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+
+                for (int i = 0; i < props.Length; ++i)
+                {
+                    var prop = props[i];
+                    dict[prop.Name] = prop.GetValue(obj, null);                    
+                }
+            }
+            return dict;
         }
 
         /// <summary>

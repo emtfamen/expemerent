@@ -42,7 +42,7 @@ struct clock: public behavior
     virtual BOOL on_timer  (HELEMENT he ) 
     { 
       dom::element el = he;
-      el.update(0);
+      el.update();
       return TRUE; /*keep going*/ 
     }
 

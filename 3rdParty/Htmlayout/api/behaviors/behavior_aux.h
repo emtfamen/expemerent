@@ -1,6 +1,8 @@
 #ifndef __behavior_aux__
 #define __behavior_aux__
 
+#pragma warning(disable:4786) //identifier was truncated...
+
 #include "htmlayout.h"
 #include "htmlayout_dom.h"
 #include "htmlayout_behavior.h"

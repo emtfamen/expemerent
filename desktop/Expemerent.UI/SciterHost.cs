@@ -17,7 +17,7 @@ namespace Expemerent.UI
     /// <remarks>
     /// Allows to reuse most of implementation between <see cref="SciterForm"/> and <see cref="SciterControl"/>
     /// </remarks>
-    internal class SciterHost : SciterBehavior, ISciterHost
+    public sealed class SciterHost : SciterBehavior, ISciterHost
     {
         #region Event keys
         /// <summary>
@@ -348,6 +348,32 @@ namespace Expemerent.UI
         }
 
         /// <summary>
+        /// Calls script function
+        /// </summary>
+        public object Call(string methodName, params object[] args)
+        {
+            #region Precondition checking
+            if (View == null)
+                throw new InvalidOperationException("View should be initialized first");
+            #endregion
+
+            return View.Call(methodName, args);
+        }
+
+        /// <summary>
+        /// Registers scripting class 
+        /// </summary>
+        public void RegisterClass<TType>() where TType : new()
+        {
+            #region Precondition checking
+            if (View == null)
+                throw new InvalidOperationException("View should be initialized first"); 
+            #endregion
+
+            Scripting.RegisterClass<TType>(View);
+        }
+
+        /// <summary>
         /// Causes validation in all sciter controls
         /// </summary>
         public bool PerformValidation()
@@ -456,7 +482,6 @@ namespace Expemerent.UI
         /// </summary>
         void ISciterNotifications.ProcessAttachBehavior(AttachBehaviorEventArgs e)
         {
-
             var behavior = default(SciterBehavior);
             var behaviorName = e.BehaviorName;
             if (!String.IsNullOrEmpty(behaviorName))

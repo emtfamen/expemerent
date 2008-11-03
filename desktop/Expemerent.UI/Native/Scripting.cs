@@ -17,7 +17,7 @@ namespace Expemerent.UI.Native
         /// <summary>
         /// Scripting delegate
         /// </summary>
-        internal delegate void SciterNativeMethod_t(IntPtr hvm, IntPtr p_data_slot, IntPtr argv, int argc, /*out*/ ref JsonValue retval);
+        internal delegate void SciterNativeMethod_t(IntPtr hvm, ref JsonValue self, IntPtr argv, int argc, /*out*/ ref JsonValue retval);
 
         /// <summary>
         /// Precalculated size of structure
@@ -39,7 +39,7 @@ namespace Expemerent.UI.Native
         /// <summary>
         /// Scripting delegate
         /// </summary>
-        internal delegate void SciterNativeProperty_t(IntPtr hvm, IntPtr p_data_slot, bool set, ref JsonValue val);
+        internal delegate void SciterNativeProperty_t(IntPtr hvm, ref JsonValue p_data_slot, bool set, ref JsonValue val);
 
         /// <summary>
         /// Precalculated size of structure
@@ -276,13 +276,13 @@ namespace Expemerent.UI.Native
                 name = propertyAttr.Name ?? propertyInfo.Name,
 
                 // Property callback implementation
-                property = (IntPtr hvm, IntPtr p_data_slot, bool set, ref JsonValue retval) =>
+                property = (IntPtr hvm, ref JsonValue p_data_slot, bool set, ref JsonValue retval) =>
                 {
                     try
                     {
                         var instance = default(object);
                         if (!propertyInfo.GetGetMethod().IsStatic)
-                            instance = InstanceProtector.GetInstance(Marshal.ReadIntPtr(p_data_slot));
+                            instance = InstanceProtector.GetInstance(p_data_slot.GetNativeObject());
 
                         retval = new JsonValue();
                         if (set)
@@ -308,14 +308,14 @@ namespace Expemerent.UI.Native
                 name = "this",
 
                 // Construction callback implementation
-                method = (IntPtr hvm, IntPtr p_data_slot, IntPtr argv, int argc, ref JsonValue retval) =>
+                method = (IntPtr hvm, ref JsonValue p_data_slot, IntPtr argv, int argc, ref JsonValue retval) =>
                 {
                     try
                     {
                         var result = Activator.CreateInstance(type, JsonPtrToArray(argv, argc));
                         var data_slot_value = InstanceProtector.Protect(result);
 
-                        Marshal.WriteIntPtr(p_data_slot, data_slot_value);
+                        p_data_slot.SetNativeObject(data_slot_value);
                         _registrations[hvm].Instances.Add(data_slot_value, result);
                     }
                     catch (Exception ex)
@@ -336,13 +336,13 @@ namespace Expemerent.UI.Native
                 name = methodAttr.Name ?? methodInfo.Name,
 
                 // Method callback implementation
-                method = (IntPtr hvm, IntPtr p_data_slot, IntPtr argv, int argc, ref JsonValue retval) =>
+                method = (IntPtr hvm, ref JsonValue p_data_slot, IntPtr argv, int argc, ref JsonValue retval) =>
                 {
                     try
                     {
                         var instance = default(object);
                         if (!methodInfo.IsStatic)
-                            instance = InstanceProtector.GetInstance(Marshal.ReadIntPtr(p_data_slot));
+                            instance = InstanceProtector.GetInstance(p_data_slot.GetNativeObject());
 
                         var result = methodInfo.Invoke(instance, JsonPtrToArray(argv, argc));
                         retval = result == null ? new JsonValue() : new JsonValue(result);
@@ -376,7 +376,7 @@ namespace Expemerent.UI.Native
                     {
                         lock (_syncRoot)
                         {
-                            Debug.Assert(_registrations[hvm].Instances.Count == 0, "all scripting class instances should be freed at this point");
+                            Debug.Assert(_registrations[hvm].Instances.Count == 0, "all scripting instances should be freed at this point");
                             _registrations.Remove(hvm);
                         }
                     };

@@ -231,6 +231,20 @@ namespace Expemerent.UI.Native
             UI_STATE_CHANGED,
 
             /// <summary>
+            /// behavior:form detected submission event. BEHAVIOR_EVENT_PARAMS::data field contains data to be posted.
+            /// BEHAVIOR_EVENT_PARAMS::data is of type T_MAP in this case key/value pairs of data that is about 
+            /// to be submitted. You can modify the data or discard submission by returning TRUE from the handler.
+            /// </summary>
+            FORM_SUBMIT, 
+            
+            /// <summary>
+            /// behavior:form detected reset event (from button type=reset). BEHAVIOR_EVENT_PARAMS::data field contains data to be reset.
+            /// BEHAVIOR_EVENT_PARAMS::data is of type T_MAP in this case key/value pairs of data that is about 
+            /// to be rest. You can modify the data or discard reset by returning TRUE from the handler.
+            /// </summary>
+            FORM_RESET,
+
+            /// <summary>
             ///all custom event codes shall be greater than this number. All codes below this will be used solely by application - HTMLayout will not intrepret it  and will do just dispatching. To send event notifications with  these codes use HTMLayoutSend/PostEvent API.
             ///</summary>
             FIRST_APPLICATION_EVENT_CODE = 0x100
@@ -521,7 +535,7 @@ namespace Expemerent.UI.Native
     [StructLayout(LayoutKind.Sequential)]
     internal struct METHOD_PARAMS
     {
-        internal enum BEHAVIOR_METHOD_IDENTIFIERS
+        internal enum BEHAVIOR_METHOD_IDENTIFIERS 
         {
             DO_CLICK = 0,
             GET_TEXT_VALUE = 1,
@@ -672,5 +686,4 @@ namespace Expemerent.UI.Native
             return args;
         }
     }
-
 }

@@ -18,6 +18,10 @@ struct sizer: public event_handler
     { 
       tracking = false;
     } 
+    virtual void detached  (HELEMENT he ) 
+    { 
+      delete this;
+    } 
 
     // either CSS custom attribute -resize: horizontal | vertical | both
     // or element attribute resize = horizontal | vertical | both
@@ -60,16 +64,18 @@ struct sizer: public event_handler
       {
         int w = max(0, params.pos.x + delta.cx); 
         int h = max(0, params.pos.y + delta.cy);
-        if(is_resize_horizontal(self)) self.set_style_attribute("width",aux::itow(w));
-        if(is_resize_vertical(self)) self.set_style_attribute("height",aux::itow(h));
+        if(is_resize_horizontal(self)) 
+          self.set_style_attribute("width",aux::itow(w));
+        if(is_resize_vertical(self)) 
+          self.set_style_attribute("height",aux::itow(h));
         
-        if(self.get_state(STATE_POPUP))
+        /*if(self.get_state(STATE_POPUP))
           self.update( RESET_STYLE_THIS | MEASURE_DEEP | REDRAW_NOW);
         else
         {
           dom::element parent = self.parent(); // as dimensions of this element were changed we need to remeasure parent element. 
           parent.update( MEASURE_DEEP | REDRAW_NOW );
-        }
+        }*/
         return TRUE; // handled
       }
 

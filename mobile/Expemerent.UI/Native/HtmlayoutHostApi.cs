@@ -175,7 +175,7 @@ namespace Expemerent.UI.Native
         /// <summary>
         /// Name of the SciterDll 
         /// </summary>
-        private const string HtmlayoutDll = "htmlayout.dll";
+        internal const string SciterDll = "htmlayout.dll";
         
         /// <summary>
         /// Storing callback delegate to prevent it from being GC
@@ -191,11 +191,6 @@ namespace Expemerent.UI.Native
         /// Marshalled element entry point 
         /// </summary>
         public static readonly IntPtr ElementEventProcEntryPoint;
-
-        /// <summary>
-        /// Cached instance of sciterApi object
-        /// </summary>
-        private static readonly SciterDomApi _sciterApi;
         #endregion
 
         #region Intialization
@@ -206,8 +201,6 @@ namespace Expemerent.UI.Native
         {
             _nativeCallback = Host_NativeCallback;
             _nativeElementProc = Behavior_NativeCallbackI4;
-
-            _sciterApi = CreateSciterApiInterface();
 
             ElementEventProcEntryPoint = Marshal.GetFunctionPointerForDelegate(_nativeElementProc);
         } 
@@ -223,32 +216,38 @@ namespace Expemerent.UI.Native
         /// <summary>
         /// Sets callback method for htmlayout notifications
         /// </summary>
-        [DllImport(HtmlayoutDll, EntryPoint = "HTMLayoutSetCallback")]
+        [DllImport(SciterDll, EntryPoint = "HTMLayoutSetCallback")]
         private static extern void HTMLayoutSetCallback(IntPtr hWndHTMLayout, HtmlayoutHostCallback cb, IntPtr cbParam);
 
         /// <summary>
         /// Load HTML from in memory buffer with base.
         /// </summary>
-        [DllImport(HtmlayoutDll, EntryPoint = "HTMLayoutLoadHtmlEx")]
+        [DllImport(SciterDll, EntryPoint = "HTMLayoutLoadHtmlEx")]
         private static extern bool HtmlayoutLoadHtml(IntPtr hWndSciter, [MarshalAs(UnmanagedType.LPArray)] Byte[] html, int htmlSize, [MarshalAs(UnmanagedType.LPWStr)] string baseUrl);
 
         /// <summary>
         /// This function is used in response to SCN_LOAD_DATA request. 
         /// </summary>
-        [DllImport(HtmlayoutDll, EntryPoint = "HTMLayoutDataReady")]
+        [DllImport(SciterDll, EntryPoint = "HTMLayoutDataReady")]
         private static extern bool HtmlayoutDataReady(IntPtr hWndSciter, [MarshalAs(UnmanagedType.LPWStr)] string uri, [MarshalAs(UnmanagedType.LPArray)] byte[] data, int dataLength);
 
         /// <summary>
         /// Returns minimal width of the document.
         /// </summary>
-        [DllImport(HtmlayoutDll, EntryPoint = "HTMLayoutGetMinWidth")]
+        [DllImport(SciterDll, EntryPoint = "HTMLayoutGetMinWidth")]
         private static extern int SciterGetMinWidth(IntPtr hWndHTMLayout);
 
         /// <summary>
         /// Returns minimal height of the document.
         /// </summary>
-        [DllImport(HtmlayoutDll, EntryPoint = "HTMLayoutGetMinHeight")]
+        [DllImport(SciterDll, EntryPoint = "HTMLayoutGetMinHeight")]
         private static extern int SciterGetMinHeight(IntPtr hWndHTMLayout, int width);
+        
+        /// <summary>
+        /// applies all pending updates and calls ::UpdateWindow()
+        /// </summary>
+        [DllImport(SciterDll, EntryPoint = "HTMLayoutGetMinHeight")]
+        private static extern int SciterUpdateWindow(IntPtr hWndHTMLayout);
         #endregion
 
         #region Public interface
@@ -276,26 +275,16 @@ namespace Expemerent.UI.Native
             throw new NotSupportedException("NotSupported in Htmlayout");
         }
 
-
-        /// <summary>
-        /// Returns reference to the sciter API object
-        /// </summary>
-        public static SciterDomApi SciterDomApi
-        {
-            [DebuggerStepThrough]
-            get { return _sciterApi; }
-        }
-
         /// <summary>
         /// Call sciter WndProc without calling to default wnd proc
         /// </summary>
-        [DllImport(HtmlayoutDll, EntryPoint = "HTMLayoutProcND")]
+        [DllImport(SciterDll, EntryPoint = "HTMLayoutProcND")]
         public static extern IntPtr SciterProcND(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool pbHandled);
 
         /// <summary>
         /// Load HTML file.
         /// </summary>
-        [DllImport(HtmlayoutDll, EntryPoint = "HTMLayoutLoadFile")]
+        [DllImport(SciterDll, EntryPoint = "HTMLayoutLoadFile")]
         public static extern bool SciterLoadFile(IntPtr hWndSciter, [MarshalAs(UnmanagedType.LPWStr)] string fileName);
 
         /// <summary>
@@ -358,14 +347,6 @@ namespace Expemerent.UI.Native
         #endregion
 
         #region Private implementation
-        /// <summary>
-        /// Creates an instance of SciterApi object
-        /// </summary>
-        private static SciterDomApi CreateSciterApiInterface()
-        {
-            return new SciterDomApi();
-        }
-
         #region Behavior events partial methods
         unsafe static partial void Behavior_HandleDraw(ISciterBehavior behavior, IntPtr he, IntPtr prms, ref bool handled);
         unsafe static partial void Behavior_HandleInitialization(ISciterBehavior behavior, IntPtr he, IntPtr prms, ref bool handled);
@@ -400,6 +381,7 @@ namespace Expemerent.UI.Native
                 var behavior = InstanceProtector.GetInstance(tag) as ISciterBehavior;
                 if (behavior != null)
                 {
+                    // TODO: Timer
                     switch (evtg)
                     {
                         case EVENT_GROUPS.HANDLE_INITIALIZATION:
@@ -502,6 +484,5 @@ namespace Expemerent.UI.Native
         }
         #endregion
     }
-
 #pragma warning restore 0649
 }

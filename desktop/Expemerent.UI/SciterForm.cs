@@ -144,6 +144,22 @@ namespace Expemerent.UI
         {
             return Host.PerformValidation();
         }
+
+        /// <summary>
+        /// Calls scripting method
+        /// </summary>
+        public object Call(string functionName, params object[] args)
+        {
+            return Host.Call(functionName, args);
+        }
+
+        /// <summary>
+        /// Registers scripting class 
+        /// </summary>
+        public void RegisterClass<TType>() where TType : new()
+        {
+            Host.RegisterClass<TType>();
+        }
         #endregion
 
         #region Event handling

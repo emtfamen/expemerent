@@ -9,6 +9,13 @@ namespace Expemerent.Basic.Scripting
     [ScriptingClass(Name = "Application", IsStatic = false)]
     public class Application
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        public Application()
+        {
+        }
+
         [ScriptingMethod]
         public string Concat(string str1, string str2)
         {

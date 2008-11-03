@@ -14,6 +14,20 @@ namespace Expemerent.UI.Native
     internal static partial class SciterHostApi
     {
         /// <summary>
+        /// Cached instance of sciterApi object
+        /// </summary>
+        private static readonly SciterDomApi _sciterApi = new SciterDomApi();
+
+        /// <summary>
+        /// Returns reference to the sciter API object
+        /// </summary>
+        public static SciterDomApi SciterDomApi
+        {
+            [DebuggerStepThrough]
+            get { return _sciterApi; }
+        }
+
+        /// <summary>
         /// Handles draw event
         /// </summary>
         unsafe static partial void Behavior_HandleDraw(ISciterBehavior behavior, IntPtr he, IntPtr prms, ref bool handled)

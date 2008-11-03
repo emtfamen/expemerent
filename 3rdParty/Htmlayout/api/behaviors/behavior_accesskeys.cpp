@@ -100,8 +100,15 @@ struct accesskeys: public behavior
           htmlayout::dom::element hot_key_element;
           virtual bool on_element(HELEMENT he) 
           {
-            htmlayout::dom::element t = he; 
-            if( t.enabled() && t.visible())
+            htmlayout::dom::element t = he;
+            if( !t.enabled() )
+              return false;
+            if( t.test("menu>li") )
+            {
+              hot_key_element = t;
+              return true; // found, stop;
+            }
+            if(t.visible())
             {
               hot_key_element = t;
               return true; // found, stop;

@@ -96,7 +96,24 @@ namespace sciter
 	    virtual LRESULT on_data_loaded(LPSCN_DATA_LOADED pnmld)  { return 0; }
       virtual LRESULT on_document_complete() { return 0; }
 
-      virtual LRESULT on_callback_host(LPSCN_CALLBACK_HOST pnmld)  { return 0; }
+      virtual LRESULT on_callback_host(LPSCN_CALLBACK_HOST pnmld)  
+      { 
+        switch(pnmld->channel)  
+        {
+          case 0: // 0 - stdin, read from stdin requested, put string into pnmld->r 
+            break;  
+          case 1: // 1 - stdout, "stdout << something" requested, pnmld->p1 is 
+                  //     string to output.
+            break;  
+          case 2: // 2 - stderr, "stderr << something" requested or error happened, 
+                  //     pnmld->p1 is string to output.
+            break;
+          default:
+                  // view.callback(channel,p1,p2) call from script
+            break;  
+        }
+        return 0; 
+      }
 
       virtual LRESULT on_attach_behavior( LPSCN_ATTACH_BEHAVIOR lpab )
       {

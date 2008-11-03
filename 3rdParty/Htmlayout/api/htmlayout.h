@@ -30,7 +30,7 @@
 #define EXTERN_C extern
 #endif /* __cplusplus **/
 
-#ifndef HTMLAYOUT_STATIC_LIB
+#ifndef STATIC_LIB
   #ifdef  HTMLAYOUT_EXPORTS
     #define HLAPI __declspec(dllexport) __stdcall
   #else
@@ -45,6 +45,14 @@
 #define _LPCBYTE_DEFINED
 typedef const BYTE *LPCBYTE;
 #endif
+
+#include "value.h"
+#if defined(__cplusplus) && !defined( PLAIN_API_ONLY )
+  typedef json::value JSON_VALUE;
+#else 
+  #define JSON_VALUE VALUE;
+#endif
+
 
 #include "htmlayout_dom.h"
 #include "htmlayout_behavior.h"
@@ -555,6 +563,20 @@ EXTERN_C BOOL HLAPI     HTMLayoutSetMasterCSS(LPCBYTE utf8, UINT numBytes);
 
 EXTERN_C BOOL HLAPI     HTMLayoutAppendMasterCSS(LPCBYTE utf8, UINT numBytes);
 
+/**HTMLayoutSetDataLoader.
+ * This function registeres "primordial" data loader that can be used for loading custom resources defined in custom
+ * master style sheets.
+ *
+ * \param[in] pDataLoader \b HTMLAYOUT_DATA_LOADER*, address of application defined custom loader.
+ *
+ * dataType here is HTMLayoutResourceType.
+ *
+ **/
+typedef void CALLBACK   HTMLAYOUT_DATA_WRITER(LPCWSTR uri, UINT dataType, LPCBYTE data, UINT dataLength);
+typedef BOOL CALLBACK   HTMLAYOUT_DATA_LOADER(LPCWSTR uri, UINT dataType, HTMLAYOUT_DATA_WRITER* pDataWriter);
+
+EXTERN_C BOOL HLAPI     HTMLayoutSetDataLoader(HTMLAYOUT_DATA_LOADER* pDataLoader);
+
 
 enum ELEMENT_MODEL
 {
@@ -638,7 +660,6 @@ enum HTMLAYOUT_OPTIONS
 EXTERN_C BOOL HLAPI HTMLayoutSetOption(HWND hWndHTMLayout, UINT option, UINT value );
 
 
-
 /**Render document to 24bpp or 32bpp bitmap (with alpha).
  *
  * \param[in] hWndHTMLayout \b HWND, HTMLayout window handle.
@@ -650,6 +671,19 @@ EXTERN_C BOOL HLAPI HTMLayoutSetOption(HWND hWndHTMLayout, UINT option, UINT val
  *
  **/
 EXTERN_C BOOL HLAPI HTMLayoutRender(HWND hWndHTMLayout, HBITMAP hBmp, RECT area );
+
+
+/** Update HTMLayout window 
+ *
+ * Function applies all pending updates and calls ::UpdateWindow().
+ *
+ * This function is intended to be used in cases when htmlayout is not able
+ * to process messages from input queue. 
+ *
+ **/
+EXTERN_C BOOL HLAPI HTMLayoutUpdateWindow(HWND hWndHTMLayout );
+
+
 
 /**Show HTML based dialog
  *
@@ -714,6 +748,7 @@ EXTERN_C VOID HLAPI HTMLayoutSetupDebugOutput(
   #include "htmlayout_value.hpp"
   #include "htmlayout_controls.hpp"
 #endif
+
 
   namespace htmlayout 
   {

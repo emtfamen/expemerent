@@ -73,11 +73,11 @@ namespace Expemerent.UI.Native
 
             _mainWndProc = WindowProc;
             _callback = callback;
-
+            
             // Subclassing window
             _originalWndProc = User32.SetWindowLong(_handle, User32.GWL_WNDPROC, Marshal.GetFunctionPointerForDelegate(_mainWndProc));
         }
-       
+      
         /// <summary>
         /// This is a generic wndproc. It is the callback for all hooked
         /// windows. If we get into this function, we look up the hwnd in the
@@ -90,19 +90,17 @@ namespace Expemerent.UI.Native
             using (var scope = ElementScope.Create())
             {
                 Debug.Assert(_originalWndProc != IntPtr.Zero, "Window hook was not installed");
-
-                bool handled = false;
+                bool handled = false;                
 
                 var retval = _callback(hwnd, msg, wParam, lParam, ref handled);
                 if (handled)
                     return retval;
 
                 retval = User32.CallWindowProc(_originalWndProc, hwnd, msg, wParam, lParam);
-
                 if (msg == User32.WM_DESTROY)
                     revertWndProc();
 
-                    return retval;
+                return retval;
             }
         }
 
@@ -116,7 +114,6 @@ namespace Expemerent.UI.Native
             User32.SetWindowLong(_handle, User32.GWL_WNDPROC, _originalWndProc);
             
             _originalWndProc = IntPtr.Zero;
-
             OnHandleDestroyed(EventArgs.Empty);
         }
 

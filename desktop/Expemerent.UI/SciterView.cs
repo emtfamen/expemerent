@@ -15,7 +15,7 @@ namespace Expemerent.UI
     /// </summary>
     public class SciterView 
     {
-        #region Properties        
+        #region Properties
         /// <summary>
         /// Gets instance of sciter dom api
         /// </summary>

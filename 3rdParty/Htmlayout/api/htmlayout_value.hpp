@@ -21,8 +21,7 @@
 
 #include <assert.h>
 
-#include "json-value.h"
-#include "json-parse.h"
+#include "value.h"
 
 #include <map>
 #include <string>
@@ -34,18 +33,6 @@
 
 #pragma once
 
-/**HTMLayout namespace.*/
-namespace htmlayout
-{
-
-  /// \class value_t
-  /// \brief The value type, can hold values of bool, int, double, string(wchar_t) and array(value_t)
-  /// value_t is also known as JSON value, see: http://json.org/
-
-  typedef json::named_value named_value_t;
-  typedef json::value value_t;
-
-}
 
 namespace json
 {
@@ -65,6 +52,8 @@ namespace json
 #endif 
     return v;
   }
+  
+
 }
 
 #endif
