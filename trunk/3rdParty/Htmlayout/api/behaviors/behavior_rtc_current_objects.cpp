@@ -48,10 +48,9 @@ struct current_objects_updater: public event_handler
       int n = stack.length();
       for( int i = 0; i < n; ++i )
       {
-        dom::element li = dom::element::create("li", stack.nth(i).to_string());
+        dom::element li = dom::element::create("li", stack[i].to_string().c_str());
         objects_bar.append(li);
       }
-      objects_bar.update();      
       return FALSE; /*mark it as not handled because some other behaviors in the chain may want to handle it */ 
     }
 

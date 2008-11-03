@@ -17,7 +17,12 @@ namespace Expemerent.UI.Native
         /// "or" this flag if you want to get coordinates relative to the origin
         /// of element iself.
         /// </summary>
-        SELF_RELATIVE = 0x02, 
+        SELF_RELATIVE = 0x02,
+
+        /// <summary>
+        /// position relative to view - HTMLayout window
+        /// </summary>
+        VIEW_RELATIVE = 0x04, 
 
         /// <summary>
         /// content (inner)  box

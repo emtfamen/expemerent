@@ -124,7 +124,7 @@ struct chart: public canvas
     { 
       if( !data.is_array() )
       {
-        draw_message( gx, width, height, const_wchars(L"Data not found") );
+        draw_message( gx, width, height, const_wchars("Data not found") );
         return; 
       }
 
@@ -138,11 +138,11 @@ struct chart: public canvas
       for( int n = 0; n < data.length(); ++n )
       {
         json::value bar_def = data[n];
-        json::value color_v = bar_def.k2v(L"color"); 
-        json::value value_v = bar_def.k2v(L"value");
+        json::value color_v = bar_def[L"color"]; 
+        json::value value_v = bar_def[L"value"];
         if( color_v.is_undefined() || value_v.is_undefined())
         {
-          draw_message( gx, width, height, const_wchars(L"Bad data structure") );
+          draw_message( gx, width, height, const_wchars("Bad data structure") );
           return; 
         }
         draw_bar(gx, width, height, n, data.length(), color(color_v.get(0)), value_v.get(1.0));

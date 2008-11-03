@@ -122,7 +122,7 @@
       DRAG_LEAVE  = 0xB, // drag left one of current drop targets. target is the drop target element.  
 
       DRAGGING = 0x100, // This flag is 'ORed' with MOUSE_ENTER..MOUSE_DOWN codes if dragging operation is in effect.
-                        // In this case 
+                        // E.g. event DRAGGING | MOUSE_MOVE is sent to underlying DOM elements while dragging.
   };
 
   struct MOUSE_PARAMS
@@ -218,7 +218,8 @@
       SCROLL_STEP_MINUS,
       SCROLL_PAGE_PLUS,
       SCROLL_PAGE_MINUS,
-      SCROLL_POS
+      SCROLL_POS,
+      SCROLL_SLIDER_RELEASED
   };
 
   struct SCROLL_PARAMS
@@ -308,6 +309,13 @@
       UI_STATE_CHANGED,              // ui state changed, observers shall update their visual states.
                                      // is sent for example by behavior:richtext when caret position/selection has changed.
 
+      FORM_SUBMIT,                   // behavior:form detected submission event. BEHAVIOR_EVENT_PARAMS::data field contains data to be posted.
+                                     // BEHAVIOR_EVENT_PARAMS::data is of type T_MAP in this case key/value pairs of data that is about 
+                                     // to be submitted. You can modify the data or discard submission by returning TRUE from the handler.
+      FORM_RESET,                    // behavior:form detected reset event (from button type=reset). BEHAVIOR_EVENT_PARAMS::data field contains data to be reset.
+                                     // BEHAVIOR_EVENT_PARAMS::data is of type T_MAP in this case key/value pairs of data that is about 
+                                     // to be rest. You can modify the data or discard reset by returning TRUE from the handler.
+
 
       FIRST_APPLICATION_EVENT_CODE = 0x100 
       // all custom event codes shall be greater
@@ -344,7 +352,16 @@
       UINT     reason;     // EVENT_REASON or EDIT_CHANGED_REASON - UI action causing change.
                            // In case of custom event notifications this may be any 
                            // application specific value.
+      JSON_VALUE 
+               data;       // auxiliary data accompanied with the event. E.g. FORM_SUBMIT event is using this field to pass collection of values.
+
   };
+
+  struct TIMER_PARAMS
+  {
+      UINT_PTR timerId;    // timerId that was used to create timer by using HTMLayoutSetTimerEx
+  };
+
 
   // identifiers of methods currently supported by intrinsic behaviors,
   // see function HTMLayoutCallMethod 

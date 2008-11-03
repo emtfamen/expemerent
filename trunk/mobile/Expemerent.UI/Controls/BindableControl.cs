@@ -731,7 +731,7 @@ namespace Expemerent.UI.Controls
         {
             ClearAttributes();
         }
-
+        
         /// <summary>
         /// Gets attribues enumerator
         /// </summary>

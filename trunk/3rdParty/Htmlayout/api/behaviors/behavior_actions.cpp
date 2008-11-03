@@ -180,18 +180,18 @@ int parse_state( aux::wchars sst )
     ++sst.start;
     --sst.length; 
   }
-  if( sst == const_wchars(L"checked") ) return STATE_CHECKED;
-  if( sst == const_wchars(L"active") ) return STATE_ACTIVE;
-  if( sst == const_wchars(L"focus") ) return STATE_FOCUS;
-  if( sst == const_wchars(L"current") ) return STATE_CURRENT;
-  if( sst == const_wchars(L"checked") ) return STATE_CHECKED;
-  if( sst == const_wchars(L"disabled") ) return STATE_DISABLED;
-  if( sst == const_wchars(L"readonly") ) return STATE_READONLY;
-  if( sst == const_wchars(L"expanded") ) return STATE_EXPANDED;
-  if( sst == const_wchars(L"collapsed") ) return STATE_COLLAPSED;
-  if( sst == const_wchars(L"anchor") ) return STATE_ANCHOR;
-  if( sst == const_wchars(L"tabfocus") ) return STATE_TABFOCUS;
-  if( sst == const_wchars(L"busy") ) return STATE_BUSY;
+  if( sst == const_wchars("checked") ) return STATE_CHECKED;
+  if( sst == const_wchars("active") ) return STATE_ACTIVE;
+  if( sst == const_wchars("focus") ) return STATE_FOCUS;
+  if( sst == const_wchars("current") ) return STATE_CURRENT;
+  if( sst == const_wchars("checked") ) return STATE_CHECKED;
+  if( sst == const_wchars("disabled") ) return STATE_DISABLED;
+  if( sst == const_wchars("readonly") ) return STATE_READONLY;
+  if( sst == const_wchars("expanded") ) return STATE_EXPANDED;
+  if( sst == const_wchars("collapsed") ) return STATE_COLLAPSED;
+  if( sst == const_wchars("anchor") ) return STATE_ANCHOR;
+  if( sst == const_wchars("tabfocus") ) return STATE_TABFOCUS;
+  if( sst == const_wchars("busy") ) return STATE_BUSY;
   assert(0); // sst is not recognized 
   return 0;
 }

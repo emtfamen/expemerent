@@ -38,7 +38,7 @@ namespace Expemerent.UI.Native
 
     #endregion
 
-    internal partial struct SciterDomApi
+    internal partial class SciterDomApi
     {
         #region Public interface
 
@@ -50,7 +50,7 @@ namespace Expemerent.UI.Native
         public bool SendEvent(Element he, BehaviorEventType eventCode, IntPtr reason, Element source)
         {
             var handled = default(bool);
-            CheckResult(HTMLayoutSendEvent(he.Handle, (int)eventCode, source != null ? source.Handle : he.Handle, reason, out handled));
+            CheckResult(SciterSendEvent(he.Handle, (int)eventCode, source != null ? source.Handle : he.Handle, reason, out handled));
 
             return handled;
         }
@@ -61,7 +61,7 @@ namespace Expemerent.UI.Native
         /// </summary>
         public void PostEvent(Element he, BehaviorEventType eventCode, IntPtr reason, Element source)
         {
-            CheckResult(HTMLayoutPostEvent(he.Handle, (int)eventCode, source != null ? source.Handle : he.Handle, reason));
+            CheckResult(SciterPostEvent(he.Handle, (int)eventCode, source != null ? source.Handle : he.Handle, reason));
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace Expemerent.UI.Native
             {
                 case BehaviorMethods.DoClick:
                     var methodParam = new METHOD_PARAMS() { methodID = (int)METHOD_PARAMS.BEHAVIOR_METHOD_IDENTIFIERS.DO_CLICK };
-                    var res = HTMLayoutCallBehaviorMethod(he.Handle, ref methodParam);
+                    var res = SciterCallBehaviorMethod(he.Handle, ref methodParam);
 
                     if (res == ScDomResult.SCDOM_OK_NOT_HANDLED)
                         return false;
@@ -92,7 +92,7 @@ namespace Expemerent.UI.Native
         public bool IsElementVisible(Element he)
         {
             var visible = default(bool);
-            CheckResult(HTMLayoutIsElementVisible(he.Handle, out visible));
+            CheckResult(SciterIsElementVisible(he.Handle, out visible));
 
             return visible;
         }
@@ -103,7 +103,7 @@ namespace Expemerent.UI.Native
         public bool IsElementEnabled(Element he)
         {
             var enabled = default(bool);
-            CheckResult(HTMLayoutIsElementEnabled(he.Handle, out enabled));
+            CheckResult(SciterIsElementEnabled(he.Handle, out enabled));
 
             return enabled;
         }
@@ -113,7 +113,7 @@ namespace Expemerent.UI.Native
         /// </summary>
         public void ScrollToView(Element he, bool top)
         {
-            CheckResult(HTMLayoutScrollToView(he.Handle, top));
+            CheckResult(SciterScrollToView(he.Handle, top));
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace Expemerent.UI.Native
         public int GetElementIndex(Element he)
         {
             var index = default(int);
-            CheckResult(HTMLayoutGetElementIndex(he.Handle, out index));
+            CheckResult(SciterGetElementIndex(he.Handle, out index));
 
             return index;
         }
@@ -133,7 +133,7 @@ namespace Expemerent.UI.Native
         public Rectangle GetElementLocation(Element he, ElementLocation areas)
         {
             Rectangle rect;
-            CheckResult(HTMLayoutGetElementLocation(he.Handle, out rect, (ELEMENT_AREA)areas));
+            CheckResult(SciterGetElementLocation(he.Handle, out rect, (ELEMENT_AREA)areas));
             rect.Width -= rect.Left;
             rect.Height -= rect.Top;
             return rect;
@@ -144,7 +144,7 @@ namespace Expemerent.UI.Native
         /// </summary>
         public void SetElementText(Element he, String text)
         {
-            CheckResult(HTMLayoutSetElementInnerText16(he.Handle, text, text.Length));
+            CheckResult(SciterSetElementText(he.Handle, text, text.Length));
         }
 
         /// <summary>
@@ -153,7 +153,7 @@ namespace Expemerent.UI.Native
         public void SetElementHtml(Element he, String text, SET_ELEMENT_HTML loc)
         {
             var bytes = MarshalUtility.StringToByteUtf8(text);
-            CheckResult(HTMLayoutSetElementHtml(he.Handle, bytes, bytes.Length, loc));
+            CheckResult(SciterSetElementHtml(he.Handle, bytes, bytes.Length, loc));
         }
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace Expemerent.UI.Native
         /// </summary>
         public void UseElement(IntPtr he)
         {
-            CheckResult(HTMLayout_UseElement(he));
+            CheckResult(SciterUseElement(he));
         }
 
         /// <summary>
@@ -169,7 +169,7 @@ namespace Expemerent.UI.Native
         /// </summary>
         public void UnuseElement(IntPtr he)
         {
-            var result = HTMLayout_UnuseElement(he);
+            var result = SciterUnuseElement(he);
             Debug.Assert(result == ScDomResult.SCDOM_OK);
         }
 
@@ -179,7 +179,7 @@ namespace Expemerent.UI.Native
         public Element SelectParent(Element element, string cssSelector, int depth)        
         {
             var parent = default(IntPtr);
-            CheckResult(HTMLayoutSelectParent(element.Handle, MarshalUtility.StringToAnsi(cssSelector), depth, out parent));
+            CheckResult(SciterSelectParent(element.Handle, MarshalUtility.StringToAnsi(cssSelector), depth, out parent));
 
             return Element.Create(parent);
         }
@@ -189,7 +189,7 @@ namespace Expemerent.UI.Native
         /// </summary>
         public void SelectElements(Element he, String cssSelector, Predicate<Element> selector)
         {
-            var result = HTMLayoutSelectElements(he.Handle, MarshalUtility.StringToAnsi(cssSelector),
+            var result = SciterSelectElements(he.Handle, MarshalUtility.StringToAnsi(cssSelector),
                 (IntPtr handle, IntPtr arg) =>
                 {
                     var element = Element.CreateInternal(handle);
@@ -209,7 +209,7 @@ namespace Expemerent.UI.Native
         {
             int count;
 
-            CheckResult(HTMLayoutGetAttributeCount(he.Handle, out count));
+            CheckResult(SciterGetAttributeCount(he.Handle, out count));
             return count;
         }
 
@@ -219,7 +219,7 @@ namespace Expemerent.UI.Native
         public string GetAttribute(IntPtr he, string name)
         {
             var value = default(IntPtr);
-            CheckResult(HTMLayoutGetAttributeByName(he, MarshalUtility.StringToAnsi(name), out value));
+            CheckResult(SciterGetAttributeByName(he, MarshalUtility.StringToAnsi(name), out value));
             return Marshal.PtrToStringUni(value);
         }
 
@@ -230,7 +230,7 @@ namespace Expemerent.UI.Native
         {
             IntPtr name;
             IntPtr value;
-            CheckResult(HTMLayoutGetNthAttribute(he.Handle, index, out name, out value));
+            CheckResult(SciterGetNthAttribute(he.Handle, index, out name, out value));
 
             return new KeyValuePair<string, string>(MarshalUtility.PtrToStringAnsi(name), Marshal.PtrToStringUni(value));
         }
@@ -240,7 +240,7 @@ namespace Expemerent.UI.Native
         /// </summary>
         public void SetAttributeByName(Element he, string name, string value)
         {
-            CheckResult(HTMLayoutSetAttributeByName(he.Handle, MarshalUtility.StringToAnsi(name), value));
+            CheckResult(SciterSetAttributeByName(he.Handle, MarshalUtility.StringToAnsi(name), value));
         }
 
         /// <summary>
@@ -249,7 +249,7 @@ namespace Expemerent.UI.Native
         public string GetElementType(Element element)
         {
             IntPtr type;
-            CheckResult(HTMLayoutGetElementType(element.Handle, out type));
+            CheckResult(SciterGetElementType(element.Handle, out type));
 
             return MarshalUtility.PtrToStringAnsi(type);
         }
@@ -260,7 +260,7 @@ namespace Expemerent.UI.Native
         public string GetElementText(Element element)
         {
             IntPtr text;
-            CheckResult(HTMLayoutGetElementInnerText16(element.Handle, out text));
+            CheckResult(SciterGetElementText(element.Handle, out text));
 
             return Marshal.PtrToStringUni(text);
         }
@@ -271,7 +271,7 @@ namespace Expemerent.UI.Native
         public string GetElementHtml(Element element, bool outer)
         {
             IntPtr text;
-            CheckResult(HTMLayoutGetElementHtml(element.Handle, out text, outer));
+            CheckResult(SciterGetElementHtml(element.Handle, out text, outer));
 
             return MarshalUtility.PtrToStringUtf8(text);
         }
@@ -283,7 +283,7 @@ namespace Expemerent.UI.Native
         /// </summary>
         public void InsertElement(Element child, Element element, int pos)
         {
-            CheckResult(HTMLayoutInsertElement(child.Handle, element.Handle, pos));
+            CheckResult(SciterInsertElement(child.Handle, element.Handle, pos));
         }
 
         /// <summary>
@@ -295,7 +295,7 @@ namespace Expemerent.UI.Native
         {
             var he = default(IntPtr);
 
-            CheckResult(HTMLayoutCloneElement(element.Handle, out he));
+            CheckResult(SciterCloneElement(element.Handle, out he));
             return new ElementRef(he);
         }
 
@@ -304,7 +304,7 @@ namespace Expemerent.UI.Native
         /// </summary>
         public void UpdateElement(Element element, bool forceUpdate)
         {
-            CheckResult(HTMLayoutUpdateElement(element.Handle, forceUpdate));
+            CheckResult(SciterUpdateElement(element.Handle, forceUpdate));
         }
 
         /// <summary>
@@ -314,7 +314,7 @@ namespace Expemerent.UI.Native
         {
             IntPtr IntPtr;
 
-            CheckResult(HTMLayoutGetElementHwnd(he.Handle, out IntPtr, root));
+            CheckResult(SciterGetElementHwnd(he.Handle, out IntPtr, root));
             return IntPtr;
         }
 
@@ -325,7 +325,7 @@ namespace Expemerent.UI.Native
         public ElementRef CreateElement(string tag, string text)
         {
             var he = default(IntPtr);
-            CheckResult(HTMLayoutCreateElement(MarshalUtility.StringToAnsi(tag), text, out he));
+            CheckResult(SciterCreateElement(MarshalUtility.StringToAnsi(tag), text, out he));
             return new ElementRef(he);
         }
 
@@ -336,7 +336,7 @@ namespace Expemerent.UI.Native
         {
             var he = default(IntPtr);
 
-            CheckResult(HTMLayoutGetRootElement(IntPtr, out he));
+            CheckResult(SciterGetRootElement(IntPtr, out he));
             return Element.Create(he);
         }
 
@@ -347,7 +347,7 @@ namespace Expemerent.UI.Native
         {
             var he = default(IntPtr);
 
-            CheckResult(HTMLayoutGetElementByUID(elementIntPtr, uid, out he));
+            CheckResult(SciterGetElementByUID(elementIntPtr, uid, out he));
             return Element.Create(he);
         }
 
@@ -358,7 +358,7 @@ namespace Expemerent.UI.Native
         {
             var uid = default(int);
 
-            CheckResult(HTMLayoutGetElementUID(element.Handle, out uid));
+            CheckResult(SciterGetElementUID(element.Handle, out uid));
             return uid;
         }
 
@@ -368,7 +368,7 @@ namespace Expemerent.UI.Native
         public string GetAttributeByName(Element element, string name)
         {
             var value = default(IntPtr);
-            CheckResult(HTMLayoutGetAttributeByName(element.Handle, MarshalUtility.StringToAnsi(name), out value));
+            CheckResult(SciterGetAttributeByName(element.Handle, MarshalUtility.StringToAnsi(name), out value));
             return Marshal.PtrToStringUni(value);
         }
 
@@ -377,7 +377,7 @@ namespace Expemerent.UI.Native
         /// </summary>
         public void ClearAttributes(Element element)
         {
-            CheckResult(HTMLayoutClearAttributes(element.Handle));
+            CheckResult(SciterClearAttributes(element.Handle));
         }
 
         /// <summary>
@@ -386,7 +386,7 @@ namespace Expemerent.UI.Native
         public int GetChildrenCount(Element he)
         {
             int count;
-            CheckResult(HTMLayoutGetChildrenCount(he.Handle, out count));
+            CheckResult(SciterGetChildrenCount(he.Handle, out count));
 
             return count;
         }
@@ -397,7 +397,7 @@ namespace Expemerent.UI.Native
         public Element GetNthChild(Element he, int index)
         {
             IntPtr element;
-            CheckResult(HTMLayoutGetNthChild(he.Handle, index, out element));
+            CheckResult(SciterGetNthChild(he.Handle, index, out element));
 
             return Element.Create(element);
         }
@@ -408,7 +408,7 @@ namespace Expemerent.UI.Native
         public string GetStyleAttribute(Element he, String name)
         {
             var value = default(IntPtr);
-            CheckResult(HTMLayoutGetStyleAttribute(he.Handle, MarshalUtility.StringToAnsi(name), out value));
+            CheckResult(SciterGetStyleAttribute(he.Handle, MarshalUtility.StringToAnsi(name), out value));
             return Marshal.PtrToStringUni(value);
         }
 
@@ -417,7 +417,7 @@ namespace Expemerent.UI.Native
         /// </summary>
         public void SetStyleAttribute(Element he, String name, String value)
         {
-            CheckResult(HTMLayoutSetStyleAttribute(he.Handle, MarshalUtility.StringToAnsi(name), value));
+            CheckResult(SciterSetStyleAttribute(he.Handle, MarshalUtility.StringToAnsi(name), value));
         }
 
         /// <summary>
@@ -433,11 +433,11 @@ namespace Expemerent.UI.Native
 
         /// <summary>
         /// Attach/Detach ElementEventProc to the element 
-        /// See htmlayout::event_handler.
+        /// See Sciter::event_handler.
         /// </summary>
         public void DetachEventHandler(Element he, ISciterBehavior behavior)
         {
-            CheckResult(HTMLayoutDetachEventHandler(he.Handle, SciterHostApi.ElementEventProcEntryPoint, InstanceProtector.Protect(behavior)));
+            CheckResult(SciterDetachEventHandler(he.Handle, SciterHostApi.ElementEventProcEntryPoint, InstanceProtector.Protect(behavior)));
         }
 
         /// <summary>
@@ -446,7 +446,7 @@ namespace Expemerent.UI.Native
         /// </summary>
         public void AttachEventHandler(Element he, ISciterBehavior behavior)
         {
-            CheckResult(HTMLayoutAttachEventHandler(he.Handle, SciterHostApi.ElementEventProcEntryPoint, InstanceProtector.Protect(behavior)));
+            CheckResult(SciterAttachEventHandler(he.Handle, SciterHostApi.ElementEventProcEntryPoint, InstanceProtector.Protect(behavior)));
         }
 
         /// <summary>
@@ -454,7 +454,7 @@ namespace Expemerent.UI.Native
         /// </summary>
         public void ShowPopup(Element he, Element anchor, PopupPlacement placement)
         {
-            CheckResult(HTMLayoutShowPopup(he.Handle, anchor.Handle, (POPUP_PLACEMENT)placement));
+            CheckResult(SciterShowPopup(he.Handle, anchor.Handle, (POPUP_PLACEMENT)placement));
         }
 
         /// <summary>
@@ -462,7 +462,7 @@ namespace Expemerent.UI.Native
         /// </summary>
         public void ShowPopup(Element he, Point localtion, bool animate)
         {
-            CheckResult(HTMLayoutShowPopupAt(he.Handle, localtion, animate));
+            CheckResult(SciterShowPopupAt(he.Handle, localtion, animate));
         }
 
         /// <summary>
@@ -470,7 +470,7 @@ namespace Expemerent.UI.Native
         /// </summary>
         public void HidePopup(Element he)
         {
-            CheckResult(HTMLayoutHidePopup(he.Handle));
+            CheckResult(SciterHidePopup(he.Handle));
         }
 
         /// <summary>
@@ -479,7 +479,7 @@ namespace Expemerent.UI.Native
         public ElementState GetElementState(Element he)
         {
             ELEMENT_STATE_BITS state = 0;
-            CheckResult(HTMLayoutGetElementState(he.Handle, out state));
+            CheckResult(SciterGetElementState(he.Handle, out state));
 
             return (ElementState)state;
         }
@@ -489,7 +489,7 @@ namespace Expemerent.UI.Native
         /// </summary>
         public void SetElementState(Element he, ElementState stateToSet, ElementState stateToClear, bool update)
         {
-            CheckResult(HTMLayoutSetElementState(he.Handle, (ELEMENT_STATE_BITS)stateToSet, (ELEMENT_STATE_BITS)stateToClear, update));
+            CheckResult(SciterSetElementState(he.Handle, (ELEMENT_STATE_BITS)stateToSet, (ELEMENT_STATE_BITS)stateToClear, update));
         }
 
         /// <summary>
@@ -498,7 +498,7 @@ namespace Expemerent.UI.Native
         /// <param name="element"></param>
         public void SetCapture(Element element)
         {
-            CheckResult(HTMLayoutSetCapture(element.Handle));
+            CheckResult(SciterSetCapture(element.Handle));
         }
 
         /// <summary>
@@ -508,7 +508,7 @@ namespace Expemerent.UI.Native
         /// </summary>
         public void WindowAttachEventHandler(IntPtr hWnd, ISciterBehavior bhv, EVENT_GROUPS evt)
         {
-            CheckResult(HTMLayoutWindowAttachEventHandler(hWnd, SciterHostApi.ElementEventProcEntryPoint, InstanceProtector.Protect(bhv), evt));
+            CheckResult(SciterWindowAttachEventHandler(hWnd, SciterHostApi.ElementEventProcEntryPoint, InstanceProtector.Protect(bhv), evt));
         }
 
         /// <summary>
@@ -518,7 +518,7 @@ namespace Expemerent.UI.Native
         /// </summary>
         public void WindowDetachEventHandler(IntPtr hWnd, ISciterBehavior bhv)
         {
-            CheckResult(HTMLayoutWindowDetachEventHandler(hWnd, SciterHostApi.ElementEventProcEntryPoint, InstanceProtector.Protect(bhv)));
+            CheckResult(SciterWindowDetachEventHandler(hWnd, SciterHostApi.ElementEventProcEntryPoint, InstanceProtector.Protect(bhv)));
         }
 
         /// <summary>
@@ -527,7 +527,7 @@ namespace Expemerent.UI.Native
         public Element GetParentElement(Element element)
         {
             var parent = default(IntPtr);
-            CheckResult(HTMLayoutGetParentElement(element.Handle, out parent));
+            CheckResult(SciterGetParentElement(element.Handle, out parent));
 
             return Element.Create(parent);
         }

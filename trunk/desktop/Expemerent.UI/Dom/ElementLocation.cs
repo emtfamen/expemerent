@@ -25,6 +25,11 @@ namespace Expemerent.UI.Dom
         SelfRelative = ELEMENT_AREA.SELF_RELATIVE, 
 
         /// <summary>
+        /// position relative to view - HTMLayout window
+        /// </summary>
+        ViewRelative = ELEMENT_AREA.VIEW_RELATIVE,
+
+        /// <summary>
         /// content (inner)  box
         /// </summary>
         ContentBox = ELEMENT_AREA.CONTENT_BOX,   

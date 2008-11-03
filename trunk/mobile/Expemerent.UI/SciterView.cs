@@ -15,7 +15,7 @@ namespace Expemerent.UI
     /// </summary>
     public class SciterView 
     {
-        #region Properties        
+        #region Properties
         /// <summary>
         /// Gets instance of sciter dom api
         /// </summary>
@@ -202,7 +202,7 @@ namespace Expemerent.UI
                     ResProtocol.PathSeparator + resource;
 
             var text = SciterFactory.ResolveBinResource(resourceName, ResourceType.Html);
-            
+
             if (text == null)
                 throw new FileNotFoundException(String.Format("Resource {0} not found", resourceName));
 

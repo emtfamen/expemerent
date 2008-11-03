@@ -49,8 +49,6 @@ struct collapsible_by_icon: public behavior
       else
         el.set_attribute("state",L"close");
         
-      el.update(true);  //done! update changes on the view
-
       return true; // as it is ours then stop event bubbling
     }
    

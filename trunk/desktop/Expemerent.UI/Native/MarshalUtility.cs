@@ -4,17 +4,30 @@ using System.Text;
 using System.Runtime.InteropServices;
 using Expemerent.UI.Native;
 using System.Threading;
+using System.Collections;
+using System.ComponentModel;
 
 namespace Expemerent.UI.Native
 {
     internal static class MarshalUtility
     {
         /// <summary>
-        /// Marshalls pointer to the wipe callback
+        /// Converts object properties to the key:value pairs
         /// </summary>
-        public static WipeCallback GetWipeDelegate(IntPtr wipe)
+        internal static IDictionary ObjectToDict(object obj)
         {
-            return (WipeCallback)Marshal.GetDelegateForFunctionPointer(wipe, typeof(WipeCallback));
+            var dict = new Dictionary<object, object>();
+            var props = TypeDescriptor.GetProperties(obj);
+
+            for(int i = 0; i <props.Count; ++i)
+            {
+                var prop = props[i];
+                if (prop.IsBrowsable && prop.SerializationVisibility == DesignerSerializationVisibility.Visible)
+                {
+                    dict[prop.Name] = prop.GetValue(obj);
+                }
+            }
+            return dict;
         }
 
         /// <summary>

@@ -29,12 +29,13 @@ typedef void* HVM;
 // Returns scripting VM assosiated with Sciter HWND.
 EXTERN_C HVM SCAPI SciterGetVM( HWND hwnd );
 
+
 //
 // typedef of C/C++ "native" functions to be called from script.
 // Shall return TRUE if retval contains valid value, return FALSE toerror.
 //
-typedef VOID CALLBACK SciterNativeMethod_t( HVM hvm, LPVOID*  p_data_slot, SCITER_VALUE* argv, INT argc, /*out*/ SCITER_VALUE* retval );
-typedef VOID CALLBACK SciterNativeProperty_t( HVM hvm, LPVOID*  p_data_slot, BOOL set, /*in-set/out-get*/ SCITER_VALUE* val );
+typedef VOID CALLBACK SciterNativeMethod_t( HVM hvm, SCITER_VALUE* self, SCITER_VALUE* argv, INT argc, /*out*/ SCITER_VALUE* retval );
+typedef VOID CALLBACK SciterNativeProperty_t( HVM hvm, SCITER_VALUE* self, BOOL set, /*in-set/out-get*/ SCITER_VALUE* val );
 typedef VOID CALLBACK SciterNativeDtor_t( HVM hvm, LPVOID* p_data_slot_value );
 
 struct SciterNativeMethodDef

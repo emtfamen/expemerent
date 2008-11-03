@@ -149,7 +149,7 @@ extern htmlayout::queue gui_queue;
        append_and_update( const dom::element& to, const dom::element& el ): where(to), what(el) {}
        
        // will be executed in GUI thread
-       inline void exec() { where.append(what); where.update(true); }
+       virtual void exec() { where.append(what); where.update(true); }
      };
 
      when you need this oparation simply do: 

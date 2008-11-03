@@ -1,0 +1,158 @@
+﻿<html>
+    <head>
+        <title>Simple browser</title>
+        <style>        
+        .button 
+        { 
+	        width:18px; height:18px; 
+	        padding:4px; margin:1px;
+	        border:1px solid transparent;	        
+	        behavior: clickable;
+	        cursor: pointer;
+        }
+        .button:hover 
+        { 
+            background-color:#F5FCF0 #EEF5E7 #DDE3D0 #EEF5E7;  
+            border-top: solid 1px #F5FCF0;
+            border-left: solid 1px #F5FCF0;
+            border-right: solid 1px #A3A8A0;
+            border-bottom: solid 1px #A3A8A0;
+        }
+        .button:active 
+        { 
+            background-color:#DDE3D0 #EEF5E7 #F5FCF0 #EEF5E7;  
+            padding:5px 3px 3px 5px;
+            border-top: solid 1px #A3A8A0;
+            border-left: solid 1px #A3A8A0;
+            border-right: solid 1px #F5FCF0;
+            border-bottom: solid 1px #F5FCF0;
+        }
+        .toolbar 
+        { 
+        	flow: horizontal; 
+        }
+        table[name="reportview"]
+        {
+            width:max-intrinsic; /* natural width */
+            height:100%%;
+            overflow:auto;
+            behavior:grid;
+            background: url(theme:edit-normal) stretch;
+            padding:1px;
+            font:system;
+            line-height:1.4em;
+        }
+        table[name="reportview"] th
+        {
+            background-image: url(theme:column-header-normal);
+            background-repeat: stretch;
+        }
+        table[name="reportview"] th:hover
+        {
+            background-image: url(theme:column-header-hover);
+        }
+        table[name="reportview"] th:active
+        {
+            background-image: url(theme:column-header-pressed);
+        }
+
+        table[name="reportview"] td /* all cells */
+        {
+            padding:0 4px;
+        }
+        #content 
+        { 
+            border-top: solid 1px #A3A8A0;
+            border-left: solid 1px #A3A8A0;
+            border-right: solid 1px #F5FCF0;
+            border-bottom: solid 1px #F5FCF0;
+
+        	width: 100%%; 
+        	height: 100%%; 
+        }
+        body 
+        { 
+        	width: 100%; height: 100%;
+        	overflow: hidden;
+            margin: 0px 0px 0px 0px;
+            font-family:Tahoma, Verdana; 
+            background-color:#EEF5E4; 
+        }
+        </style>
+        <script type="text/tiscript">
+            function createRow(method, result, rtype)
+            {
+                var r = new Element(#tr);
+                var mr = new Element(#td);
+                var rr = new Element(#td);
+                var tr = new Element(#td);
+                
+                mr.text = method;
+                rr.text = result;
+                tr.text = rtype;
+                
+                r.insert(mr);
+                r.insert(rr);
+                r.insert(tr);
+                
+                return r;
+            }
+            function createSimpleRow(method, val)
+            {
+                return createRow(method, val, typeof(val));
+            }
+            function toString(obj)
+            {
+                if (typeof(obj) == #object)
+                {
+                    var r = new Array();
+                    for (s in obj)
+                        r = r.concat(s + ":" + obj[s]);
+                    
+                    return "{ " + r.join(", ") + " }";
+                }
+                else if (typeof(obj) == #Bytes)
+                {
+                    var r = new Array();
+                    for (var i = 0; i < obj.length; ++i)
+                        r = r.concat(obj[i]);
+                    
+                    return "{ " + r.join(", ") + " }";
+                }
+                else
+                    return obj;
+            }
+            function callback(arg)
+            {
+                table.insert(createSimpleRow("callback:" + typeof(arg), toString(arg)));
+                table.insert(createSimpleRow("echo:" + typeof(arg), toString(view.echo(arg))));
+            }
+
+        </script>
+        <script type="text/tiscript">        
+            var table = self#results;
+            
+            table.insert(createSimpleRow("application_name", view.application_name()));
+            table.insert(createSimpleRow("sum", view.sum(1.0, 4.5)));
+            table.insert(createSimpleRow("echo:array", view.echo(["1", "2", "3", 4, 5 ])));
+            table.insert(createSimpleRow("echo:date", view.echo(new Date())));
+            table.insert(createSimpleRow("echo:map", toString(view.echo({ first:"1", second:"2", third:"3" }))));
+            table.insert(createSimpleRow("dict", toString(view.dict())));
+            
+            view.callback();
+            
+            var app = new Application();
+            table.insert(createSimpleRow("app.name", app.Name));
+            table.insert(createSimpleRow("app.concat", app.Concat("1", "2")));
+        </script>
+    </head>
+    <body>
+        <table #results name="reportview">
+            <tr>
+                <th>Method</th>
+                <th>Result</th>
+                <th>Type</th>
+            </tr>
+        </table>
+    </body>
+</html>

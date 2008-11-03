@@ -53,6 +53,7 @@
 #include <assert.h>
 #include <wchar.h>
 #include <string.h>
+#include <string>
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -65,17 +66,7 @@
   typedef unsigned char   byte;
 #endif
 
-#ifdef __GNUC__
-  typedef long long           int64;
-  typedef unsigned long long  uint64;
-#else
-  typedef __int64             int64;
-  typedef unsigned __int64    uint64;
-#endif
-  typedef unsigned int        uint;
-
-#include "json-slice.h"
-#include "json-parse.h"
+//#include "aux-slice.h"
 
 // WARNING: macros below must be used only for passing parameters to functions!
 
@@ -145,6 +136,12 @@
 #define t2i( S ) aux::atoi(S,0)
 #define i2t( S ) aux::itoa(S)
 #endif
+
+#define w2u( S ) aux::w2utf(S)
+#define u2w( S ) aux::utf2w(S)
+
+#define i2a( I ) aux::atoi(I)
+#define i2w( I ) aux::atow(I)
 
 inline void* zalloc ( size_t sz)
 {
@@ -227,8 +224,8 @@ namespace utf8
     if(!utf8 || length == 0) return true;
     const byte* pc = (const byte*)utf8;
     const byte* last = pc + length;
-    uint b;
-    uint num_errors = 0;
+    unsigned int b;
+    unsigned int num_errors = 0;
     while (pc < last) 
     {
       b = *pc++;
@@ -305,7 +302,7 @@ namespace utf8
   {
     const wchar_t *pc = wcs;
     const wchar_t *end = pc + length;
-    uint  num_errors = 0;
+    unsigned int  num_errors = 0;
     for(unsigned int c = *pc; pc < end ; c = *(++pc)) 
     {
       if (c < (1 << 7)) 
@@ -406,6 +403,11 @@ namespace utf8
       }
       return *this;
     }
+    ostream_t& operator << (const std::wstring& str)
+    {
+      return *this << (str.c_str());
+    }
+
   };
 
   // raw ASCII/UNICODE -> UTF8 converter 
@@ -418,6 +420,7 @@ namespace utf8
 
 namespace aux 
 {
+  template <typename T> struct slice;
 
   template <class T>
   inline T
@@ -466,72 +469,56 @@ namespace aux
   // helper convertor objects wchar_t to ACP and vice versa
   class w2a 
   {
+    char  local[16];
     char* buffer;
-  public:
-    explicit w2a(const wchar_t* wstr):buffer(0)
-    { 
-      if(wstr)
-      {
-        size_t nu = wcslen(wstr);
-        size_t n = wcstombs(0,wstr,nu);
-        buffer = new char[n+1];
-        wcstombs(buffer,wstr,nu);
-        buffer[n] = 0;
-      }
-    }
-    explicit w2a(const wchars wstr):buffer(0)
-    { 
-      // who invented that "wcstombs"? cauchemar.
-      if(wstr.length)
-      {
-        //size_t nu = wstr.length;
-        size_t n = 0;
-        char d[8];
-        for( unsigned i = 0; i < wstr.length; ++i)
-        {
-		      wchar_t w = wstr[i];
-          size_t k = wcstombs( d, &w, 1 );
-          n += (k == size_t(-1))?1:k;
-        }
-        buffer = new char[n+1];
-        wcstombs(buffer,wstr.start,n);
-        buffer[n] = 0;
-      }
-    }
-    ~w2a() {  delete[] buffer;  }
+    unsigned int n;
 
+    void init(const wchar_t* wstr, unsigned int nu)
+      {
+      n = WideCharToMultiByte(CP_ACP,0,wstr,nu,0,0,0,0);
+      buffer = (n < (16-1))? local:new char[n+1];
+        WideCharToMultiByte(CP_ACP,0,wstr,nu,buffer,n,0,0);
+        buffer[n] = 0;
+      }
+  public:
+    explicit w2a(const wchar_t* wstr):buffer(0),n(0)
+      {
+      if(wstr)
+        init(wstr,(unsigned int)wcslen(wstr));
+    }
+    explicit w2a(const std::wstring& wstr):buffer(0),n(0)
+    { 
+      init(wstr.c_str(),wstr.length());
+    }
+    explicit w2a(slice<wchar_t> s);
+
+    ~w2a() { if(buffer != local) delete[] buffer;  }
+    unsigned int length() const { return n; }    
     operator const char*() { return buffer; }
   };
 
   class a2w 
   {
+    wchar_t  local[16];
     wchar_t* buffer;
+    unsigned int nu;
+    void init(const char* str, unsigned int n)
+      {
+      nu = MultiByteToWideChar(CP_THREAD_ACP,0,str,n,0,0);
+      buffer = ( nu < (16-1) )? local: new wchar_t[nu+1];
+        MultiByteToWideChar(CP_ACP,0,str,n,buffer,nu);
+        buffer[nu] = 0;
+      }
   public:
-    explicit a2w(const char* str):buffer(0)
-    { 
+    explicit a2w(const char* str):buffer(0), nu(0)
+      {
       if(str)
-      {
-        size_t n = strlen(str);
-        size_t nu = mbstowcs(0,str,n);
-        buffer = new wchar_t[n+1];
-        mbstowcs(buffer,str,n);
-        buffer[nu] = 0;
-      }
+        init(str, strlen(str));
     }
-    explicit a2w(const chars str):buffer(0)
-    { 
-      if(str.length)
-      {
-        size_t n = str.length;
-        size_t nu = mbstowcs(0,str.start,n);
-        buffer = new wchar_t[n+1];
-        mbstowcs(buffer,str.start,n);
-        buffer[nu] = 0;
-      }
-    }
-    ~a2w() {  delete[] buffer;  }
+    explicit a2w(slice<char> s);
+    ~a2w() {  if(buffer != local) delete[] buffer;  }
+    unsigned int length() const { return nu; }
     operator const wchar_t*() { return buffer; }
-
   };
 
   // helper convertor objects wchar_t to utf8 and vice versa
@@ -547,10 +534,18 @@ namespace aux
         utf8::towcs(utf8, length ,buffer);
       }
     }
+    explicit utf2w(const char* utf8, size_t length = 0)
+    { 
+      if(utf8)
+      {
+        if( length == 0) length = strlen(utf8);
+        utf8::towcs((const byte*)utf8, length ,buffer);
+      }
+    }
     ~utf2w() {}
 
     operator const wchar_t*() { return buffer.data(); }
-    size_t length() const { return buffer.length(); }
+    unsigned int length() const { return buffer.length(); }
 
     pod::wchar_buffer& get_buffer() { return buffer; }
 
@@ -568,10 +563,16 @@ namespace aux
         utf8::fromwcs(wstr,nu,buffer);
       }
     }
+    explicit w2utf(const std::wstring& str)
+    {
+      utf8::fromwcs(str.c_str(),str.length(),buffer);
+    }
     ~w2utf() {}
     operator const byte*() { return buffer.data(); }
-    size_t length() const { return buffer.length(); }
+    operator const char*() { return (const char*)buffer.data(); }
+    unsigned int length() const { return buffer.length(); }
   };
+
 
   /** Integer to string converter.
       Use it as ostream << itoa(234) 

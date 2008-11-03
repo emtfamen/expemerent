@@ -20,7 +20,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "json-aux.h"
+#include "aux-cvt.h"
+#include "aux-slice.h"
 
 //
 // This file is a part of 

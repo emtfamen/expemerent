@@ -4,7 +4,6 @@ namespace htmlayout
 {
 
 /*
-
 OUTDATED! use behavior 'button' instead.
 It is here only for the demo purposes.
 

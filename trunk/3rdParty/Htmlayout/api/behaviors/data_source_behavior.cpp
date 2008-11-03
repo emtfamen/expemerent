@@ -42,7 +42,6 @@ struct sample_data_source: public behavior
           swprintf(buffer,L"row %d, col %d", i, c); //\x4E00\x4E01\x4E02\x4E03  
           dom::element cell = row.child(c);
           cell.set_text(buffer);
-          cell.update(MEASURE_INPLACE);
         }
       }
       return TRUE;

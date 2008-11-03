@@ -1,5 +1,13 @@
 #include "behavior_aux.h"
 
+// OBSOLETE
+// OBSOLETE
+// OBSOLETE - replaced by internal implementation. 
+// OBSOLETE - if you need your own implementation - rename this behavior to something like "form-ex"
+// OBSOLETE
+// OBSOLETE
+
+
 #include <malloc.h>
 
 namespace htmlayout 
@@ -119,7 +127,7 @@ struct form_instance: public event_handler
       }
 
       HLDOM_RESULT hr = ::HTMLayoutHttpRequest( 
-          the_form,                         // element to deliver data 
+          target_element(the_form),         // element to deliver data to
           uri,                              // url 
           HLRT_DATA_HTML,                   // data type, see HTMLayoutResourceType.
           do_post? POST_ASYNC: GET_ASYNC,   // one of REQUEST_TYPE values
@@ -130,6 +138,28 @@ struct form_instance: public event_handler
       assert( hr == HLDOM_OK );
 
       return TRUE;
+    }
+ 
+    dom::element target_element(dom::element form )
+    {
+      const wchar_t* target_name = form.get_attribute("target");
+      if( target_name )
+      {
+        dom::element view_root = form.root();
+        assert(view_root.is_valid());
+        dom::element target = view_root.find_first("frame[name='%s'],frame#%s",target_name);
+        if(target.is_valid())
+          return target;
+      }
+      dom::element t = form.parent();
+      while( t.is_valid() ) 
+      {
+        if(t.get_ctl_type() == CTL_FRAME)
+          return t; // we are in frame 
+        t = t.parent();
+      }
+      // not in frame so deliver data to the form (see on_data_arrived below).
+      return form;
     }
 
     virtual BOOL on_data_arrived (HELEMENT he, HELEMENT initiator, LPCBYTE data, UINT dataSize, UINT dataType ) 
@@ -166,10 +196,7 @@ struct form_instance: public event_handler
       }
       return FALSE; 
     }
-
 };
-
-
 
 struct form: public behavior
 {

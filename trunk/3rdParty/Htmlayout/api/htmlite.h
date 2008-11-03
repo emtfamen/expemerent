@@ -161,6 +161,9 @@ EXTERN_C  HPRESULT HLAPI HTMLiteRenderOnBitmap(HTMLITE hLite, HBITMAP hbmp,
           INT sx,   // width of area to render  
           INT sy);  // height of area to render  
 
+/** executes all pending changes */
+EXTERN_C  BOOL     HLAPI HTMLayoutUpdateView( HTMLITE hLite );
+
 /**This function is used in response to HLN_LOAD_DATA request. 
  *
  * \param[in] hLite \b HTMLITE, handle.

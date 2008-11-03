@@ -9,8 +9,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "json-aux.h"
-#include "json-parse.h"
+typedef unsigned int uint;
+
+#include "aux-cvt.h"
+#include "aux-slice.h"
 
 //
 // This file is a part of 

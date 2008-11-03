@@ -34,7 +34,7 @@ namespace htmlayout
           if( new_zoom != zoom)
           {
             el.set_attribute("zoom",aux::itow(new_zoom));
-            el.update(true);
+            //el.update(true);
           }
           return true;
         }

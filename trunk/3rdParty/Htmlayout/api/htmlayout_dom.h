@@ -17,7 +17,7 @@
 #ifndef __htmengine_dom_h__
 #define __htmengine_dom_h__
 
-#include "json-value.h"
+#include "value.h"
 
 /**Type of the result value for HTMLayout DOM functions.
  * Possible values are:
@@ -309,6 +309,7 @@ enum ELEMENT_AREAS
   SELF_RELATIVE = 0x02,       // - "or" this flag if you want to get coordinates relative to the origin
                               //   of element iself.
   CONTAINER_RELATIVE = 0x03,  // - position inside immediate container.
+  VIEW_RELATIVE = 0x04,       // - position relative to view - HTMLayout window
 
   CONTENT_BOX = 0x00,   // content (inner)  box
   PADDING_BOX = 0x10,   // content + paddings
@@ -341,10 +342,14 @@ EXTERN_C  HLDOM_RESULT HLAPI HTMLayoutScrollToView(HELEMENT he, UINT /*HTMLAYOUT
 
 /**Apply changes and refresh element area in its window.
  * \param[in] he \b #HELEMENT 
- * \param[in] renderNow \b BOOL, if TRUE element will be redrawn immediately.
+ * \param[in] remeasure \b BOOL, TRUE if element's dimensions need to be recalculated.
  * \return \b #HLDOM_RESULT
+ *
+ * This is optional method since v 3.3.0.4   
+ * Engine will call update internaly when handling DOM mutating methods.  
+ *
  **/
-EXTERN_C  HLDOM_RESULT HLAPI HTMLayoutUpdateElement(HELEMENT he, BOOL renderNow);
+EXTERN_C  HLDOM_RESULT HLAPI HTMLayoutUpdateElement(HELEMENT he, BOOL remeasure);
 
 enum UPDATE_ELEMENT_FLAGS
 {
@@ -354,7 +359,7 @@ enum UPDATE_ELEMENT_FLAGS
   MEASURE_INPLACE = 0x0001, // use this flag if you do not expect any dimensional changes - this is faster than REMEASURE
   MEASURE_DEEP    = 0x0002, // use this flag if changes of some attributes/content may cause change of dimensions of the element  
 
-  REDRAW_NOW = 0x8000,      // invoke UpdateWindow function after applying changes
+  REDRAW_NOW = 0x8000,      // invoke ::UpdateWindow function after applying changes
 };
 
 /**Apply changes and refresh element area in its window.
@@ -467,6 +472,14 @@ EXTERN_C  HLDOM_RESULT HLAPI HTMLayoutSelectElements(
                     callback, 
           LPVOID    param);
 
+EXTERN_C  HLDOM_RESULT HLAPI HTMLayoutSelectElementsW(
+          HELEMENT  he, 
+          LPCWSTR   CSS_selectors,
+          HTMLayoutElementCallback* 
+                    callback, 
+          LPVOID    param);
+
+
 /**Find parent of the element by CSS selector. 
  * ATTN: function will test first element itself. 
  * See list of supported selectors: http://terrainformatica.com/htmlayout/selectors.whtm
@@ -483,6 +496,12 @@ EXTERN_C  HLDOM_RESULT HLAPI HTMLayoutSelectElements(
 EXTERN_C  HLDOM_RESULT HLAPI HTMLayoutSelectParent(
           HELEMENT  he, 
           LPCSTR    selector,
+          UINT      depth,
+          /*out*/ HELEMENT* heFound);
+
+EXTERN_C  HLDOM_RESULT HLAPI HTMLayoutSelectParentW(
+          HELEMENT  he, 
+          LPCWSTR   selector,
           UINT      depth,
           /*out*/ HELEMENT* heFound);
 
@@ -690,6 +709,15 @@ EXTERN_C HLDOM_RESULT HLAPI HTMLayoutDetachElement( HELEMENT he );
  **/
 EXTERN_C HLDOM_RESULT HLAPI HTMLayoutSetTimer( HELEMENT he, UINT milliseconds );
 
+/** Start Extended Timer for the element. 
+    Element will receive on_timer(, timerId) event
+    To stop timer call HTMLayoutSetTimerEx( he, 0, timerId);
+ * \param timerId \b UINT_OTR, arbitrary value that will be deliverd to the behavior "as is". 
+ **/
+EXTERN_C HLDOM_RESULT HLAPI HTMLayoutSetTimerEx( HELEMENT he, UINT milliseconds, UINT_PTR timerId );
+
+
+
 /** Attach/Detach ElementEventProc to the element 
     See htmlayout::event_handler.
  **/
@@ -778,8 +806,6 @@ enum REQUEST_TYPE
 {
   GET_ASYNC,  // async GET
   POST_ASYNC, // async POST
-  GET_SYNC,   // synchronous GET 
-  POST_SYNC   // synchronous POST 
 };
 
 struct REQUEST_PARAM { LPCWSTR name; LPCWSTR value; };
@@ -925,6 +951,11 @@ enum CTL_TYPE
     CTL_TOOLTIP,
 
     CTL_HIDDEN,
+    CTL_URL,            ///< URL input element.
+    CTL_TOOLBAR,
+
+    CTL_FORM,
+
 };
 
 /** HTMLayoutControlGetType - get type of control - type of behavior assigned to the element.
@@ -936,12 +967,21 @@ EXTERN_C HLDOM_RESULT HLAPI HTMLayoutControlGetType( HELEMENT he, /*CTL_TYPE*/ U
 
 /** HTMLayoutControlGetValue - get value of the control.
  * \param[in] he \b HELEMENT, element.
- * \param[out] pVal \b JSON_VALUE*, pointer to variable receiving control value.
+ * \param[out] pVal \b VALUE*, pointer to variable receiving control value. After use of this value ValueClear MUST be 
+ *                             called on it. Otherwise memory leak will happen!
  *
  * *pVal - variable shall be properly initialized before the call
  *
  **/
-EXTERN_C HLDOM_RESULT HLAPI HTMLayoutControlGetValue( HELEMENT he, JSON_VALUE *pVal );
+
+EXTERN_C HLDOM_RESULT HLAPI HTMLayoutControlGetValue( HELEMENT he, VALUE *pVal );
+
+// ATTENTION:
+// ATTENTION:
+// ATTENTION: ValueClear(pVal); must be called at some point HTMLayoutControlGetValue use.
+// ATTENTION:
+// ATTENTION:
+
 
 /** HTMLayoutControlSetValue - set value of the control and update UI.
  * \param[in] he \b HELEMENT, element.
@@ -950,7 +990,7 @@ EXTERN_C HLDOM_RESULT HLAPI HTMLayoutControlGetValue( HELEMENT he, JSON_VALUE *p
  * *pVal - variable shall contain valid JSON_VALUE. 
  *
  **/
-EXTERN_C HLDOM_RESULT HLAPI HTMLayoutControlSetValue( HELEMENT he, const JSON_VALUE *pVal );
+EXTERN_C HLDOM_RESULT HLAPI HTMLayoutControlSetValue( HELEMENT he, const VALUE *pVal );
 
 
 /**Callback function used with #HTMLayoutEnumearate().
@@ -1042,6 +1082,19 @@ EXTERN_C HLDOM_RESULT HLAPI HTMLayoutElementSetExpando( HELEMENT he, HTMLayoutEl
 EXTERN_C HLDOM_RESULT HLAPI HTMLayoutElementGetExpando( HELEMENT he, HTMLayoutElementExpando** ppExpando );
 
 
+/** HTMLayoutMoveElement - moves element from its normal place to the position defined by xView, yView.
+ *
+ * \param[in] he \b HELEMENT, element.
+ * \param[in] xView \b INT, new x coordinate of content box of the element relative to the view - htmlayout window.
+ * \param[in] yView \b INT, new y coordinate of content box of the element relative to the view - htmlayout window.
+ *
+ * If element is moved outside of the view then HTMLayoutMoveElement will create popup window for it.
+ *
+ **/
+
+EXTERN_C HLDOM_RESULT HLAPI HTMLayoutMoveElement( HELEMENT he, INT xView, INT yView);
+
+
 /** HTMLayoutParseValue - parses JSON forrmatted text (data).
  * \param[in] text \b LPCWSTR, json text.
  * \param[in] textLength \b UINT, length of json text.
@@ -1057,7 +1110,7 @@ EXTERN_C HLDOM_RESULT HLAPI HTMLayoutElementGetExpando( HELEMENT he, HTMLayoutEl
  *   { "one":1, 2:"two" }
  * \see http://json.org
  **/
-EXTERN_C UINT HLAPI HTMLayoutParseValue( LPCWSTR text, UINT textLength, UINT mode, JSON_VALUE *pVal );
+EXTERN_C UINT HLAPI HTMLayoutParseValue( LPCWSTR text, UINT textLength, UINT mode, VALUE *pVal );
 
 
 /** HTMLayoutRange*** - range manipulation routines. 

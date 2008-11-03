@@ -145,8 +145,6 @@ struct tabs: public behavior
       tab_el.set_attribute("selected", L""); // set selected attribute (empty)
       tab_el.set_state(STATE_CURRENT,0,false); // set also state flag, :current
                   
-      tabs_el.update(MEASURE_INPLACE);  //done! update changes on the view
-
       // notify all parties involved
       prev_tab_el.post_event(ELEMENT_COLLAPSED,0, prev_tab_el); // source here is old collapsed tab itself
       tab_el.post_event(ELEMENT_EXPANDED,0, tab_el);  // source here is new expanded tab itself

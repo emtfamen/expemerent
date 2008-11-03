@@ -22,15 +22,16 @@
 #include <string>
 
 #include "sciter-x-aux.h"
-#include "json-value.h"
 
-namespace sciter
-{
-  typedef json::value value_t;
-  typedef json::named_value named_value_t;
-}
+#define HAS_TISCRIPT
 
-typedef sciter::value_t SCITER_VALUE;
+#include "value.h"
+
+#if defined(__cplusplus) && !defined( PLAIN_API_ONLY )
+  typedef json::value SCITER_VALUE;
+#else
+  typedef VALUE SCITER_VALUE;
+#endif
  
 
 #endif

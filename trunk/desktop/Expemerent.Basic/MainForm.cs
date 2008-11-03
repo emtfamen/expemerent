@@ -26,7 +26,7 @@ namespace Expemerent.Basic
             var openButton = new ButtonControl() { Selector = "#open" };
             var reloadButton = new ButtonControl() { Selector = "#reload" };
             var content = new BindableControl() { Selector = "#content" };
-            
+
             Action resizeContent = () => 
                 { 
                     var rect = content.Element.GetLocation(ElementLocation.ContentBox);
@@ -43,6 +43,7 @@ namespace Expemerent.Basic
                 {
                     contentControl.Reload();
                 };
+
             openButton.Click += (s, e) =>
                 {
                     var dlg = new OpenFileDialog() { Filter = "Html files (*.htm)|*.htm|All files (*.*)|*.*" };
@@ -54,8 +55,46 @@ namespace Expemerent.Basic
             SciterControls.Add(reloadButton);
             SciterControls.Add(content);
 
-            Controls.Add(contentControl);
+            ScriptingMethodCall += (s, e) =>
+                {
+                    switch (e.MethodName)
+                    {
+                        case "application_name": // Returns application title
+                            e.ReturnValue = Text;
+                            break;
+                    }
+                };
 
+            contentControl.HandleCreated += (s, e) => contentControl.RegisterClass<Scripting.Application>();
+            contentControl.ScriptingMethodCall += (s, e) =>
+                {
+                    switch (e.MethodName)
+                    {
+                        case "application_name": // Returns application title
+                            e.ReturnValue = Text;
+                            break;
+                        case "sum": // Returns sum of two arguments
+                            e.ReturnValue = Convert.ToDouble(e.Arguments[0]) + Convert.ToDouble(e.Arguments[1]);
+                            break;
+                        case "echo":
+                            e.ReturnValue = e.Arguments[0];
+                            break;
+                        case "dict":
+                            e.ReturnValue = new { first = 1, second = 2, third = 3 };
+                            break;
+                        case "callback":
+                            contentControl.Call("callback", "hello");
+                            contentControl.Call("callback", 1);
+                            contentControl.Call("callback", true);
+                            contentControl.Call("callback", 1.0);
+                            contentControl.Call("callback", DateTime.Now);
+                            contentControl.Call("callback", 1M);
+                            contentControl.Call("callback", new byte[] { 0x1, 0x2, 0x3} );
+                            break;
+                    }   
+                };
+
+            Controls.Add(contentControl);
             LoadHtmlResource<MainForm>("Html/Default.htm");
         }
     }
