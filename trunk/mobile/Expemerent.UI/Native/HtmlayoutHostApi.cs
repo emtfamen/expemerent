@@ -256,7 +256,7 @@ namespace Expemerent.UI.Native
         /// </summary>
         public static IntPtr SciterGetVM(IntPtr hwnd)
         {
-            throw new NotSupportedException("NotSupported in Htmlayout");
+            return IntPtr.Zero;
         }
 
         /// <summary>
@@ -264,7 +264,7 @@ namespace Expemerent.UI.Native
         /// </summary>
         public static bool SciterNativeDefineClass(IntPtr hvm, SciterNativeClassDef pClassDef)
         {
-            throw new NotSupportedException("NotSupported in Htmlayout");
+            return false;
         }
 
         /// <summary>
@@ -272,7 +272,7 @@ namespace Expemerent.UI.Native
         /// </summary>
         public static bool SciterNativeThrow(IntPtr hvm, string errorMsg)
         {
-            throw new NotSupportedException("NotSupported in Htmlayout");
+            return false;
         }
 
         /// <summary>
