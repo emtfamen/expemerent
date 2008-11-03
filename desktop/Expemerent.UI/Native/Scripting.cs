@@ -182,26 +182,32 @@ namespace Expemerent.UI.Native
         /// <summary>
         /// Registers scripting class
         /// </summary>
-        public static void RegisterClass<TType>(SciterView view)
+        public static bool RegisterClass<TType>(SciterView view)
         {
             Debug.Assert(view != null && view.HandleInternal != IntPtr.Zero, "View cannot be null");
 
+            var result = false;
             var hvm = SciterHostApi.SciterGetVM(view.HandleInternal);
-            var scripting = GetScriptingClasses(view, hvm);
-
-            var sciterClassDef = GetClassDef(typeof(TType));
-            if (!scripting.IsExists(sciterClassDef))
+            if (hvm == IntPtr.Zero)
             {
-                var nativeClass = sciterClassDef.ToNative();
-                try
+                var scripting = GetScriptingClasses(view, hvm);
+
+                var sciterClassDef = GetClassDef(typeof(TType));
+                if (!scripting.IsExists(sciterClassDef))
                 {
-                    SciterHostApi.SciterNativeDefineClass(hvm, nativeClass);
-                    scripting.ClassDefs.Add(sciterClassDef);
+                    var nativeClass = sciterClassDef.ToNative();
+                    try
+                    {
+                        result = SciterHostApi.SciterNativeDefineClass(hvm, nativeClass);
+                        scripting.ClassDefs.Add(sciterClassDef);
+                    }
+                    finally { SciterClassDef.FreeNative(nativeClass); }
                 }
-                finally { SciterClassDef.FreeNative(nativeClass); }
+                else
+                    throw new ArgumentException("Class already registered", "TType");
             }
-            else
-                throw new ArgumentException("Class already registered", "TType");
+
+            return result;
         } 
         #endregion
 
