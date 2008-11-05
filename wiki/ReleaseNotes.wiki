@@ -3,5 +3,5 @@
  * Updated to the latest Sciter API
 == v0.3.06.99 == 
 === New === 
- * DbTest project: SQLCE vs SQLite performance comparison
- * DataGridControl
+ * !DbTest project: SQLCE vs SQLite performance comparison
+ * !DataGridControl
