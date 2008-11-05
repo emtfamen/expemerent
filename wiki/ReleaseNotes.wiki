@@ -1,5 +1,5 @@
 #labels Featured
-== v0.3.10.`*` == 
+== v0.3.10.112 == 
  * Updated to the latest Sciter API
 == v0.3.06.99 == 
 === New === 
