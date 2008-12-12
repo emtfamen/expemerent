@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
+using Expemerent.UI.Behaviors;
+using Expemerent.UI.Behaviors.BuiltIn;
 using Expemerent.UI.Dom;
 using Expemerent.UI.Native;
 using Expemerent.UI.Protocol;
-using System.Windows.Forms;
-using Expemerent.UI.Behaviors.BuiltIn;
-using Expemerent.UI.Behaviors;
-using System.IO;
 
 namespace Expemerent.UI
 {
@@ -113,15 +112,30 @@ namespace Expemerent.UI
         /// <summary>
         /// Attaches SciterView to the existing window
         /// </summary>
-        public static SciterView Attach(ISciterHost host)
+        public static SciterView Attach(IntPtr handle, ISciterHost host)
         {
+            #region Parameters checking
+            if (handle == IntPtr.Zero)
+                throw new ArgumentException("handle");
+            if (host == null)
+                throw new ArgumentNullException("host"); 
+            #endregion
+
             SciterView view = new SciterView();
             view.Host = host;
-            view.HandleInternal = host.Handle;
-            view.Hook = WindowHook.Install(host.Handle, view.ProcessMessage);
+            view.HandleInternal = handle;
+            view.Hook = WindowHook.Install(handle, view.ProcessMessage);
             view.InitializeSciter();
 
             return view;
+        }
+
+        /// <summary>
+        /// Attaches SciterView to the existing window
+        /// </summary>
+        public static SciterView Attach(IntPtr handle)
+        {
+            return Attach(handle, new SciterHost());
         }
 
         /// <summary>

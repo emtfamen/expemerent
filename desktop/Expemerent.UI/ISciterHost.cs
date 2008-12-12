@@ -8,11 +8,6 @@ namespace Expemerent.UI
     public interface ISciterHost : ISciterNotifications
     {
         /// <summary>
-        /// Gets HWND handle of the host window
-        /// </summary>
-        IntPtr Handle { get; }
-
-        /// <summary>
         /// Raises <see cref="Destroyed"/> event
         /// </summary>
         void ProcessDestroyed(EventArgs e);

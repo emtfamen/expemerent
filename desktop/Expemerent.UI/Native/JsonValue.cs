@@ -315,7 +315,7 @@ namespace Expemerent.UI.Native
 
         public JsonValue(object data) : this()
         {
-            NativeMethods.ValueClear(ref this);
+            NativeMethods.ValueInit(ref this);
             SetValue(data);
         }
 

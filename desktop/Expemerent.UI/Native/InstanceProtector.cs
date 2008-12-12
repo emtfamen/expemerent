@@ -8,11 +8,6 @@ namespace Expemerent.UI.Native
     internal static class InstanceProtector
     {
         /// <summary>
-        /// Synchronization object
-        /// </summary>
-        private static readonly object _syncRoot = new object();
-
-        /// <summary>
         /// Collection of allocated handles
         /// </summary>
         private static Dictionary<IntPtr, GCHandle> _instances = new Dictionary<IntPtr, GCHandle>();
@@ -22,9 +17,9 @@ namespace Expemerent.UI.Native
         /// </summary>
         public static IntPtr Protect(object instance)
         {
-            lock (_syncRoot)
+            lock (_instances)
             {
-                GCHandle handle = new GCHandle();
+                GCHandle handle = default(GCHandle);
                 if (FindHandle(instance, out handle))
                     ClearUnusedHandles();
 
@@ -44,7 +39,7 @@ namespace Expemerent.UI.Native
         /// </summary>
         public static object GetInstance(IntPtr cookie)
         {
-            lock (_syncRoot)
+            lock (_instances)
             {
                 var handle = _instances[cookie];
                 var obj = handle.Target;
