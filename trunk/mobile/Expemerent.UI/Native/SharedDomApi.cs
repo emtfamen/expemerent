@@ -436,8 +436,11 @@ namespace Expemerent.UI.Native
         /// See Sciter::event_handler.
         /// </summary>
         public void DetachEventHandler(Element he, ISciterBehavior behavior)
-        {
-            CheckResult(SciterDetachEventHandler(he.Handle, SciterHostApi.ElementEventProcEntryPoint, InstanceProtector.Protect(behavior)));
+        {            
+            var r = SciterDetachEventHandler(he.Handle, SciterHostApi.ElementEventProcEntryPoint, InstanceProtector.Protect(behavior));
+
+            // DetachEventHandler can return SCDOM_PASSIVE_HANDLE if element was detached from the tree
+            CheckResult(r == ScDomResult.SCDOM_PASSIVE_HANDLE ? ScDomResult.SCDOM_OK : r);
         }
 
         /// <summary>
@@ -545,7 +548,6 @@ namespace Expemerent.UI.Native
 
             Debug.Assert(result == ScDomResult.SCDOM_OK);
         }
-
         #endregion
     }
 }

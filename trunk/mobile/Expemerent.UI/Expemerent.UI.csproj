@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{9DFF74A8-33C2-48E7-9A8E-CCA2CB5447CF}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -120,6 +120,7 @@
     <Compile Include="Behaviors\BuiltIn\CollapsibleList.cs" />
     <Compile Include="Behaviors\BuiltIn\ExpandableList.cs" />
     <Compile Include="Behaviors\ScriptingMethodCallEventArgs.cs" />
+    <Compile Include="ControlsHost.cs" />
     <Compile Include="Controls\BindableControl.cs" />
     <Compile Include="Controls\ButtonControl.cs" />
     <Compile Include="Controls\CheckBoxControl.cs" />

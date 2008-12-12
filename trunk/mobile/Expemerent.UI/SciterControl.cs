@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using Form = System.Windows.Forms.Form;
-using Control = System.Windows.Forms.Control;
-using UserControl = System.Windows.Forms.UserControl;
 using Expemerent.UI.Behaviors;
 using Expemerent.UI.Controls;
 using Expemerent.UI.Dom;
-using Expemerent.UI.Native;
-using System.Windows.Forms;
+using Control = System.Windows.Forms.Control;
+using Form = System.Windows.Forms.Form;
+using UserControl = System.Windows.Forms.UserControl;
 
 namespace Expemerent.UI
 {
@@ -20,21 +17,21 @@ namespace Expemerent.UI
     /// [*] SciterControls management
     /// [*] Behaviors management
     /// </remarks>
-    public class SciterControl : UserControl, ISciterControl
+    public class SciterControl : UserControl
     {
         #region Private data
         /// <summary>
         /// See <see cref="Host"/> property
         /// </summary>
-        private SciterHost _host;
+        private ControlsHost _host;
 
         /// <summary>
         /// Gets the <see cref="ISciterHost"/> instance 
         /// </summary>
-        private SciterHost Host
+        private ControlsHost Host
         {
             [DebuggerStepThrough]
-            get { return _host ?? (_host = new SciterHost(this) { AutoValidate = AutoValidate }); }
+            get { return _host ?? (_host = new ControlsHost(this) { AutoValidate = AutoValidate }); }
         } 
         #endregion
 
@@ -187,40 +184,5 @@ namespace Expemerent.UI
                 Host.DetachFromControl();
         }
         #endregion
-
-        #region Internal implementation
-        /// <summary>
-        /// Handles <see cref="AutoValidate"/> property changes
-        /// </summary>
-        public new AutoValidate AutoValidate
-        {
-            get { return base.AutoValidate; }
-            set
-            {
-                base.AutoValidate = value;
-                Host.AutoValidate = AutoValidate;
-            }
-        } 
-        #endregion
-
-        #region ISciterControl implementation
-        /// <summary>
-        /// Gets parent windows forms control
-        /// </summary>
-        Control ISciterControl.Control
-        {
-            [DebuggerStepThrough]
-            get { return this; }
-        }
-
-        /// <summary>
-        /// Gets the root element (will be a document.rootElement)
-        /// </summary>
-        Element ISciterControl.RootElement
-        {
-            [DebuggerStepThrough]
-            get { return RootElement; }
-        } 
-        #endregion        
-    }
+     }
 }

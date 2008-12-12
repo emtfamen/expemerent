@@ -7,6 +7,9 @@ using System.Data.Common;
 
 namespace Expemerent.DbTest.Provider.SqlCe
 {
+    /// <summary>
+    /// Simplified version of the DbProviderFactory for NETCF 
+    /// </summary>
     internal class SqlCeProviderFactory : DbProviderFactory
     {
         public override DbConnection CreateConnection()

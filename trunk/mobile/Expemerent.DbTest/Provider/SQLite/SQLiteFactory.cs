@@ -7,6 +7,9 @@ using System.Data.Common;
 
 namespace Expemerent.DbTest.Provider.SQLite
 {
+    /// <summary>
+    /// Simplified version of the DbProviderFactory for NETCF 
+    /// </summary>
     internal class SQLiteFactory : DbProviderFactory
     {
         public override DbConnection CreateConnection()

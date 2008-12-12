@@ -115,6 +115,13 @@ EXTERN_C UINT VALAPI ValueCompare( const VALUE* pval1, const VALUE* pval2 );
 EXTERN_C UINT VALAPI ValueCopy( VALUE* pdst, const VALUE* psrc );
 
 /**
+ * ValueIsolate - converts T_OBJECT value types to T_MAP or T_ARRAY.
+ * use this method if you need to pass values between different threads.
+ * The fanction is applicable for the Sciter 
+ */
+EXTERN_C UINT VALAPI ValueIsolate( VALUE* pdst );
+
+/**
  * ValueType - returns VALUE_TYPE and VALUE_UNIT_TYPE flags of the VALUE
  */
 EXTERN_C UINT VALAPI ValueType( const VALUE* pval, UINT* pType, UINT* pUnits );
@@ -562,6 +569,12 @@ EXTERN_C UINT VALAPI ValueInvoke( VALUE* pval, VALUE* pthis, UINT argc, const VA
         ValueInvoke(this,&self,argc,argv,&rv,url_or_script_name);
         return rv;
       }
+
+      void isolate()
+      {
+        ValueIsolate(this);
+      }
+
 #endif //defined(HAS_TISCRIPT)
           
       // "smart" or "soft" equality test

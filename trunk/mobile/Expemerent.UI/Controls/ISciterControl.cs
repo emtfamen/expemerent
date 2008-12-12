@@ -5,7 +5,7 @@ using Expemerent.UI.Dom;
 namespace Expemerent.UI.Controls
 {
     /// <summary>
-    /// Defines interface to the Windows.Forms controls with sciter content
+    /// Defines interface for classes that can host Sciter controls
     /// </summary>
     public interface ISciterControl
     {
