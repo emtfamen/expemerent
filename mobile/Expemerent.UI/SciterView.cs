@@ -186,6 +186,21 @@ namespace Expemerent.UI
         }
 
         /// <summary>
+        /// Loads Html from the resource. The html loading can be delayed if window handle was not created.
+        /// </summary>
+        /// <typeparam name="TResourceBase">Used as a base URI in the data requests</typeparam>
+        /// <param name="resourceName">Relative resource name</param>
+        public void LoadResource<TResourceBase>(string resourceName)
+        {
+            #region Arguments checking
+            if (String.IsNullOrEmpty(resourceName))
+                throw new ArgumentNullException("resourceName");
+            #endregion
+
+            LoadResource(typeof(TResourceBase), resourceName);
+        }
+
+        /// <summary>
         /// Loads html from file 
         /// </summary>
         public void LoadResource(String resourceName)
