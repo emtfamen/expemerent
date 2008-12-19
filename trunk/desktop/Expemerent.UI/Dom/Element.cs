@@ -495,11 +495,19 @@ namespace Expemerent.UI.Dom
 
         #region Mouse capture management
         /// <summary>
-        /// 
+        /// Captures mouse
         /// </summary>
         public void SetCapture()
         {
             SciterDomApi.SetCapture(this);
+        }
+
+        /// <summary>
+        /// Releases capture from the element
+        /// </summary>
+        public void ReleaseCapture()
+        {
+            SciterDomApi.ReleaseCapture(this);
         }
         #endregion
 

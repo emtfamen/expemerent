@@ -430,6 +430,14 @@ namespace Expemerent.UI.Native
         {
             CheckResult(SciterDeleteElement(element.Handle));
         }
+
+        /// <summary>
+        /// Releases the mouse capture from the specified element.
+        /// </summary>
+        public void ReleaseCapture(Element element)
+        {
+            ReleaseCapture();
+        }
     }
 
     #endregion
