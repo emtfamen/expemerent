@@ -144,6 +144,9 @@
             var app = new Application();
             table.insert(createSimpleRow("app.name", app.Name));
             table.insert(createSimpleRow("app.concat", app.Concat("1", "2")));
+            
+            var func = function(p) { return p + 1 };
+            app.Subscribe(func);
         </script>
     </head>
     <body>

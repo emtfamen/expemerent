@@ -27,5 +27,11 @@ namespace Expemerent.Basic.Scripting
         {
             get { return this.GetType().Name; }
         }
+
+        [ScriptingMethod]
+        public void Subscribe(string name)
+        {
+            
+        }
     }
 }
