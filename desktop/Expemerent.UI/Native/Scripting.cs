@@ -25,6 +25,7 @@ namespace Expemerent.UI.Native
 
         [MarshalAs(UnmanagedType.LPStr)]
         public string name;
+
         [MarshalAs(UnmanagedType.FunctionPtr)]
         public SciterNativeMethod_t method;
     }
@@ -47,6 +48,7 @@ namespace Expemerent.UI.Native
 
         [MarshalAs(UnmanagedType.LPStr)]
         public string name;
+
         [MarshalAs(UnmanagedType.FunctionPtr)]
         public SciterNativeProperty_t property;
     }
@@ -95,12 +97,14 @@ namespace Expemerent.UI.Native
             for (var i = 0; i < methods.Length; ++i)
                 Marshal.StructureToPtr(methods[i], new IntPtr(sciterNative.methods.ToInt64() + i * SciterNativeMethodDef.SizeOf), false);
 
+            // Write NULL methodDef
             Marshal.StructureToPtr(new SciterNativeMethodDef(), new IntPtr(sciterNative.methods.ToInt64() + methods.Length * SciterNativeMethodDef.SizeOf), false);
 
             sciterNative.properties = Marshal.AllocCoTaskMem(SciterNativePropertyDef.SizeOf * properties.Length + 1);
             for (var i = 0; i < properties.Length; ++i)
-                Marshal.StructureToPtr(properties[i], new IntPtr(sciterNative.properties.ToInt64() + i * properties.Length), false);
+                Marshal.StructureToPtr(properties[i], new IntPtr(sciterNative.properties.ToInt64() + i * SciterNativePropertyDef.SizeOf), false);
 
+            // Write NULL propertyDef
             Marshal.StructureToPtr(new SciterNativePropertyDef(), new IntPtr(sciterNative.properties.ToInt64() + properties.Length * SciterNativePropertyDef.SizeOf), false);
 
             return sciterNative;
@@ -187,7 +191,7 @@ namespace Expemerent.UI.Native
 
             var result = false;
             var hvm = SciterHostApi.SciterGetVM(view.HandleInternal);
-            if (hvm == IntPtr.Zero)
+            if (hvm != IntPtr.Zero)
             {
                 var scripting = GetScriptingClasses(view, hvm);
 
